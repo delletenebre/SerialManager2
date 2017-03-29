@@ -162,7 +162,7 @@ class BluetoothConnection {
                     mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(CONNECTION_UUID);
                     mBluetoothSocket.connect();
                     connected = mBluetoothSocket.isConnected();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     try {
                         if (mBluetoothSocket != null) {
                             mBluetoothSocket.close();
@@ -170,7 +170,7 @@ class BluetoothConnection {
                         synchronized (this) {
                             sleep(100);
                         }
-                    } catch (IOException | InterruptedException e1) {
+                    } catch (Exception e1) {
                         // nothing
                     }
                 }
