@@ -1,0 +1,120 @@
+<resources>
+    <string name="app_name" translatable="false">Serial Manager</string>
+
+    <string name="save">Save</string>
+    <string name="command">Command</string>
+    <string name="settings">Settings</string>
+    <string name="send_report">Send report</string>
+    <string name="error">Error</string>
+
+    <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
+    <string name="crash_dialog_title">Send Crash Report?</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the
+    application to stop. Please help us fix this by sending us error data,
+    all you have to do is click OK.</string>
+    <string name="crash_dialog_comment_prompt">You might add your comments about the problem below:</string>
+    <string name="crash_dialog_ok_toast">Thank you!</string>
+
+
+    <string name="notification_usb_connections_count">USB-connections</string>
+    <string name="notification_bluetooth_connection_state">Bluetooth-connection</string>
+    <string name="notification_web_socket_connections_count">WebSocket-connections</string>
+    <string name="notification_default_connections_count">0</string>
+
+    <string name="app_chooser_no_app">[ No app ]</string>
+    <string name="app_chooser_title">Choose application</string>
+    <string name="app_chooser_title_apps">Apps</string>
+    <string name="app_chooser_title_shortcuts">Shortcuts</string>
+    <string name="app_chooser_toast_app_not_found">Application \"%1$s\" not found</string>
+
+    <string name="default__command_scatter" translatable="false">0.0</string>
+    <string name="default__command_intent_value_extra" translatable="false">%value</string>
+    <string name="default__command_noty_duration" translatable="false">3</string>
+    <string name="default__command_noty_text_size" translatable="false">16</string>
+    <string name="default__command_noty_bg_color" translatable="false">#88000000</string>
+    <string name="default__command_noty_text_color" translatable="false">#FFFFFFFF</string>
+    <string name="default__command_noty_offset" translatable="false">0</string>
+
+    <string name="send_data_to_controller_format" translatable="false">&lt;%1$s:%2$s&gt;</string>
+    <string name="command_title" translatable="false">%1$s : %2$s</string>
+    <string name="command_subtitle" translatable="false">%1$s: %2$s</string>
+    <string name="command_alert_empty_key_message">Field \"Key\" can\'t be empty</string>
+    <string name="command_autoset_key_and_value">Autoset Key and Value</string>
+    <string name="command_key">Key</string>
+    <string name="command_value">Value</string>
+    <string name="command_scatter">Scatter</string>
+    <string name="command_intent_value_extra">Intent\'s \"value\" extra</string>
+    <string name="command_action">Action</string>
+    <string-array name="array_command_actions">
+        <item>No action</item>
+        <item>Run application</item>
+        <item>Emulate key</item>
+        <item>Shell command</item>
+        <item>Send data</item>
+    </string-array>
+    <string name="command_emulated_key">Emulated key</string>
+    <string name="shell_command">Shell command</string>
+    <string name="send_data">Send data</string>
+    <string name="command_noty_message">Notification message</string>
+    <string name="command_noty_duration">Duration</string>
+    <string name="command_noty_text_size">Text size</string>
+    <string name="command_noty_background_color">Background color</string>
+    <string name="command_noty_text_color">Text color</string>
+    <string name="horizontal_position">Horizontal position</string>
+    <string name="vertical_position">Vertical position</string>
+    <string name="noty_horiz_offset_title">X-axis offset</string>
+    <string name="noty_vert_offset_title">Y-axis offset</string>
+    <string-array name="array_position_horiz_titles">
+        <item>Left</item>
+        <item>Center</item>
+        <item>Right</item>
+    </string-array>
+    <string-array name="array_position_vert_titles">
+        <item>Top</item>
+        <item>Center</item>
+        <item>Bottom</item>
+    </string-array>
+
+
+
+
+    <!-- Strings related to Settings -->
+    <string name="title_activity_settings">@string/settings</string>
+
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_start_on_boot">Start on boot</string>
+    <string name="pref_summary_start_on_boot">Start the service on device boot completed</string>
+    <string name="pref_title_start_on_boot_delay">Start delay after boot (sec)</string>
+    <string name="pref_default_start_on_boot_delay" translatable="false">3</string>
+    <string name="pref_title_start_when_screen_on">Start when screen on</string>
+    <string name="pref_summary_start_when_screen_on">Start the service when screen turn on</string>
+    <string name="pref_title_start_when_screen_on_delay">Start delay after screen on (sec)</string>
+    <string name="pref_default_start_when_screen_on_delay" translatable="false">0</string>
+    <string name="pref_title_stop_when_screen_off">Stop when screen off</string>
+    <string name="pref_summary_stop_when_screen_off">Stop the service when screen turn off</string>
+    <string name="pref_title_stop_when_screen_off_delay">Stop delay after screen off (sec)</string>
+    <string name="pref_default_stop_when_screen_off_delay" translatable="false">0</string>
+    <string name="pref_title_debugging">Enable debugging</string>
+    <string name="pref_summary_debugging">Enable popups and send additional information to logcat</string>
+
+    <string name="pref_header_usb">USB connection</string>
+    <string name="pref_title_usb_communication_enabled">Enable USB communication</string>
+    <string name="pref_default_usb_baud_rate" translatable="false">9600</string>
+    <string name="pref_title_usb_baud_rate">Serial port baud rate</string>
+
+    <string name="pref_header_bluetooth">Bluetooth connection</string>
+    <string name="pref_title_bluetooth_communication_enabled">Enable Bluetooth communication</string>
+    <string name="pref_title_bluetooth_device">Bluetooth device</string>
+    <string name="no_device">No device</string>
+    <string name="pref_template_bluetooth_device_list_item" translatable="false">%1$s [ %2$s ]</string>
+    <string name="pref_title_bluetooth_adapter_turn_on">Turn on bluetooth adapter</string>
+    <string name="pref_summary_bluetooth_adapter_turn_on">Turn on bluetooth adapter on Service create, if it is off</string>
+
+    <string name="pref_header_web_socket">WebSocket connection</string>
+    <string name="pref_title_web_socket_communication_enabled">Enable WebSocket communication</string>
+    <string name="pref_title_web_server_port">Port number</string>
+    <string name="pref_default_web_server_port" translatable="false">5000</string>
+    <string name="web_server_info" translatable="false">WebServer: <b>%s:%d</b>\r\nWebSocket: <b>%s:%d/ws</b></string>
+    <string name="web_socket_info" translatable="false">WebSocket server address: <b>%s:%d/ws</b></string>
+
+</resources>

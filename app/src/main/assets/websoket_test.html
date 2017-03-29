@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+    <head>
+        <title>SerialManager WebSoket тест</title>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+        <h1>Тест соединения через WebSoket</h1>
+
+        <div>
+            <p>Укажите адрес websocket сервера, например: <i>192.168.137.1:5000/ws</i></p>
+            <input type="text" id="server-address" value="{{address}}"> <button id="server-connect">Установить соединение</button>
+        </div>
+
+        <br><br>
+
+        <div>
+            <input type="text" id="message" disabled> <button id="send-message" disabled>Отправить данные</button>
+        </div>
+
+        <div>
+            <h3>Лог</h3>
+            <textarea id="log" cols="64" rows="16" readonly></textarea>
+            <br>
+            <button id="clear-log">Очистить лог</button>
+        </div>
+
+        <script>
+            'use strict';
+
+            Date.prototype.getTime = function () {
+                 return ((this.getHours() < 10)?'0':'') + this.getHours() + ':' + ((this.getMinutes() < 10)?'0':'') + this.getMinutes() + ':'+ ((this.getSeconds() < 10)?'0':'') + this.getSeconds();
+            }
+
+            var socket,
+                serverAddress = document.querySelector('#server-address'),
+                connectButton = document.querySelector('#server-connect'),
+                messageInput  = document.querySelector('#message'),
+                sendMessageButton = document.querySelector('#send-message'),
+
+                logElement    = document.querySelector('#log'),
+                logClearButton = document.querySelector('#clear-log'),
+                log = function (type, message) {
+                    logElement.value += (new Date()).getTime() + ' | ' + type + ' ' + message + '\r\n';
+                    logElement.scrollTop = logElement.scrollHeight;
+                };
+
+            connectButton.onclick = function() {
+                if (socket != null) {
+                    socket.close();
+                }
+
+                messageInput.setAttribute('disabled', 'disabled');
+                sendMessageButton.setAttribute('disabled', 'disabled');
+
+                var address = serverAddress.value.trim();
+
+                if (address != '') {
+                    socket = new WebSocket('ws://' + address);
+                    socket.onopen = function() {
+                        messageInput.removeAttribute('disabled');
+                        sendMessageButton.removeAttribute('disabled');
+
+                        log('><', 'Соединение успешно установлено');
+                    };
+
+                    socket.onclose = function(event) {
+                        if (event.wasClean) {
+                            log('<>', 'Соединение завершено');
+                        } else {
+                            log('||', 'Соединение оборвано');
+                        }
+
+                        messageInput.setAttribute('disabled', 'disabled');
+                        sendMessageButton.setAttribute('disabled', 'disabled');
+                        //console.log('Код: ' + event.code + ' | Причина: ' + event.reason);
+                    };
+
+                    socket.onmessage = function(event) {
+                        log('<<', event.data);
+                    };
+
+                    socket.onerror = function(error) {
+                        log('**', error.message);
+                    };
+                }
+            };
+
+            sendMessageButton.onclick = function () {
+                if (socket != null) {
+                    var message = messageInput.value;
+
+                    socket.send(message);
+
+                    log('>>', message);
+                }
+            }
+
+            logClearButton.onclick = function () {
+                logElement.value = '';
+            }
+
+
+
+        </script>
+
+    </body>
+</html>

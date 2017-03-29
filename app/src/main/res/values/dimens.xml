@@ -1,0 +1,20 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="ic_clear_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="input_label_vertical_spacing">8dp</dimen>
+    <dimen name="input_label_horizontal_spacing">4dp</dimen>
+
+    <dimen name="form_max_width">-1dp</dimen>
+    <dimen name="form_element_icon_size">22dip</dimen>
+
+    <dimen name="notification_padding_top_bottom">8dp</dimen>
+    <dimen name="notification_padding_left_right">16dp</dimen>
+    <dimen name="notification_icon_size_app">16dp</dimen>
+    <dimen name="notification_icon_size_connected_type">20dp</dimen>
+
+    <!--<dimen name="vertical_margin_between_form_elements">16dp</dimen>-->
+</resources>

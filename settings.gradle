@@ -1,0 +1,2 @@
+include ':app', ':RootShell'
+project(':RootShell').projectDir = new File('app/libs/RootShell')

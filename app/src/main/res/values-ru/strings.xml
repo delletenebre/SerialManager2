@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="save">Сохранить</string>
+    <string name="command">Команда</string>
+    <string name="settings">Настройки</string>
+    <string name="send_report">Отправить отчёт</string>
+    <string name="error">Ошибка</string>
+
+    <string name="crash_toast_text">Упс! Возникла критическая ошибка, но Вы можете отправить информацию разработчику, что поможет (наверное) решить проблему.</string>
+    <string name="crash_dialog_title">Отправить отчёт?</string>
+    <string name="crash_dialog_text">Возникла непредвиденная критическая ошибка. Вы можете помочь решить её просто нажав OK. А если расскажите об обстоятельствах предшествующих возникновению ошибки, то будет вообще шик.</string>
+    <string name="crash_dialog_comment_prompt">Дополнительная информация:</string>
+    <string name="crash_dialog_ok_toast">Спасибо!</string>
+
+
+    <string name="notification_usb_connections_count">USB-соединения</string>
+    <string name="notification_bluetooth_connection_state">Bluetooth-соединение</string>
+    <string name="notification_web_socket_connections_count">WebSocket-соединения</string>
+    <string name="notification_default_connections_count">0</string>
+
+    <string name="app_chooser_no_app">[ Не выбрано ]</string>
+    <string name="app_chooser_title">Выберите приложение</string>
+    <string name="app_chooser_title_apps">Приложения</string>
+    <string name="app_chooser_title_shortcuts">Ярлыки</string>
+    <string name="app_chooser_toast_app_not_found">Приложение \"%1$s\" не установлено</string>
+
+    <string name="command_alert_empty_key_message">Пожалуйста, заполните поле \"Ключ\"</string>
+    <string name="command_autoset_key_and_value">Определить Ключ и Значение автоматически</string>
+    <string name="command_key">Ключ</string>
+    <string name="command_value">Значение</string>
+    <string name="command_scatter">Разброс</string>
+    <string name="command_intent_value_extra">Intent\'s \"value\" extra</string>
+    <string name="command_action">Действие</string>
+    <string-array name="array_command_actions">
+        <item>Нет действия</item>
+        <item>Запустить приложение</item>
+        <item>Нажатие клавиши</item>
+        <item>Консольная команда</item>
+        <item>Отправить данные</item>
+    </string-array>
+    <string name="command_emulated_key">Эмулируемая клавиша</string>
+    <string name="shell_command">Консольная команда</string>
+    <string name="send_data">Отправить данные</string>
+    <string name="command_noty_message">Текст уведомления</string>
+    <string name="command_noty_duration">Продолжительность</string>
+    <string name="command_noty_text_size">Размер</string>
+    <string name="command_noty_background_color">Цвет фона</string>
+    <string name="command_noty_text_color">Цвет текста</string>
+    <string name="horizontal_position">Позиция по горизонтали</string>
+    <string name="vertical_position">Позиция по вертикали</string>
+    <string name="noty_horiz_offset_title">Смещение по оси X</string>
+    <string name="noty_vert_offset_title">Смещение по оси Y</string>
+    <string-array name="array_position_horiz_titles">
+        <item>Слева</item>
+        <item>По центру</item>
+        <item>Справа</item>
+    </string-array>
+    <string-array name="array_position_vert_titles">
+        <item>Вверху</item>
+        <item>По центру</item>
+        <item>Внизу</item>
+    </string-array>
+
+
+    <!-- Strings related to Settings -->
+    <string name="title_activity_settings">@string/settings</string>
+
+    <string name="pref_header_general">Общие</string>
+    <string name="pref_title_start_on_boot">Запускать при загрузке</string>
+    <string name="pref_summary_start_on_boot">Запускать сервис по завершению загрузки устройства</string>
+    <string name="pref_title_start_on_boot_delay">Задержка запуска после загрузки (сек)</string>
+    <string name="pref_title_start_when_screen_on">Запускать при включении экрана</string>
+    <string name="pref_summary_start_when_screen_on"></string>
+    <string name="pref_title_start_when_screen_on_delay">Задержка после включения экрана (сек)</string>
+    <string name="pref_title_stop_when_screen_off">Останавливать при выключении экрана</string>
+    <string name="pref_summary_stop_when_screen_off"></string>
+    <string name="pref_title_stop_when_screen_off_delay">Задержка после выключения экрана (сек)</string>
+    <string name="pref_title_debugging">Отладка</string>
+    <string name="pref_summary_debugging">Включить всплывающие окна и отправлять дополнительную информацию в logcat</string>
+
+    <string name="pref_header_usb">USB соединение</string>
+    <string name="pref_title_usb_communication_enabled">Включить USB соединение</string>
+    <string name="pref_title_usb_baud_rate">Скорость серийного порта</string>
+
+    <string name="pref_header_bluetooth">Bluetooth соединение</string>
+    <string name="pref_title_bluetooth_communication_enabled">Включить Bluetooth соединение</string>
+    <string name="pref_title_bluetooth_device">Bluetooth устройство</string>
+    <string name="no_device">Нет</string>
+    <string name="pref_title_bluetooth_adapter_turn_on">Включать bluetooth</string>
+    <string name="pref_summary_bluetooth_adapter_turn_on">Включать bluetooth при запуске сервиса, если он был выключен</string>
+
+    <string name="pref_header_web_socket">WebSocket соединение</string>
+    <string name="pref_title_web_socket_communication_enabled">Включить WebSocket соединение</string>
+    <string name="pref_title_web_server_port">Номер порта</string>
+</resources>

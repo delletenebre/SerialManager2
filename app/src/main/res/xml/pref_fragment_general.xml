@@ -1,0 +1,52 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference android:key="start_on_boot"
+        android:defaultValue="@bool/pref_default_start_on_boot"
+        android:title="@string/pref_title_start_on_boot"
+        android:summary="@string/pref_summary_start_on_boot" />
+
+    <EditTextPreference android:key="start_on_boot_delay"
+        android:dependency="start_on_boot"
+        android:defaultValue="@string/pref_default_start_on_boot_delay"
+        android:title="@string/pref_title_start_on_boot_delay"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:singleLine="true" />
+
+    <CheckBoxPreference android:key="start_when_screen_on"
+        android:defaultValue="@bool/pref_default_start_when_screen_on"
+        android:title="@string/pref_title_start_when_screen_on"
+        android:summary="@string/pref_summary_start_when_screen_on" />
+
+    <EditTextPreference android:key="start_when_screen_on_delay"
+        android:dependency="start_when_screen_on"
+        android:defaultValue="@string/pref_default_start_when_screen_on_delay"
+        android:title="@string/pref_title_start_when_screen_on_delay"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:singleLine="true" />
+
+    <CheckBoxPreference android:key="stop_when_screen_off"
+        android:defaultValue="@bool/pref_default_stop_when_screen_off"
+        android:title="@string/pref_title_stop_when_screen_off"
+        android:summary="@string/pref_summary_stop_when_screen_off" />
+
+    <EditTextPreference android:key="stop_when_screen_off_delay"
+        android:dependency="stop_when_screen_off"
+        android:defaultValue="@string/pref_default_stop_when_screen_off_delay"
+        android:title="@string/pref_title_stop_when_screen_off_delay"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:singleLine="true" />
+
+
+    <!--<CheckBoxPreference android:key="volume_show_ui"-->
+        <!--android:defaultValue="true"-->
+        <!--android:title="@string/pref_title_volume_show_ui" />-->
+
+    <CheckBoxPreference android:key="debugging"
+        android:defaultValue="@bool/pref_default_debugging"
+        android:title="@string/pref_title_debugging"
+        android:summary="@string/pref_summary_debugging" />
+
+</PreferenceScreen>

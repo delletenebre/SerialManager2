@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference android:key="usb_communication_enabled"
+        android:defaultValue="@bool/pref_default_usb_communication_enabled"
+        android:title="@string/pref_title_usb_communication_enabled" />
+
+    <EditTextPreference android:key="usb_baud_rate"
+        android:dependency="usb_communication_enabled"
+        android:defaultValue="@string/pref_default_usb_baud_rate"
+        android:inputType="numberSigned"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:title="@string/pref_title_usb_baud_rate" />
+
+</PreferenceScreen>

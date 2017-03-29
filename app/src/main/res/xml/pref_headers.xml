@@ -1,0 +1,23 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <header
+        android:fragment="kg.delletenebre.serialmanager2.SettingsActivity$GeneralPreferenceFragment"
+        android:icon="@drawable/ic_build_black_24dp"
+        android:title="@string/pref_header_general" />
+
+    <header
+        android:fragment="kg.delletenebre.serialmanager2.SettingsActivity$UsbPreferenceFragment"
+        android:icon="@drawable/ic_usb"
+        android:title="@string/pref_header_usb" />
+
+    <header
+        android:fragment="kg.delletenebre.serialmanager2.SettingsActivity$BluetoothPreferenceFragment"
+        android:icon="@drawable/ic_bluetooth_black_24dp"
+        android:title="@string/pref_header_bluetooth" />
+
+    <header
+        android:fragment="kg.delletenebre.serialmanager2.SettingsActivity$WebSocketPreferenceFragment"
+        android:icon="@drawable/ic_language_black_24dp"
+        android:title="@string/pref_header_web_socket" />
+
+</preference-headers>

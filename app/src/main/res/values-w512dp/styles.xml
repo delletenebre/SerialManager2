@@ -1,0 +1,5 @@
+<resources>
+    <style name="MaxWidthStyle">
+        <item name="android:layout_width">480dp</item>
+    </style>
+</resources>

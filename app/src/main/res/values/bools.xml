@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="pref_default_usb_communication_enabled">true</bool>
+    <bool name="pref_default_bluetooth_communication_enabled">true</bool>
+    <bool name="pref_default_bluetooth_adapter_turn_on">true</bool>
+    <bool name="pref_default_web_socket_communication_enabled">false</bool>
+    <bool name="pref_default_debugging">false</bool>
+    <bool name="pref_default_start_on_boot">true</bool>
+    <bool name="pref_default_start_when_screen_on">true</bool>
+    <bool name="pref_default_stop_when_screen_off">true</bool>
+</resources>

@@ -1,0 +1,237 @@
+[
+  {
+    "name": "unknown",
+    "linuxCode": 240,
+    "androidCode": 0
+  },
+  {
+    "name": "App Switch",
+    "linuxCode": 580,
+    "androidCode": 187
+  },
+  {
+    "name": "Alt + Tab",
+    "linuxCode": -2,
+    "androidCode": -2
+  },
+  {
+    "name": "Alt + Tab .. Tab ...",
+    "linuxCode": -2,
+    "androidCode": -2
+  },
+  {
+    "name": "Tab",
+    "linuxCode": 15,
+    "androidCode": 61
+  },
+  {
+    "name": "Assist",
+    "linuxCode": -1,
+    "androidCode": 219
+  },
+  {
+    "name": "Voice Assist (>= 5.0)",
+    "linuxCode": 582,
+    "androidCode": 231
+  },
+  {
+    "name": "Search",
+    "linuxCode": 217,
+    "androidCode": 84
+  },
+  {
+    "name": "Menu",
+    "linuxCode": 139,
+    "androidCode": 82
+  },
+  {
+    "name": "Home",
+    "linuxCode": 102,
+    "androidCode": 3
+  },
+  {
+    "name": "Homepage",
+    "linuxCode": 172,
+    "androidCode": 0
+  },
+  {
+    "name": "Back",
+    "linuxCode": 158,
+    "androidCode": 4
+  },
+  {
+    "name": "Forward",
+    "linuxCode": 159,
+    "androidCode": 125
+  },
+  {
+    "name": "Brightness Up",
+    "linuxCode": 225,
+    "androidCode": 221
+  },
+  {
+    "name": "Brightness Down",
+    "linuxCode": 224,
+    "androidCode": 220
+  },
+  {
+    "name": "Call",
+    "linuxCode": 169,
+    "androidCode": 5
+  },
+  {
+    "name": "End Call",
+    "linuxCode": -1,
+    "androidCode": 6
+  },
+  {
+    "name": "Headsethook",
+    "linuxCode": 226,
+    "androidCode": 79
+  },
+  {
+    "name": "DPad Up",
+    "linuxCode": 103,
+    "androidCode": 19
+  },
+  {
+    "name": "DPad Down",
+    "linuxCode": 108,
+    "androidCode": 20
+  },
+  {
+    "name": "DPad Left",
+    "linuxCode": 105,
+    "androidCode": 21
+  },
+  {
+    "name": "DPad Right",
+    "linuxCode": 106,
+    "androidCode": 22
+  },
+  {
+    "name": "DPad Center",
+    "linuxCode": 353,
+    "androidCode": 23
+  },
+  {
+    "name": "Page Up",
+    "linuxCode": 104,
+    "androidCode": 92
+  },
+  {
+    "name": "Page Down",
+    "linuxCode": 109,
+    "androidCode": 93
+  },
+  {
+    "name": "Enter",
+    "linuxCode": 28,
+    "androidCode": 66
+  },
+  {
+    "name": "Escape",
+    "linuxCode": 1,
+    "androidCode": 111
+  },
+  {
+    "name": "Media fast-forward",
+    "linuxCode": 208,
+    "androidCode": 90
+  },
+  {
+    "name": "Media next",
+    "linuxCode": 163,
+    "androidCode": 87
+  },
+  {
+    "name": "Media play/pause",
+    "linuxCode": 164,
+    "androidCode": 85
+  },
+  {
+    "name": "Media play",
+    "linuxCode": 207,
+    "androidCode": 126
+  },
+  {
+    "name": "Media pause",
+    "linuxCode": 119,
+    "androidCode": 127
+  },
+  {
+    "name": "Media stop",
+    "linuxCode": 128,
+    "androidCode": 86
+  },
+  {
+    "name": "Media previous",
+    "linuxCode": 165,
+    "androidCode": 88
+  },
+  {
+    "name": "Media rewind",
+    "linuxCode": 168,
+    "androidCode": 89
+  },
+  {
+    "name": "Media record",
+    "linuxCode": 167,
+    "androidCode": 130
+  },
+  {
+    "name": "Volume Up",
+    "linuxCode": 115,
+    "androidCode": 24
+  },
+  {
+    "name": "Volume Down",
+    "linuxCode": 114,
+    "androidCode": 25
+  },
+  {
+    "name": "Volume Mute",
+    "linuxCode": 113,
+    "androidCode": 164
+  },
+  {
+    "name": "Mute Microphone",
+    "linuxCode": 248,
+    "androidCode": 91
+  },
+  {
+    "name": "Notification",
+    "linuxCode": -1,
+    "androidCode": 83
+  },
+  {
+    "name": "Power",
+    "linuxCode": 116,
+    "androidCode": 26
+  },
+  {
+    "name": "Power (alt)",
+    "linuxCode": 356,
+    "androidCode": -1
+  },
+  {
+    "name": "Sleep (>= 4.4W)",
+    "linuxCode": 142,
+    "androidCode": 223
+  },
+  {
+    "name": "Wakeup (>= 5.0)",
+    "linuxCode": 143,
+    "androidCode": 224
+  },
+  {
+    "name": "Zoom In",
+    "linuxCode": 418,
+    "androidCode": 168
+  },
+  {
+    "name": "Zoom Out",
+    "linuxCode": 419,
+    "androidCode": 169
+  }
+]
