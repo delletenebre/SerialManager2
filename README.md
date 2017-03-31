@@ -38,7 +38,7 @@ void loop() {
 
 ## Serial Manager → Arduino
 
-#### Запуск и завершение соединения
+### Запуск и завершение соединения
 При включенной опции `Отправлять состояния соединения`, на контроллер, при каждом успешном
 соединении, будет отправлено сообщение
 `kg.serial.manager.connection_established`.
@@ -47,7 +47,7 @@ void loop() {
 `kg.serial.manager.connection_lost`.
 
 
-#### Датчик света
+### Датчик света
 При включенной опции `Отправлять данные датчика освещённости`, на контроллер будут отправлены:
 * `light_sensor_value:{value}`, где `{value}` значение датчика в люксах;
 * `light_sensor_mode:{mode}`, где `{mode}` число от 0 до 7:
@@ -82,4 +82,5 @@ Broadcast Intent'ы:
 * [UsbSerial](https://github.com/felHR85/UsbSerial)
 
 ## Альтернативы
+* [Serial Manager](https://github.com/delletenebre/SerialManager)
 * [Remote Inputs Manager / Remote steering wheel control](http://forum.xda-developers.com/showthread.php?t=2635159)
