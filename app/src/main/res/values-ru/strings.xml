@@ -92,4 +92,9 @@
     <string name="pref_header_web_socket">WebSocket соединение</string>
     <string name="pref_title_web_socket_communication_enabled">Включить WebSocket соединение</string>
     <string name="pref_title_web_server_port">Номер порта</string>
+
+    <string name="pref_header_controller_communication">Взаимодействие с конроллером</string>
+    <string name="pref_title_send_connection_state">Отправлять состояния соединения</string>
+    <string name="pref_summary_send_connection_state">Отправлять сообщение \"kg.serial.manager.connection_established\" на контроллер при упешном соединении\nи \"kg.serial.manager.connection_lost\" при завершении работы сервиса</string>
+    <string name="pref_title_send_light_sensor_data">Отправлять данные датчика освещённости</string>
 </resources>

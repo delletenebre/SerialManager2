@@ -183,7 +183,8 @@ public class SettingsActivity extends PreferenceActivity {
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || UsbPreferenceFragment.class.getName().equals(fragmentName)
                 || BluetoothPreferenceFragment.class.getName().equals(fragmentName)
-                || WebSocketPreferenceFragment.class.getName().equals(fragmentName);
+                || WebSocketPreferenceFragment.class.getName().equals(fragmentName)
+                || ControllerPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     public static class GeneralPreferenceFragment extends PreferenceFragment {
@@ -229,6 +230,17 @@ public class SettingsActivity extends PreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference("web_server_port"));
+        }
+    }
+
+    public static class ControllerPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_fragment_controller_communication);
+            setHasOptionsMenu(true);
+
+            //bindPreferenceSummaryToValue(findPreference("web_server_port"));
         }
     }
 }

@@ -8,4 +8,6 @@
     <bool name="pref_default_start_on_boot">true</bool>
     <bool name="pref_default_start_when_screen_on">true</bool>
     <bool name="pref_default_stop_when_screen_off">true</bool>
+    <bool name="pref_default_send_connection_state">false</bool>
+    <bool name="pref_default_send_light_sensor_data">false</bool>
 </resources>

@@ -82,6 +82,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String ACTION_APP_STARTED = "kg.serial.manager.app_started";
     public static final String ACTION_SERVICE_STARTED = "kg.serial.manager.started";
     public static final String ACTION_SERVICE_STOPPED = "kg.serial.manager.stopped";
+    public static final String ACTION_CONNECTION_ESTABLISHED = "kg.serial.manager.connection_established";
+    public static final String ACTION_CONNECTION_LOST = "kg.serial.manager.connection_lost";
 
     private static boolean sDebugEnabled = false;
     public static boolean isDebugEnabled() {

@@ -20,4 +20,9 @@
         android:icon="@drawable/ic_language_black_24dp"
         android:title="@string/pref_header_web_socket" />
 
+    <header
+        android:fragment="kg.delletenebre.serialmanager2.SettingsActivity$ControllerPreferenceFragment"
+        android:icon="@drawable/ic_circuit_board"
+        android:title="@string/pref_header_controller_communication" />
+
 </preference-headers>

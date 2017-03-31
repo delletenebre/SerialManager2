@@ -1,0 +1,13 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference android:key="send_connection_state"
+        android:defaultValue="@bool/pref_default_send_connection_state"
+        android:title="@string/pref_title_send_connection_state"
+        android:summary="@string/pref_summary_send_connection_state" />
+
+    <CheckBoxPreference android:key="send_light_sensor_data"
+        android:defaultValue="@bool/pref_default_send_light_sensor_data"
+        android:title="@string/pref_title_send_light_sensor_data"
+        android:summary="@string/pref_summary_send_light_sensor_data" />
+
+</PreferenceScreen>

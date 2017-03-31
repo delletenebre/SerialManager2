@@ -18,7 +18,7 @@
   * Отправка данных на контроллер
   
 
-## Arduino → Android
+## Arduino → Serial Manager
 Формат отправляемой команды: `<key:value>`
 
 Пример простого скетча для ардуино:
@@ -35,6 +35,35 @@ void loop() {
   delay(3000);
 }
 ```
+
+## Serial Manager → Arduino
+
+#### Запуск и завершение соединения
+При включенной опции `Отправлять состояния соединения`, на контроллер, при каждом успешном
+соединении, будет отправлено сообщение
+`kg.serial.manager.connection_established`.
+
+При завершении работы сервиса, на все подключенные контроллеры будет отправлено сообщение
+`kg.serial.manager.connection_lost`.
+
+
+#### Датчик света
+При включенной опции `Отправлять данные датчика освещённости`, на контроллер будут отправлены:
+* `light_sensor_value:{value}`, где `{value}` значение датчика в люксах;
+* `light_sensor_mode:{mode}`, где `{mode}` число от 0 до 7:
+  * 0 - [LIGHT_NO_MOON](https://developer.android.com/reference/android/hardware/SensorManager.html#LIGHT_NO_MOON)
+  * 1 - [LIGHT_FULLMOON](https://developer.android.com/reference/android/hardware/SensorManager.html#LIGHT_FULLMOON)
+  * 2 - [LIGHT_CLOUDY](https://developer.android.com/reference/android/hardware/SensorManager.html#LIGHT_CLOUDY)
+  * 3 - [LIGHT_SUNRISE](https://developer.android.com/reference/android/hardware/SensorManager.html#LIGHT_SUNRISE)
+  * 4 - [LIGHT_OVERCAST](https://developer.android.com/reference/android/hardware/SensorManager.html#LIGHT_OVERCAST)
+  * 5 - [LIGHT_SHADE](https://developer.android.com/reference/android/hardware/SensorManager.html#LIGHT_SHADE)
+  * 6 - [LIGHT_SUNLIGHT](https://developer.android.com/reference/android/hardware/SensorManager.html#LIGHT_SUNLIGHT)
+  * 7 - [LIGHT_SUNLIGHT_MAX](https://developer.android.com/reference/android/hardware/SensorManager.html#LIGHT_SUNLIGHT_MAX)
+
+Сообщения датчика освещённости отправляются не чаще одного раза в 3 секунды и только при значительном изменении освещения, т.е. при
+смене значения `{mode}`.
+
+
 
 ## Serial Manager → Android
 Broadcast Intent'ы:

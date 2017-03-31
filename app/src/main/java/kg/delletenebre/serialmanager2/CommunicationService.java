@@ -197,7 +197,9 @@ public class CommunicationService extends Service implements SensorEventListener
 
     @Override
     public void onDestroy() {
-        sendData(App.ACTION_SERVICE_STOPPED);
+        if (isConnectionStateMessageEnabled()) {
+            sendData(App.ACTION_CONNECTION_LOST);
+        }
 
         unregisterReceiver(mBroadcastReceiver);
         stopUsbCommunication();
@@ -404,7 +406,9 @@ public class CommunicationService extends Service implements SensorEventListener
 //            } catch (InterruptedException e) {
 //                e.printStackTrace();
 //            }
-
+            if (isConnectionStateMessageEnabled()) {
+                serialDevice.write((App.ACTION_CONNECTION_ESTABLISHED + "\n").getBytes());
+            }
             updateNotificationText();
 
             return true;
@@ -431,6 +435,9 @@ public class CommunicationService extends Service implements SensorEventListener
             mBluetothConnection.setConnectionListener(new BluetoothConnection.ConnectionListener() {
                 @Override
                 public void onDeviceConnected(String name, String address) {
+                    if (isConnectionStateMessageEnabled()) {
+                        bluetoothSend(App.ACTION_CONNECTION_ESTABLISHED);
+                    }
                     updateNotificationText();
                 }
 
@@ -529,6 +536,9 @@ public class CommunicationService extends Service implements SensorEventListener
                     }
                 });
                 mWebSockets.add(webSocket);
+                if (isConnectionStateMessageEnabled()) {
+                    webSocket.send(App.ACTION_CONNECTION_ESTABLISHED);
+                }
                 updateNotificationText();
             }
         });
@@ -586,17 +596,26 @@ public class CommunicationService extends Service implements SensorEventListener
             }
 
             if (mLastLightSensorMode != mode
-                    && System.currentTimeMillis() - mLastLightSensorMillis > 2500) {
+                    && System.currentTimeMillis() - mLastLightSensorMillis > 3000) {
                 mLastLightSensorMillis = System.currentTimeMillis();
                 mLastLightSensorMode = mode;
 
-                sendData(String.format(Locale.getDefault(),
-                        getString(R.string.send_data_to_controller_format),
-                        "light_sensor_value", String.valueOf(value)));
-                sendData(String.format(Locale.getDefault(),
-                        getString(R.string.send_data_to_controller_format),
-                        "light_sensor_mode", String.valueOf(mode)));
+                if (mPrefs != null && mPrefs.getBoolean("send_light_sensor_data",
+                        getResources().getBoolean(R.bool.pref_default_send_light_sensor_data))) {
+                    sendData(String.format(Locale.getDefault(),
+                            getString(R.string.send_data_to_controller_format),
+                            "light_sensor_value", String.valueOf(value)));
+                    sendData(String.format(Locale.getDefault(),
+                            getString(R.string.send_data_to_controller_format),
+                            "light_sensor_mode", String.valueOf(mode)));
+                }
             }
         }
+    }
+
+
+    private boolean isConnectionStateMessageEnabled() {
+        return mPrefs != null && mPrefs.getBoolean("send_connection_state",
+                getResources().getBoolean(R.bool.pref_default_send_connection_state));
     }
 }

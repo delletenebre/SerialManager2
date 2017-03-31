@@ -41,6 +41,7 @@
         </activity>
         <activity
             android:name=".commands.EditActivity"
+            android:label="@string/command"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -28,7 +28,7 @@ class NotyOverlay {
     private int mShowDuration = 5000;
 
 
-    public NotyOverlay(Context context) {
+    NotyOverlay(Context context) {
         mContext = context;
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
 
@@ -61,12 +61,12 @@ class NotyOverlay {
         return this;
     }
 
-    public NotyOverlay setBackgroundColor(int color) {
+    NotyOverlay setBackgroundColor(int color) {
         mNotificationLayout.setBackgroundColor(color);
         return this;
     }
 
-    public NotyOverlay setPosition(int positionX, int positionY,
+    NotyOverlay setPosition(int positionX, int positionY,
                                    int offsetX, int offsetY) {
         mNotificationLayoutParams.gravity = getGravity(positionX, positionY);
         mNotificationLayoutParams.x = offsetX;
@@ -74,7 +74,7 @@ class NotyOverlay {
         return this;
     }
 
-    public void show(String message, int duration) {
+    void show(String message, int duration) {
         if (Build.VERSION.SDK_INT < 23
                 || (Build.VERSION.SDK_INT >= 23 && Settings.canDrawOverlays(mContext))) {
 
