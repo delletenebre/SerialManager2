@@ -97,4 +97,6 @@
     <string name="pref_title_send_connection_state">Отправлять состояния соединения</string>
     <string name="pref_summary_send_connection_state">Отправлять сообщение \"kg.serial.manager.connection_established\" на контроллер при упешном соединении\nи \"kg.serial.manager.connection_lost\" при завершении работы сервиса</string>
     <string name="pref_title_send_light_sensor_data">Отправлять данные датчика освещённости</string>
+    <string name="pref_title_send_screen_state">Отправлять состояние экрана</string>
+    <string name="pref_summary_send_screen_state">Отправлять \"screen:on\" при включении экрана и \"screen:off\" при выключении</string>
 </resources>

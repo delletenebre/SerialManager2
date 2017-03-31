@@ -122,5 +122,7 @@
     <string name="pref_summary_send_connection_state">Send \"kg.serial.manager.connection_established\" to controller when connection established\nand \"kg.serial.manager.connection_lost\" on service stop</string>
     <string name="pref_title_send_light_sensor_data">Send light sensor data</string>
     <string name="pref_summary_send_light_sensor_data" translatable="false">light_sensor_value:12345\nlight_sensor_mode:0–7</string>
+    <string name="pref_title_send_screen_state">Send screen state</string>
+    <string name="pref_summary_send_screen_state">Send \"screen:on\" when screen turns on and \"screen:off\" when screen turns off</string>
 
 </resources>

@@ -19,7 +19,10 @@ public class EventsReceiver extends BroadcastReceiver {
         final App app = App.getInstance();
         SharedPreferences prefs = App.getInstance().getPrefs();
         Resources resources = app.getResources();
-        final boolean debug = prefs.getBoolean("debugging", resources.getBoolean(R.bool.pref_default_debugging));
+        final boolean debug = prefs.getBoolean("debugging",
+                resources.getBoolean(R.bool.pref_default_debugging));
+        boolean sendScreenState = prefs.getBoolean("send_screen_state",
+                resources.getBoolean(R.bool.pref_default_send_screen_state));
         final boolean startOnBoot = prefs.getBoolean("start_on_boot",
                 app.getResources().getBoolean(R.bool.pref_default_start_on_boot));
         final boolean startWhenScreenOn = prefs.getBoolean("start_when_screen_on",
@@ -54,10 +57,12 @@ public class EventsReceiver extends BroadcastReceiver {
             case Intent.ACTION_SCREEN_ON:
                 App.logStatus("Screen state", "ON");
 
-                sendIntent.putExtra("data", String.format(Locale.getDefault(),
-                        context.getString(R.string.send_data_to_controller_format),
-                        "screen", "on"));
-                context.sendBroadcast(sendIntent);
+                if (sendScreenState) {
+                    sendIntent.putExtra("data", String.format(Locale.getDefault(),
+                            context.getString(R.string.send_data_to_controller_format),
+                            "screen", "on"));
+                    context.sendBroadcast(sendIntent);
+                }
 
                 if (startWhenScreenOn && (!startOnBoot
                         || SystemClock.uptimeMillis() > 150000
@@ -76,10 +81,12 @@ public class EventsReceiver extends BroadcastReceiver {
             case Intent.ACTION_SCREEN_OFF:
                 App.logStatus("Screen state", "OFF");
 
-                sendIntent.putExtra("data", String.format(Locale.getDefault(),
-                        context.getString(R.string.send_data_to_controller_format),
-                        "screen", "off"));
-                context.sendBroadcast(sendIntent);
+                if (sendScreenState) {
+                    sendIntent.putExtra("data", String.format(Locale.getDefault(),
+                            context.getString(R.string.send_data_to_controller_format),
+                            "screen", "off"));
+                    context.sendBroadcast(sendIntent);
+                }
 
                 if (stopWhenScreenOff) {
                     new Handler().postDelayed(new Runnable() {

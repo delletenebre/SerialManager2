@@ -10,4 +10,9 @@
         android:title="@string/pref_title_send_light_sensor_data"
         android:summary="@string/pref_summary_send_light_sensor_data" />
 
+    <CheckBoxPreference android:key="send_screen_state"
+        android:defaultValue="@bool/pref_default_send_screen_state"
+        android:title="@string/pref_title_send_screen_state"
+        android:summary="@string/pref_summary_send_screen_state" />
+
 </PreferenceScreen>
