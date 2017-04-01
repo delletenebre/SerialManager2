@@ -23,8 +23,8 @@ android {
         applicationId "kg.delletenebre.serialmanager2"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 3
-        versionName "17.03.31"
+        versionCode 4
+        versionName "2.0.0"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
             cmake {
@@ -34,7 +34,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

@@ -1,7 +1,9 @@
 package kg.delletenebre.serialmanager2;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -10,9 +12,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,8 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
-
-import org.acra.ACRA;
 
 import java.lang.reflect.Field;
 
@@ -78,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+
+        new Updater().execute(this);
     }
 
     @Override
@@ -224,5 +228,40 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendCrashReport() {
         throw new RuntimeException("User report");
+    }
+
+    public void update(final String lastAppVersion) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage(String.format(getString(R.string.new_update_available), lastAppVersion))
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.yes),
+                                new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                String apkUrl = "https://raw.githubusercontent.com/delletenebre/SerialManager2/master/apk/SerialManager-" + lastAppVersion + ".apk";
+                                intent.setData(Uri.parse(apkUrl));
+
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.ignore_this_version),
+                                new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString(Updater.PREF_NAME_LAST_IGNORED_VERSION, lastAppVersion);
+                                editor.apply();
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
     }
 }
