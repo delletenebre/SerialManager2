@@ -4,7 +4,12 @@
     <string name="command">Команда</string>
     <string name="settings">Настройки</string>
     <string name="send_report">Отправить отчёт</string>
+    <string name="check_for_updates">Проверить обновления</string>
     <string name="error">Ошибка</string>
+    <string name="yes">Да</string>
+    <string name="ignore_this_version">Игнорировать эту версию</string>
+    <string name="new_update_available">Доступно обновление Serial Manager до версии %1$s. Желаете скачать APK-файл?</string>
+    <string name="no_updates_available">Вы пользуетесь самой свежей версией приложения</string>
 
     <string name="crash_toast_text">Упс! Возникла критическая ошибка, но Вы можете отправить информацию разработчику, что поможет (наверное) решить проблему.</string>
     <string name="crash_dialog_title">Отправить отчёт?</string>
@@ -66,6 +71,8 @@
     <string name="title_activity_settings">@string/settings</string>
 
     <string name="pref_header_general">Общие</string>
+    <string name="pref_title_check_for_updates">Проверять обновления</string>
+    <string name="pref_summary_check_for_updates">Автоматически проверять обновление при запуске программы</string>
     <string name="pref_title_start_on_boot">Запускать при загрузке</string>
     <string name="pref_summary_start_on_boot">Запускать сервис по завершению загрузки устройства</string>
     <string name="pref_title_start_on_boot_delay">Задержка запуска после загрузки (сек)</string>

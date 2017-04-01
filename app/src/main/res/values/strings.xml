@@ -5,10 +5,12 @@
     <string name="command">Command</string>
     <string name="settings">Settings</string>
     <string name="send_report">Send report</string>
+    <string name="check_for_updates">Check for updates</string>
     <string name="error">Error</string>
     <string name="yes">Yes</string>
     <string name="ignore_this_version">Ignore this version</string>
-    <string name="new_update_available">Доступно обновление приложения @string/app_name до версии %1$s - желаете обновиться? Если вы согласны - вы будете перенаправлены к скачиванию APK файла.</string>
+    <string name="new_update_available">Serial Manager v%1$s is available. Do you wish to download it?</string>
+    <string name="no_updates_available">You are using the latest version of the application</string>
 
     <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
     <string name="crash_dialog_title">Send Crash Report?</string>
@@ -85,6 +87,8 @@
     <string name="title_activity_settings">@string/settings</string>
 
     <string name="pref_header_general">General</string>
+    <string name="pref_title_check_for_updates">Check for updates</string>
+    <string name="pref_summary_check_for_updates">Automatically check for updates when app starts</string>
     <string name="pref_title_start_on_boot">Start on boot</string>
     <string name="pref_summary_start_on_boot">Start the service on device boot completed</string>
     <string name="pref_title_start_on_boot_delay">Start delay after boot (sec)</string>

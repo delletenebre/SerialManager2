@@ -81,7 +81,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        new Updater().execute(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("check_for_updates",
+                getResources().getBoolean(R.bool.pref_default_check_for_updates))) {
+            new Updater(false).execute(this);
+        }
     }
 
     @Override
@@ -102,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
             case R.id.report_crash:
                 sendCrashReport();
                 break;
+
+            case R.id.check_updates:
+                new Updater(true).execute(this);
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -259,6 +268,25 @@ public class MainActivity extends AppCompatActivity {
                                 dialog.cancel();
                             }
                         });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
+
+    public void showNoUpdatesAvailable() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage(getString(R.string.no_updates_available))
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.yes),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.dismiss();
+                                    }
+                                });
                 AlertDialog alert = builder.create();
                 alert.show();
             }

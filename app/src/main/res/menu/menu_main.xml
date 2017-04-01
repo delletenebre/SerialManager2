@@ -1,5 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
@@ -10,4 +9,8 @@
         android:id="@+id/report_crash"
         android:orderInCategory="101"
         android:title="@string/send_report" />
+    <item
+        android:id="@+id/check_updates"
+        android:orderInCategory="102"
+        android:title="@string/check_for_updates" />
 </menu>

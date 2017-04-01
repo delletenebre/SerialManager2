@@ -11,16 +11,21 @@ import java.io.InputStreamReader;
 import java.net.URL;
 
 class Updater extends AsyncTask<MainActivity, Void, Void> {
-    public static final String PREF_NAME_LAST_IGNORED_VERSION = "last_ignored_update_version";
+    static final String PREF_NAME_LAST_IGNORED_VERSION = "last_ignored_update_version";
 
     private String mVersionName = "";
+    private boolean mShowDialogIfNoUpdates = false;
+
+    Updater(boolean showDialogIfNoUpdates) {
+        mShowDialogIfNoUpdates = showDialogIfNoUpdates;
+    }
 
     protected Void doInBackground(MainActivity... activity) {
         checkUpdates(activity[0]);
         return null;
     }
 
-    Integer getLastAppVersion() {
+    private Integer getLastAppVersion() {
         int versionCode = -1;
         try {
             // Create a URL for the desired page
@@ -53,23 +58,22 @@ class Updater extends AsyncTask<MainActivity, Void, Void> {
         return versionCode;
     }
 
-    void checkUpdates(final MainActivity activity) {
+    private void checkUpdates(final MainActivity activity) {
         final Integer lastAppVersion = getLastAppVersion();
-        if (lastAppVersion == null)
-            return;
         if (lastAppVersion <= BuildConfig.VERSION_CODE) {
-            return;
+            if (!mShowDialogIfNoUpdates) {
+                return;
+            } else {
+                activity.showNoUpdatesAvailable();
+            }
         }
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         String lastIgnoredUpdateVersion = prefs.getString(PREF_NAME_LAST_IGNORED_VERSION, "");
-        if (!lastIgnoredUpdateVersion.isEmpty()) {
-            Integer liInt = Integer.parseInt(lastIgnoredUpdateVersion);
-            if (liInt >= lastAppVersion)
-                return;
+        if (!mShowDialogIfNoUpdates && lastIgnoredUpdateVersion.equals(mVersionName)) {
+            return;
         }
 
         activity.update(mVersionName);
     }
-
 }
