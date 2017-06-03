@@ -21,6 +21,11 @@
         android:title="@string/pref_header_web_socket" />
 
     <header
+        android:fragment="kg.delletenebre.serialmanager2.SettingsActivity$SerialPreferenceFragment"
+        android:icon="@drawable/ic_vga"
+        android:title="@string/pref_header_serial" />
+
+    <header
         android:fragment="kg.delletenebre.serialmanager2.SettingsActivity$ControllerPreferenceFragment"
         android:icon="@drawable/ic_circuit_board"
         android:title="@string/pref_header_controller_communication" />

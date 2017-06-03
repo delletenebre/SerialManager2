@@ -184,6 +184,7 @@ public class SettingsActivity extends PreferenceActivity {
                 || UsbPreferenceFragment.class.getName().equals(fragmentName)
                 || BluetoothPreferenceFragment.class.getName().equals(fragmentName)
                 || WebSocketPreferenceFragment.class.getName().equals(fragmentName)
+                || SerialPreferenceFragment.class.getName().equals(fragmentName)
                 || ControllerPreferenceFragment.class.getName().equals(fragmentName);
     }
 
@@ -230,6 +231,18 @@ public class SettingsActivity extends PreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference("web_server_port"));
+        }
+    }
+
+    public static class SerialPreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_fragment_serial_communication);
+            setHasOptionsMenu(true);
+
+            bindPreferenceSummaryToValue(findPreference("serial_path"));
+            bindPreferenceSummaryToValue(findPreference("serial_baud_rate"));
         }
     }
 

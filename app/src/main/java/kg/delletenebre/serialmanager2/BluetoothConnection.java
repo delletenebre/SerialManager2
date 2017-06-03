@@ -200,7 +200,7 @@ class BluetoothConnection {
                     try {
                         int data = mInputStream.read();
                         if (data > -1) {
-                            if (data == 0x0D || data == 0x0A) {
+                            if (data == App.CR || data == App.LF) {
                                 if (sb.length() > 0) {
                                     if (mDataReceivedListener != null) {
                                         mDataReceivedListener.onDataReceived(sb.toString());
@@ -297,21 +297,15 @@ class BluetoothConnection {
 
 
 
-    public boolean isEnabled() {
+    private boolean isEnabled() {
         return mBluetoothAdapter != null && mBluetoothAdapter.isEnabled();
     }
     BluetoothAdapter getBluetoothAdapter() {
         return mBluetoothAdapter;
     }
 
-    public void write(String data, boolean CRLF) {
-        if (mState == BluetoothState.CONNECTED) {
-            if (CRLF) {
-                data += "\r\n";
-            }
-
-            write(data.getBytes());
-        }
+    public void write(String data) {
+        write(data.getBytes());
     }
 
 }

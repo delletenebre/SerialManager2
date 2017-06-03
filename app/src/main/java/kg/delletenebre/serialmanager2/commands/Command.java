@@ -38,7 +38,7 @@ public class Command extends RealmObject {
     private String shellCommand;
     private String sendData;
     private String notyMessage;
-    private int notyDuration;
+    private float notyDuration;
     private int notyTextSize;
     private String notyBgColor;
     private String notyTextColor;
@@ -132,10 +132,13 @@ public class Command extends RealmObject {
         this.notyMessage = notyMessage;
     }
 
-    public int getNotyDuration() {
+    public float getNotyDuration() {
         return notyDuration;
     }
-    public void setNotyDuration(int notyDuration) {
+    public int getNotyDurationInMillis() {
+        return (int)(notyDuration * 1000);
+    }
+    public void setNotyDuration(float notyDuration) {
         this.notyDuration = notyDuration;
     }
 

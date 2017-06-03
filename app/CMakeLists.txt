@@ -10,9 +10,14 @@ cmake_minimum_required(VERSION 3.4.1)
 add_library( virtual-keyboard
              SHARED
              src/main/c/virtual-keyboard.c )
+add_library( serial-port
+             SHARED
+             src/main/c/serial-port.c )
 
 find_library( log-lib
               log )
 
-target_link_libraries( virtual-keyboard
-                       ${log-lib} )
+target_link_libraries(virtual-keyboard
+                      ${log-lib})
+target_link_libraries(serial-port
+                      ${log-lib})

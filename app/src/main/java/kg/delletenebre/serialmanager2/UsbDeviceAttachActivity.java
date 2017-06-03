@@ -3,7 +3,6 @@ package kg.delletenebre.serialmanager2;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.usb.UsbAccessory;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
@@ -18,9 +17,7 @@ public class UsbDeviceAttachActivity extends Activity {
         Intent intent = new Intent(getApplicationContext(), CommunicationService.class);
 
         UsbDevice usbDevice = getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE);
-        if (App.getInstance().getPrefs().getBoolean("usb_communication_enabled",
-                getResources().getBoolean(R.bool.pref_default_usb_communication_enabled)) &&
-                usbDevice != null && usbManager.hasPermission(usbDevice)) {
+        if (usbDevice != null && usbManager.hasPermission(usbDevice)) {
             intent.putExtra(CommunicationService.EXTRA_UPDATE_USB_CONNECTION, true);
         }
 

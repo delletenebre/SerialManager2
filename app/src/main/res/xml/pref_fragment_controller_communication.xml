@@ -1,5 +1,10 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <CheckBoxPreference android:key="crlf"
+        android:defaultValue="@bool/pref_default_crlf"
+        android:title="@string/pref_title_crlf"
+        android:summary="@string/pref_summary_crlf" />
+
     <CheckBoxPreference android:key="send_connection_state"
         android:defaultValue="@bool/pref_default_send_connection_state"
         android:title="@string/pref_title_send_connection_state"

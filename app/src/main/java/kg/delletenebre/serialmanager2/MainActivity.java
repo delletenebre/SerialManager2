@@ -103,6 +103,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
 
+            case R.id.restart_service:
+                Intent communicationServiceIntent = new Intent(this, CommunicationService.class);
+                stopService(communicationServiceIntent);
+                startService(communicationServiceIntent);
+                break;
+
             case R.id.report_crash:
                 sendCrashReport();
                 break;
@@ -243,33 +249,42 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage(String.format(getString(R.string.new_update_available), lastAppVersion))
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(String.format(getString(R.string.new_update_available), lastAppVersion))
                         .setCancelable(true)
                         .setPositiveButton(getString(R.string.yes),
                                 new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(Intent.ACTION_VIEW);
-                                String apkUrl = "https://raw.githubusercontent.com/delletenebre/SerialManager2/master/apk/SerialManager-" + lastAppVersion + ".apk";
-                                intent.setData(Uri.parse(apkUrl));
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                                        String apkUrl = "https://raw.githubusercontent.com/delletenebre/SerialManager2/master/apk/SerialManager-" + lastAppVersion + ".apk";
+                                        intent.setData(Uri.parse(apkUrl));
 
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(intent);
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton(getString(R.string.ignore_this_version),
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                        dialog.dismiss();
+                                    }
+                                }
+                        )
+                        .setNegativeButton(getString(R.string.no),
                                 new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                SharedPreferences.Editor editor = prefs.edit();
-                                editor.putString(Updater.PREF_NAME_LAST_IGNORED_VERSION, lastAppVersion);
-                                editor.apply();
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alert = builder.create();
-                alert.show();
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                }
+                        )
+                        .setNeutralButton(getString(R.string.ignore_this_version),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                                        SharedPreferences.Editor editor = prefs.edit();
+                                        editor.putString(Updater.PREF_NAME_LAST_IGNORED_VERSION, lastAppVersion);
+                                        editor.apply();
+                                        dialog.cancel();
+                                    }
+                                }
+                        )
+                        .create()
+                        .show();
             }
         });
     }
@@ -278,17 +293,18 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage(getString(R.string.no_updates_available))
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage(getString(R.string.no_updates_available))
                         .setCancelable(true)
-                        .setPositiveButton(getString(R.string.yes),
+                        .setPositiveButton(getString(R.string.awesome),
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
                                         dialog.dismiss();
                                     }
-                                });
-                AlertDialog alert = builder.create();
-                alert.show();
+                                }
+                        )
+                        .create()
+                        .show();
             }
         });
     }

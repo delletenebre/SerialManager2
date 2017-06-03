@@ -4,7 +4,6 @@ package kg.delletenebre.serialmanager2;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -26,7 +25,7 @@ class Updater extends AsyncTask<MainActivity, Void, Void> {
     }
 
     private Integer getLastAppVersion() {
-        int versionCode = -1;
+        int versionCode = BuildConfig.VERSION_CODE;
         try {
             // Create a URL for the desired page
             URL url = new URL("https://raw.githubusercontent.com/delletenebre/SerialManager2/master/app/build.gradle");
@@ -50,30 +49,27 @@ class Updater extends AsyncTask<MainActivity, Void, Void> {
             }
             in.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            App.logError(e.getLocalizedMessage());
         }
 
-        Log.d("*****", "versionCode: " + versionCode);
-        Log.d("*****", "versionName: " + mVersionName);
         return versionCode;
     }
 
     private void checkUpdates(final MainActivity activity) {
-        final Integer lastAppVersion = getLastAppVersion();
-        if (lastAppVersion <= BuildConfig.VERSION_CODE) {
+        if (getLastAppVersion() <= BuildConfig.VERSION_CODE) {
             if (!mShowDialogIfNoUpdates) {
                 return;
             } else {
                 activity.showNoUpdatesAvailable();
             }
-        }
+        } else {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+            String lastIgnoredUpdateVersion = prefs.getString(PREF_NAME_LAST_IGNORED_VERSION, "");
+            if (!mShowDialogIfNoUpdates && lastIgnoredUpdateVersion.equals(mVersionName)) {
+                return;
+            }
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-        String lastIgnoredUpdateVersion = prefs.getString(PREF_NAME_LAST_IGNORED_VERSION, "");
-        if (!mShowDialogIfNoUpdates && lastIgnoredUpdateVersion.equals(mVersionName)) {
-            return;
+            activity.update(mVersionName);
         }
-
-        activity.update(mVersionName);
     }
 }

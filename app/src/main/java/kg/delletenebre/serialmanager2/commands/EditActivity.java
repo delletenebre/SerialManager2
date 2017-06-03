@@ -13,7 +13,6 @@ import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -258,7 +257,7 @@ public class EditActivity extends AppCompatActivity implements ColorPickerDialog
                 try {
                     scatter = Float.parseFloat(mEditTextScatter.getText().toString());
                 } catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    App.logError(e.getLocalizedMessage());
                 }
                 mCommand.setScatter(scatter);
 
@@ -272,11 +271,11 @@ public class EditActivity extends AppCompatActivity implements ColorPickerDialog
 
                 mCommand.setNotyMessage(mEditTextNotyMessage.getText().toString());
 
-                int duration = 0;
+                float duration = 0;
                 try {
-                    duration = Integer.parseInt(mEditTextNotyDuration.getText().toString());
+                    duration = Float.parseFloat(mEditTextNotyDuration.getText().toString());
                 } catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    App.logError(e.getLocalizedMessage());
                 }
                 mCommand.setNotyDuration(duration);
 
@@ -284,7 +283,7 @@ public class EditActivity extends AppCompatActivity implements ColorPickerDialog
                 try {
                     textSize = Integer.parseInt(mEditTextNotyTextSize.getText().toString());
                 } catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    App.logError(e.getLocalizedMessage());
                 }
                 mCommand.setNotyTextSize(textSize);
 
@@ -298,7 +297,7 @@ public class EditActivity extends AppCompatActivity implements ColorPickerDialog
                 try {
                     offsetX = Integer.parseInt(mEditTextNotyOffsetX.getText().toString());
                 } catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    App.logError(e.getLocalizedMessage());
                 }
                 mCommand.setOffsetX(offsetX);
 
@@ -306,7 +305,7 @@ public class EditActivity extends AppCompatActivity implements ColorPickerDialog
                 try {
                     offsetY = Integer.parseInt(mEditTextNotyOffsetY.getText().toString());
                 } catch (Exception e) {
-                    Log.e(TAG, e.getLocalizedMessage());
+                    App.logError(e.getLocalizedMessage());
                 }
                 mCommand.setOffsetY(offsetY);
             }

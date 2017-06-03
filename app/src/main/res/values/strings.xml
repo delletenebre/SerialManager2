@@ -4,10 +4,13 @@
     <string name="save">Save</string>
     <string name="command">Command</string>
     <string name="settings">Settings</string>
+    <string name="restart_service">Restart Service</string>
     <string name="send_report">Send report</string>
     <string name="check_for_updates">Check for updates</string>
     <string name="error">Error</string>
     <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="awesome">Awesome</string>
     <string name="ignore_this_version">Ignore this version</string>
     <string name="new_update_available">Serial Manager v%1$s is available. Do you wish to download it?</string>
     <string name="no_updates_available">You are using the latest version of the application</string>
@@ -85,6 +88,17 @@
 
     <!-- Strings related to Settings -->
     <string name="title_activity_settings">@string/settings</string>
+    <string-array name="array_baud_rates" translatable="false">
+        <item>300</item>
+        <item>1200</item>
+        <item>2400</item>
+        <item>4800</item>
+        <item>9600</item>
+        <item>19200</item>
+        <item>38400</item>
+        <item>57600</item>
+        <item>115200</item>
+    </string-array>
 
     <string name="pref_header_general">General</string>
     <string name="pref_title_check_for_updates">Check for updates</string>
@@ -124,7 +138,16 @@
     <string name="web_server_info" translatable="false">WebServer: <b>%s:%d</b>\r\nWebSocket: <b>%s:%d/ws</b></string>
     <string name="web_socket_info" translatable="false">WebSocket server address: <b>%s:%d/ws</b></string>
 
+    <string name="pref_header_serial">Serial port (/dev/tty*)</string>
+    <string name="pref_title_serial_communication_enabled">Enable Serial communication</string>
+    <string name="pref_title_serial_path">Path</string>
+    <string name="pref_default_serial_path" translatable="false">/dev/ttyS0</string>
+    <string name="pref_title_serial_baud_rate">Serial port baud rate</string>
+    <string name="pref_default_serial_baud_rate" translatable="false">9600</string>
+
     <string name="pref_header_controller_communication">Controller communication</string>
+    <string name="pref_title_crlf">Add CR&#38;LF</string>
+    <string name="pref_summary_crlf">Add Carriage Return and Line Feed symbols to end of sending data</string>
     <string name="pref_title_send_connection_state">Send connection state messages</string>
     <string name="pref_summary_send_connection_state">Send \"kg.serial.manager.connection_established\" to controller when connection established\nand \"kg.serial.manager.connection_lost\" on service stop</string>
     <string name="pref_title_send_light_sensor_data">Send light sensor data</string>

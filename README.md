@@ -83,6 +83,28 @@ Broadcast Intent'ы:
   * `kg.serial.manager.started`
 * При остановке сервиса:
   * `kg.serial.manager.stopped`
+  
+  
+## Android → Serial Manager
+Чтобы отправить данные на контроллер из Вашего приложения, необходимо создать Intent со следующими
+параметрами:
+* Action: `kg.serial.manager.send`
+* Extras:
+  * `data` - сообщение, которое необходимо отправить на контроллер
+  * `id` - идентификатор конкретной операции, необязательный параметр.
+  
+
+Пример (Java):
+```java
+Intent intent = new Intent("kg.serial.manager.send");
+intent.putExtra("id", "1234");
+intent.putExtra("data", "message_for_controller");
+sendBroadcast(intent);
+```
+В случае, если был указан параметр `id`, то после обработки команды и попытки отправить данные на
+контроллер, Serial Manager создаст следующий Broadcast Intent:
+* Action: `kg.serial.manager.send.complete`
+* Extras: `id`
 
 
 ## Форматирование строк

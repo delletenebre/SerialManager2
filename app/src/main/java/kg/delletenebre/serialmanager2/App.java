@@ -39,6 +39,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import kg.delletenebre.serialmanager2.commands.Command;
+import kg.delletenebre.serialmanager2.commands.Migration;
 import kg.delletenebre.serialmanager2.utils.Utils;
 import kg.delletenebre.serialmanager2.utils.VirtualKeyboard;
 import kg.delletenebre.serialmanager2.view.AppChooserView;
@@ -78,12 +79,17 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     private static final String ACTION_COMMAND_RECEIVED = "kg.serial.manager.command_received";
     public static final String ACTION_SEND_DATA = "kg.serial.manager.send";
+    public static final String ACTION_SEND_DATA_COMPLETE = "kg.serial.manager.send.complete";
     public static final String ACTION_EXTERNAL_COMMAND = "kg.serial.manager.new_command";
     public static final String ACTION_APP_STARTED = "kg.serial.manager.app_started";
     public static final String ACTION_SERVICE_STARTED = "kg.serial.manager.started";
     public static final String ACTION_SERVICE_STOPPED = "kg.serial.manager.stopped";
     public static final String ACTION_CONNECTION_ESTABLISHED = "kg.serial.manager.connection_established";
     public static final String ACTION_CONNECTION_LOST = "kg.serial.manager.connection_lost";
+
+    public final static char CR  = (char) 0x0D;
+    public final static char LF  = (char) 0x0A;
+    public final static String CRLF  = "" + CR + LF;
 
     private static boolean sDebugEnabled = false;
     public static boolean isDebugEnabled() {
@@ -130,8 +136,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRealm = Realm.getInstance(new RealmConfiguration.Builder()
-                .schemaVersion(0)
-                .deleteRealmIfMigrationNeeded()
+                .schemaVersion(1)
+                .migration(new Migration())
+                //.deleteRealmIfMigrationNeeded()
                 .build());
 
         sDebugEnabled = mPrefs.getBoolean("debugging", false);
@@ -277,13 +284,14 @@ public class App extends Application implements Application.ActivityLifecycleCal
                             if (!mIsFullscreen) {
                                 String text = compileFormulas(
                                         replaceKeywords(command.getNotyMessage(), key, value));
-                                NotyOverlay noty = new NotyOverlay(this);
-                                noty.setPosition(command.getPositionX(), command.getPositionY(),
+
+                                new NotyOverlay(this)
+                                    .setPosition(command.getPositionX(), command.getPositionY(),
                                         command.getOffsetX(), command.getOffsetY())
-                                        .setTextSize(command.getNotyTextSize())
-                                        .setTextColor(Color.parseColor(command.getNotyTextColor()))
-                                        .setBackgroundColor(Color.parseColor(command.getNotyBgColor()))
-                                        .show(text, command.getNotyDuration() * 1000);
+                                    .setTextSize(command.getNotyTextSize())
+                                    .setTextColor(Color.parseColor(command.getNotyTextColor()))
+                                    .setBackgroundColor(Color.parseColor(command.getNotyBgColor()))
+                                    .show(text, command.getNotyDurationInMillis());
                             }
                         }
 
@@ -372,7 +380,27 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
     public int getIntPreference(String key) {
-        return getIntPreference(key, getString(Utils.getStringIdentifier(this, "pref_default_" + key)));
+        return getIntPreference(key,
+                getString(Utils.getStringIdentifier(this, "pref_default_" + key)));
+    }
+
+
+    public boolean getBooleanPreference(String key, boolean defaultValue) {
+        return mPrefs.getBoolean(key, defaultValue);
+    }
+
+    public boolean getBooleanPreference(String key) {
+        return getBooleanPreference(key,
+                getResources().getBoolean(Utils.getBooleanIdentifier(this, "pref_default_" + key)));
+    }
+
+    public String getStringPreference(String key, String defaultValue) {
+        return mPrefs.getString(key, defaultValue);
+    }
+
+    public String getStringPreference(String key) {
+        return getStringPreference(key,
+                getResources().getString(Utils.getStringIdentifier(this, "pref_default_" + key)));
     }
 
     public boolean isScreenOn() {

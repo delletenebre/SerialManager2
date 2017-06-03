@@ -3,10 +3,13 @@
     <string name="save">Сохранить</string>
     <string name="command">Команда</string>
     <string name="settings">Настройки</string>
+    <string name="restart_service">Перезапустить сервис</string>
     <string name="send_report">Отправить отчёт</string>
     <string name="check_for_updates">Проверить обновления</string>
     <string name="error">Ошибка</string>
     <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="awesome">Отлично</string>
     <string name="ignore_this_version">Игнорировать эту версию</string>
     <string name="new_update_available">Доступно обновление Serial Manager до версии %1$s. Желаете скачать APK-файл?</string>
     <string name="no_updates_available">Вы пользуетесь самой свежей версией приложения</string>
@@ -100,7 +103,14 @@
     <string name="pref_title_web_socket_communication_enabled">Включить WebSocket соединение</string>
     <string name="pref_title_web_server_port">Номер порта</string>
 
+    <string name="pref_header_serial">Последовательный порт (/dev/tty*)</string>
+    <string name="pref_title_serial_communication_enabled">Подключаться к порту</string>
+    <string name="pref_title_serial_path">Путь</string>
+    <string name="pref_title_serial_baud_rate">Скорость</string>
+
     <string name="pref_header_controller_communication">Взаимодействие с конроллером</string>
+    <string name="pref_title_crlf">Добавлять CR&#38;LF</string>
+    <string name="pref_summary_crlf">Добавлять управляющие символы CR и LF при отправке данных</string>
     <string name="pref_title_send_connection_state">Отправлять состояния соединения</string>
     <string name="pref_summary_send_connection_state">Отправлять сообщение \"kg.serial.manager.connection_established\" на контроллер при упешном соединении\nи \"kg.serial.manager.connection_lost\" при завершении работы сервиса</string>
     <string name="pref_title_send_light_sensor_data">Отправлять данные датчика освещённости</string>

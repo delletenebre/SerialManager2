@@ -1,0 +1,22 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <CheckBoxPreference android:key="serial_communication_enabled"
+        android:defaultValue="@bool/pref_default_serial_communication_enabled"
+        android:title="@string/pref_title_serial_communication_enabled" />
+
+    <EditTextPreference android:key="serial_path"
+        android:dependency="serial_communication_enabled"
+        android:defaultValue="@string/pref_default_serial_path"
+        android:inputType="text"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:title="@string/pref_title_serial_path" />
+
+    <ListPreference android:key="serial_baud_rate"
+        android:dependency="serial_communication_enabled"
+        android:title="@string/pref_title_serial_baud_rate"
+        android:entries="@array/array_baud_rates"
+        android:entryValues="@array/array_baud_rates"
+        android:defaultValue="@string/pref_default_serial_baud_rate" />
+
+</PreferenceScreen>

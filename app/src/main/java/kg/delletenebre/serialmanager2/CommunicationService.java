@@ -18,7 +18,6 @@ import android.hardware.SensorManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.v7.app.NotificationCompat;
 import android.view.View;
@@ -64,11 +63,14 @@ public class CommunicationService extends Service implements SensorEventListener
     private HashMap<String,ByteArrayOutputStream> mUsbSerialReadBuffers;
 
     // **** BLUETOOTH **** //
-    private BluetoothConnection mBluetothConnection;
+    private BluetoothConnection mBluetoothConnection;
 
-    // **** WEBSERVER **** //
+    // **** WEB-SERVER **** //
     private AsyncHttpServer mWebServer;
     private List<WebSocket> mWebSockets;
+
+    // **** SERIAL **** //
+    private SerialPort mSerialPort;
 
     private SensorManager mSensorManager;
 
@@ -87,13 +89,15 @@ public class CommunicationService extends Service implements SensorEventListener
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getBooleanExtra(EXTRA_UPDATE_USB_CONNECTION, false)) {
-            startUsbCommunication();
-        }
+        if (intent != null) {
+            if (intent.getBooleanExtra(EXTRA_UPDATE_USB_CONNECTION, false)) {
+                startUsbCommunication();
+            }
 
-        if (intent.getBooleanExtra(EXTRA_BLUETOOTH_ENABLED, false)
-                || intent.getBooleanExtra(EXTRA_UPDATE_BLUETOOTH_CONNECTION, false)) {
-            startBluetoothCommunication();
+            if (intent.getBooleanExtra(EXTRA_BLUETOOTH_ENABLED, false)
+                    || intent.getBooleanExtra(EXTRA_UPDATE_BLUETOOTH_CONNECTION, false)) {
+                startBluetoothCommunication();
+            }
         }
 
         return START_STICKY;
@@ -108,15 +112,16 @@ public class CommunicationService extends Service implements SensorEventListener
         mConnectedUsbSerialDevices = new HashMap<>();
         mUsbSerialReadBuffers = new HashMap<>();
 
-        mBluetothConnection = new BluetoothConnection();
-        if (mPrefs.getBoolean("bluetooth_adapter_turn_on",
-                getResources().getBoolean(R.bool.pref_default_bluetooth_adapter_turn_on))) {
-            mBluetothConnection.getBluetoothAdapter().enable();
+        mBluetoothConnection = new BluetoothConnection();
+        if (App.getInstance().getBooleanPreference("bluetooth_adapter_turn_on")) {
+            mBluetoothConnection.getBluetoothAdapter().enable();
         }
 
-        if (isCommunicationTypeEnabled("web_socket")) {
-            startWebServer();
-        }
+
+        startUsbCommunication();
+        startBluetoothCommunication();
+        startSerialCommunication();
+        startWebServer();
 
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
@@ -142,9 +147,12 @@ public class CommunicationService extends Service implements SensorEventListener
                         break;
 
                     case App.ACTION_SEND_DATA:
-                        String data = intent.getStringExtra("data");
-                        if (data != null) {
-                            sendData(data);
+                        if (intent.hasExtra("data")) {
+                            if (intent.hasExtra("id")) {
+                                sendData(intent.getStringExtra("data"), intent.getStringExtra("id"));
+                            } else {
+                                sendData(intent.getStringExtra("data"));
+                            }
                         }
                         break;
 
@@ -156,13 +164,15 @@ public class CommunicationService extends Service implements SensorEventListener
                         } else {
                             stopUsbCommunication();
                         }
+
                         if (isCommunicationTypeEnabled("bluetooth")) {
-                            if (mBluetothConnection == null) {
+                            if (mBluetoothConnection == null) {
                                 startBluetoothCommunication();
                             }
                         } else {
                             stopBluetoothCommunication();
                         }
+
                         if (isCommunicationTypeEnabled("web_socket")) {
                             if (mWebServer == null) {
                                 startWebServer();
@@ -170,6 +180,15 @@ public class CommunicationService extends Service implements SensorEventListener
                         } else {
                             stopWebServer();
                         }
+
+                        if (isCommunicationTypeEnabled("serial")) {
+                            if (mSerialPort == null) {
+                                startSerialCommunication();
+                            }
+                        } else {
+                            stopSerialCommunication();
+                        }
+
                         updateNotificationText();
                         break;
                 }
@@ -207,10 +226,11 @@ public class CommunicationService extends Service implements SensorEventListener
         mUsbSerialReadBuffers = null;
         stopBluetoothCommunication();
         stopWebServer();
+        stopSerialCommunication();
 
 //        if (mPrefs.getBoolean("bluetooth_adapter_turn_on",
 //                getResources().getBoolean(R.bool.pref_default_bluetooth_adapter_turn_on))) {
-//            mBluetothConnection.getBluetoothAdapter().disable();
+//            mBluetoothConnection.getBluetoothAdapter().disable();
 //        }
 
         mSensorManager.unregisterListener(this);
@@ -222,9 +242,7 @@ public class CommunicationService extends Service implements SensorEventListener
 
 
     private boolean isCommunicationTypeEnabled(String type) {
-        return mPrefs.getBoolean(type + "_communication_enabled",
-                getResources().getBoolean(Utils.getBooleanIdentifier(this,
-                        "pref_default_" + type + "_communication_enabled")));
+        return App.getInstance().getBooleanPreference(type + "_communication_enabled");
     }
 
 
@@ -283,7 +301,7 @@ public class CommunicationService extends Service implements SensorEventListener
         if (isCommunicationTypeEnabled("bluetooth")) {
             if (mNotificationLayout != null) {
                 int bluetoothIconId = R.drawable.ic_bluetooth_black_24dp;
-                if (mBluetothConnection != null && mBluetothConnection.isConnected()) {
+                if (mBluetoothConnection != null && mBluetoothConnection.isConnected()) {
                     bluetoothIconId = R.drawable.ic_bluetooth_connected_black_24dp;
                 }
                 int textColor = getNotificationTextColor(
@@ -335,14 +353,16 @@ public class CommunicationService extends Service implements SensorEventListener
 
 
     private void startUsbCommunication() {
-        for (UsbDevice device : mUsbManager.getDeviceList().values()) {
-            if (mUsbManager.hasPermission(device) &&
-                    !mConnectedUsbSerialDevices.containsKey(device.getDeviceName())) {
-                if (setupUsbSerialConnection(device)) {
-                    String path = device.getDeviceName();
-                    String vid = String.valueOf(device.getVendorId());
-                    String pid = String.valueOf(device.getProductId());
-                    App.log("Connected usb device: " + path + " | VID:" + vid + " | PID: " + pid);
+        if (isCommunicationTypeEnabled("usb")) {
+            for (UsbDevice device : mUsbManager.getDeviceList().values()) {
+                if (mUsbManager.hasPermission(device) &&
+                        !mConnectedUsbSerialDevices.containsKey(device.getDeviceName())) {
+                    if (setupUsbSerialConnection(device)) {
+                        String path = device.getDeviceName();
+                        String vid = String.valueOf(device.getVendorId());
+                        String pid = String.valueOf(device.getProductId());
+                        App.log("Connected usb device: " + path + " | VID:" + vid + " | PID: " + pid);
+                    }
                 }
             }
         }
@@ -428,11 +448,11 @@ public class CommunicationService extends Service implements SensorEventListener
 
     private void startBluetoothCommunication() {
         if (isCommunicationTypeEnabled("bluetooth")) {
-            if (mBluetothConnection == null) {
-                mBluetothConnection = new BluetoothConnection();
+            if (mBluetoothConnection == null) {
+                mBluetoothConnection = new BluetoothConnection();
             }
-            mBluetothConnection.autoConnectTo(mPrefs.getString("bluetooth_device", ""));
-            mBluetothConnection.setConnectionListener(new BluetoothConnection.ConnectionListener() {
+            mBluetoothConnection.autoConnectTo(mPrefs.getString("bluetooth_device", ""));
+            mBluetoothConnection.setConnectionListener(new BluetoothConnection.ConnectionListener() {
                 @Override
                 public void onDeviceConnected(String name, String address) {
                     if (isConnectionStateMessageEnabled()) {
@@ -444,12 +464,12 @@ public class CommunicationService extends Service implements SensorEventListener
                 @Override
                 public void onDeviceConnectionFailed() {
                     updateNotificationText();
-                    if (mBluetothConnection != null) {
-                        mBluetothConnection.autoConnectTo(mPrefs.getString("bluetooth_device", ""));
+                    if (mBluetoothConnection != null) {
+                        mBluetoothConnection.autoConnectTo(mPrefs.getString("bluetooth_device", ""));
                     }
                 }
             });
-            mBluetothConnection.setOnDataReceivedListener(new BluetoothConnection.OnDataReceivedListener() {
+            mBluetoothConnection.setOnDataReceivedListener(new BluetoothConnection.OnDataReceivedListener() {
                 public void onDataReceived(String message) {
                     App.getInstance().detectCommand(message);
                 }
@@ -457,91 +477,93 @@ public class CommunicationService extends Service implements SensorEventListener
         }
     }
     private void stopBluetoothCommunication() {
-        if (mBluetothConnection != null) {
-            mBluetothConnection.stop();
-            mBluetothConnection = null;
+        if (mBluetoothConnection != null) {
+            mBluetoothConnection.stop();
+            mBluetoothConnection = null;
             updateNotificationText();
         }
     }
     private void bluetoothSend(String message) {
-        if (mBluetothConnection != null) {
-            mBluetothConnection.write(message, true);
+        if (mBluetoothConnection != null) {
+            mBluetoothConnection.write(message);
         }
     }
 
 
     public void startWebServer() {
-        mWebServer = new AsyncHttpServer();
-        mWebSockets = new ArrayList<>();
-        final int port = App.getInstance().getIntPreference("web_server_port",
-                getString(R.string.pref_default_web_server_port));
-        final String ipAddress = Utils.getIpAddress();
+        if (isCommunicationTypeEnabled("web_socket")) {
+            mWebServer = new AsyncHttpServer();
+            mWebSockets = new ArrayList<>();
+            final int port = App.getInstance().getIntPreference("web_server_port",
+                    getString(R.string.pref_default_web_server_port));
+            final String ipAddress = Utils.getIpAddress();
 
-        mWebServer.get("/", new HttpServerRequestCallback() {
-            @Override
-            public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
-                String webSocketInfo = String.format(getString(R.string.web_socket_info),
-                        ipAddress, port);
+            mWebServer.get("/", new HttpServerRequestCallback() {
+                @Override
+                public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                    String webSocketInfo = String.format(getString(R.string.web_socket_info),
+                            ipAddress, port);
 
-                response.send("<!DOCTYPE html><head><title>" + getString(R.string.app_name) + "</title><meta charset=\"utf-8\" /></head><body><h1>" + getString(R.string.app_name) + "</h1><i>version: <b>" + App.getInstance().getVersion() + "</b></i><br><br>" + webSocketInfo + "<br><br><a href=\"/test-websocket\">WebSocket test</a></body></html>");
-            }
-        });
-        mWebServer.get("/test-websocket", new HttpServerRequestCallback() {
-            @Override
-            public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
-                AssetManager assetManager = getAssets();
-
-                String html = "<h1>404 Not found</h1>";
-                InputStream input;
-                try {
-                    input = assetManager.open("websoket_test.html");
-                    int size = input.available();
-                    byte[] buffer = new byte[size];
-                    //noinspection ResultOfMethodCallIgnored
-                    input.read(buffer);
-                    input.close();
-
-                    html = new String(buffer);
-                    html = html.replace("{{address}}", ipAddress + ":" + port + "/ws");
-                } catch(IOException e) {
-                    e.printStackTrace();
+                    response.send("<!DOCTYPE html><head><title>" + getString(R.string.app_name) + "</title><meta charset=\"utf-8\" /></head><body><h1>" + getString(R.string.app_name) + "</h1><i>version: <b>" + App.getInstance().getVersion() + "</b></i><br><br>" + webSocketInfo + "<br><br><a href=\"/test-websocket\">WebSocket test</a></body></html>");
                 }
+            });
+            mWebServer.get("/test-websocket", new HttpServerRequestCallback() {
+                @Override
+                public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
+                    AssetManager assetManager = getAssets();
 
-                response.send(html);
-            }
-        });
-        mWebServer.listen(port);
-        mWebServer.websocket("/ws", new AsyncHttpServer.WebSocketRequestCallback() {
-            @Override
-            public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
-                App.log("New WebSocket client connected");
-                webSocket.setClosedCallback(new CompletedCallback() {
-                    @Override
-                    public void onCompleted(Exception e) {
-                        try {
-                            if (e != null) {
-                                e.printStackTrace();
+                    String html = "<h1>404 Not found</h1>";
+                    InputStream input;
+                    try {
+                        input = assetManager.open("websoket_test.html");
+                        int size = input.available();
+                        byte[] buffer = new byte[size];
+                        //noinspection ResultOfMethodCallIgnored
+                        input.read(buffer);
+                        input.close();
+
+                        html = new String(buffer);
+                        html = html.replace("{{address}}", ipAddress + ":" + port + "/ws");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    response.send(html);
+                }
+            });
+            mWebServer.listen(port);
+            mWebServer.websocket("/ws", new AsyncHttpServer.WebSocketRequestCallback() {
+                @Override
+                public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
+                    App.log("New WebSocket client connected");
+                    webSocket.setClosedCallback(new CompletedCallback() {
+                        @Override
+                        public void onCompleted(Exception e) {
+                            try {
+                                if (e != null) {
+                                    e.printStackTrace();
+                                }
+                            } finally {
+                                mWebSockets.remove(webSocket);
+                                updateNotificationText();
                             }
-                        } finally {
-                            mWebSockets.remove(webSocket);
-                            updateNotificationText();
                         }
+                    });
+                    webSocket.setStringCallback(new WebSocket.StringCallback() {
+                        @Override
+                        public void onStringAvailable(String message) {
+                            App.log("Received from WebSocket: " + message);
+                            App.getInstance().detectCommand(message);
+                        }
+                    });
+                    mWebSockets.add(webSocket);
+                    if (isConnectionStateMessageEnabled()) {
+                        webSocket.send(App.ACTION_CONNECTION_ESTABLISHED);
                     }
-                });
-                webSocket.setStringCallback(new WebSocket.StringCallback() {
-                    @Override
-                    public void onStringAvailable(String message) {
-                        App.log("Received from WebSocket: " + message);
-                        App.getInstance().detectCommand(message);
-                    }
-                });
-                mWebSockets.add(webSocket);
-                if (isConnectionStateMessageEnabled()) {
-                    webSocket.send(App.ACTION_CONNECTION_ESTABLISHED);
+                    updateNotificationText();
                 }
-                updateNotificationText();
-            }
-        });
+            });
+        }
     }
     private void stopWebServer() {
         if (mWebSockets != null) {
@@ -565,10 +587,49 @@ public class CommunicationService extends Service implements SensorEventListener
     }
 
 
+    private void startSerialCommunication() {
+        if (isCommunicationTypeEnabled("serial")) {
+            stopSerialCommunication();
+            mSerialPort = new SerialPort(
+                    App.getInstance().getStringPreference("serial_path"),
+                    App.getInstance().getIntPreference("serial_baud_rate"));
+            mSerialPort.setOnDataReceivedListener(new SerialPort.OnDataReceivedListener() {
+                @Override
+                public void onDataReceived(String message) {
+                    App.getInstance().detectCommand(message);
+                }
+            });
+        }
+    }
+    private void stopSerialCommunication() {
+        if (mSerialPort != null) {
+            mSerialPort.closePort();
+            mSerialPort = null;
+        }
+    }
+    private void serialSend(String message) {
+        if (mSerialPort != null) {
+            mSerialPort.write(message.getBytes());
+        }
+    }
+
+
+
     private void sendData(String message) {
+        if (App.getInstance().getBooleanPreference("crlf")) {
+            message += App.CRLF;
+        }
         usbSend(message);
         bluetoothSend(message);
         webSocketSend(message);
+        serialSend(message);
+    }
+    private void sendData(String message, String id) {
+        sendData(message);
+
+        Intent intent = new Intent(App.ACTION_SEND_DATA_COMPLETE);
+        intent.putExtra("id", id);
+        sendBroadcast(intent);
     }
 
     private int mLastLightSensorMode = 0;
@@ -579,21 +640,43 @@ public class CommunicationService extends Service implements SensorEventListener
             float value = event.values[0];
             int mode = 0;
 
-            if (value >= SensorManager.LIGHT_SUNLIGHT_MAX) {
-                mode = 7;
-            } else if (value >= SensorManager.LIGHT_SUNLIGHT) {
-                mode = 6;
-            } else if (value >= SensorManager.LIGHT_SHADE) {
-                mode = 5;
-            } else if (value >= SensorManager.LIGHT_OVERCAST) {
-                mode = 4;
-            } else if (value >= SensorManager.LIGHT_SUNRISE) {
-                mode = 3;
-            } else if (value >= SensorManager.LIGHT_CLOUDY) {
-                mode = 2;
-            } else if (value >= SensorManager.LIGHT_FULLMOON) {
-                mode = 1;
+            if (value >= SensorManager.LIGHT_FULLMOON) {
+                mode++;
             }
+            if (value >= SensorManager.LIGHT_CLOUDY) {
+                mode++;
+            }
+            if (value >= SensorManager.LIGHT_SUNRISE) {
+                mode++;
+            }
+            if (value >= SensorManager.LIGHT_OVERCAST) {
+                mode++;
+            }
+            if (value >= SensorManager.LIGHT_SHADE) {
+                mode++;
+            }
+            if (value >= SensorManager.LIGHT_SUNLIGHT) {
+                mode++;
+            }
+            if (value >= SensorManager.LIGHT_SUNLIGHT_MAX) {
+                mode++;
+            }
+//
+//            if (value >= SensorManager.LIGHT_SUNLIGHT_MAX) {
+//                mode = 7;
+//            } else if (value >= SensorManager.LIGHT_SUNLIGHT) {
+//                mode = 6;
+//            } else if (value >= SensorManager.LIGHT_SHADE) {
+//                mode = 5;
+//            } else if (value >= SensorManager.LIGHT_OVERCAST) {
+//                mode = 4;
+//            } else if (value >= SensorManager.LIGHT_SUNRISE) {
+//                mode = 3;
+//            } else if (value >= SensorManager.LIGHT_CLOUDY) {
+//                mode = 2;
+//            } else if (value >= SensorManager.LIGHT_FULLMOON) {
+//                mode = 1;
+//            }
 
             if (mLastLightSensorMode != mode
                     && System.currentTimeMillis() - mLastLightSensorMillis > 3000) {
@@ -615,7 +698,6 @@ public class CommunicationService extends Service implements SensorEventListener
 
 
     private boolean isConnectionStateMessageEnabled() {
-        return mPrefs != null && mPrefs.getBoolean("send_connection_state",
-                getResources().getBoolean(R.bool.pref_default_send_connection_state));
+        return App.getInstance().getBooleanPreference("send_connection_state");
     }
 }

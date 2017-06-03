@@ -77,13 +77,9 @@
                 <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
                 <action android:name="kg.serial.manager.CONNECTED_DEVICES_REQUEST" />
                 <action android:name="kg.serial.manager.local.settings_updated" />
-                <action android:name="kg.serial.manager.send" />
                 <action android:name="kg.serial.manager.new_command" />
             </intent-filter>
         </receiver>
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="fc7a81f8b1040fa56a369753ec3eab1da3343c05" />
     </application>
 
 </manifest>
