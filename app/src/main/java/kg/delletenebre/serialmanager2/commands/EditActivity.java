@@ -34,7 +34,7 @@ import butterknife.OnItemSelected;
 import io.realm.Realm;
 import kg.delletenebre.serialmanager2.App;
 import kg.delletenebre.serialmanager2.R;
-import kg.delletenebre.serialmanager2.view.AppChooserView;
+import kg.delletenebre.serialmanager2.views.AppChooserView;
 
 public class EditActivity extends AppCompatActivity implements ColorPickerDialogListener {
     private static final String TAG = "EditActivity";

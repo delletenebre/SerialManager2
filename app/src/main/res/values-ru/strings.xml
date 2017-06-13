@@ -68,6 +68,10 @@
         <item>По центру</item>
         <item>Внизу</item>
     </string-array>
+    <string name="dialog_title_confirm_delete_command">Удалить команду?</string>
+    <string name="dialog_message_delete_command">Подтвердите удаление команды:\n%1$s</string>
+    <string name="dialog_delete_positive">Удалить</string>
+    <string name="dialog_negative">Отмена</string>
 
 
     <!-- Strings related to Settings -->
@@ -116,4 +120,21 @@
     <string name="pref_title_send_light_sensor_data">Отправлять данные датчика освещённости</string>
     <string name="pref_title_send_screen_state">Отправлять состояние экрана</string>
     <string name="pref_summary_send_screen_state">Отправлять \"screen:on\" при включении экрана и \"screen:off\" при выключении</string>
+
+    <string name="pref_header_backup_restore">Импорт/Экспорт команд</string>
+    <string name="pref_title_commands_backup">Сохранить команды</string>
+    <string name="pref_summary_commands_backup">Сохраняет команды в файл: %1$s</string>
+    <string name="pref_toast_commands_backup_success">Сохранение завершено успешно!</string>
+    <string name="pref_toast_commands_backup_error">Ошибка при сохранении</string>
+    <string name="pref_title_commands_restore">Восстановить команды</string>
+    <string name="pref_summary_commands_restore">Восстанавливает команды из файла: %1$s</string>
+    <string name="pref_toast_commands_restore_success">Восстановление завершено успешно!</string>
+    <string name="pref_toast_commands_restore_error">Ошибка восстановления команд</string>
+
+
+    <!-- Strings related to Widgets -->
+    <string name="pref_default_widget_receive_text">Данные: %key / %value</string>
+    <string name="appwidget_text">ПРИМЕР</string>
+    <string name="configure">Настройка</string>
+    <string name="add_widget">Добавить виджет</string>
 </resources>

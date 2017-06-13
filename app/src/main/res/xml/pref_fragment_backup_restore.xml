@@ -1,0 +1,11 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference android:key="db_backup"
+        android:title="@string/pref_title_commands_backup"
+        android:summary="@string/pref_summary_commands_backup" />
+
+    <Preference android:key="db_restore"
+        android:title="@string/pref_title_commands_restore"
+        android:summary="@string/pref_summary_commands_restore" />
+
+</PreferenceScreen>

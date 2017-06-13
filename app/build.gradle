@@ -8,8 +8,8 @@ android {
         applicationId "kg.delletenebre.serialmanager2"
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 7
-        versionName "2.1.0"
+        versionCode 8
+        versionName "2.2.0"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
             cmake {
@@ -42,11 +42,15 @@ dependencies {
     compile "com.android.support:support-vector-drawable:$supportLibsVersion"
 
     compile 'ch.acra:acra:4.9.2'
+    compile 'org.apache.commons:commons-lang3:3.5'
     compile 'me.palazzetti:adktoolkit:0.3.0'
     compile 'com.github.felHR85:UsbSerial:4.5'
     compile 'com.jrummyapps:colorpicker:2.1.5'
     compile 'com.udojava:EvalEx:1.6'
     compile 'com.koushikdutta.async:androidasync:2.1.9'
     compile 'com.jakewharton:butterknife:8.5.1'
+    compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.google.code.gson:gson:2.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

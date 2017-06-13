@@ -82,8 +82,10 @@
         <item>Center</item>
         <item>Bottom</item>
     </string-array>
-
-
+    <string name="dialog_title_confirm_delete_command">Delete command?</string>
+    <string name="dialog_message_delete_command">Confirm the removal of the command:\n%1$s</string>
+    <string name="dialog_delete_positive">Delete</string>
+    <string name="dialog_negative">Cancel</string>
 
 
     <!-- Strings related to Settings -->
@@ -154,5 +156,23 @@
     <string name="pref_summary_send_light_sensor_data" translatable="false">light_sensor_value:12345\nlight_sensor_mode:0–7</string>
     <string name="pref_title_send_screen_state">Send screen state</string>
     <string name="pref_summary_send_screen_state">Send \"screen:on\" when screen turns on and \"screen:off\" when screen turns off</string>
+
+    <string name="pref_header_backup_restore">Backup/Restore commands</string>
+    <string name="pref_title_commands_backup">Backup commands</string>
+    <string name="pref_summary_commands_backup">Saves commands to: %1$s</string>
+    <string name="pref_toast_commands_backup_success">Successfully exported!</string>
+    <string name="pref_toast_commands_backup_error">Failed to export commands</string>
+    <string name="pref_title_commands_restore">Restore commands</string>
+    <string name="pref_summary_commands_restore">Restore commands from: %1$s</string>
+    <string name="pref_toast_commands_restore_success">Successfully imported!</string>
+    <string name="pref_toast_commands_restore_error">Failed to import commands</string>
+
+
+    <!-- Strings related to Widgets -->
+    <string name="widget_receive_label" translatable="false">Serial Manager Receive</string>
+    <string name="pref_default_widget_receive_text">Data: %key / %value</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

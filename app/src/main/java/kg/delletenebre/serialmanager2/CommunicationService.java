@@ -448,9 +448,11 @@ public class CommunicationService extends Service implements SensorEventListener
 
     private void startBluetoothCommunication() {
         if (isCommunicationTypeEnabled("bluetooth")) {
-            if (mBluetoothConnection == null) {
-                mBluetoothConnection = new BluetoothConnection();
+            if (mBluetoothConnection != null) {
+                mBluetoothConnection.stop();
+                mBluetoothConnection = null;
             }
+            mBluetoothConnection = new BluetoothConnection();
             mBluetoothConnection.autoConnectTo(mPrefs.getString("bluetooth_device", ""));
             mBluetoothConnection.setConnectionListener(new BluetoothConnection.ConnectionListener() {
                 @Override

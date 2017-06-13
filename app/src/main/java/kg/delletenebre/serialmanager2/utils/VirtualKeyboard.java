@@ -3,6 +3,11 @@ package kg.delletenebre.serialmanager2.utils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -24,6 +29,68 @@ public class VirtualKeyboard {
     private long mKeyAltTabTabTimer = 0;
 
     public VirtualKeyboard() {
+        final String path = "/system/usr/keylayout/";
+        final String name = "uinput-serialmanager.kl";
+        final String filePath = path + name;
+
+        Process suProcess;
+        DataOutputStream os;
+        int sleepTime = 50;
+        try {
+            //Get Root
+            suProcess = Runtime.getRuntime().exec("su");
+            os = new DataOutputStream(suProcess.getOutputStream());
+
+            //Remount writable FS within the root process
+            os.writeBytes("mount -o rw,remount,rw /system\n");
+            os.flush();
+            Thread.sleep(sleepTime);
+
+            os.writeBytes("rm " + filePath + "\n");
+            os.flush();
+            Thread.sleep(sleepTime);
+
+            os.writeBytes("touch " + filePath + "\n");
+            os.flush();
+            Thread.sleep(sleepTime);
+
+            try {
+                InputStream file = App.getInstance().getAssets().open(name);
+                BufferedReader reader = new BufferedReader(new InputStreamReader(file));
+                String line = reader.readLine();
+                while (line != null) {
+                    os.writeBytes("echo '" + line + "' >> " + filePath + "\n");
+                    os.flush();
+                    Thread.sleep(5);
+                    line = reader.readLine();
+                }
+
+                file.close();
+                reader.close();
+            } catch(IOException ioe) {
+                App.logError(ioe.getLocalizedMessage());
+            }
+
+            os.writeBytes("chmod 644 " + filePath + "\n");
+            os.flush();
+            Thread.sleep(sleepTime);
+
+            //Remount Read-Only
+            os.writeBytes("mount -o ro,remount,ro /system\n");
+            os.flush();
+            Thread.sleep(sleepTime);
+
+            //End process
+            os.writeBytes("exit\n");
+            os.flush();
+            Thread.sleep(sleepTime);
+
+            os.close();
+            suProcess.destroy();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         try {
             mKeymap = new JSONArray(Utils.getAssetsFileContent("virtual-keyboard-codes.json"));
         } catch (Exception e) {

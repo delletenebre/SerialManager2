@@ -16,5 +16,12 @@
     <dimen name="notification_icon_size_app">16dp</dimen>
     <dimen name="notification_icon_size_connected_type">20dp</dimen>
 
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
     <!--<dimen name="vertical_margin_between_form_elements">16dp</dimen>-->
 </resources>

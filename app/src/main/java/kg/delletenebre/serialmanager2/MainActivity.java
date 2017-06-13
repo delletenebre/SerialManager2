@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mCommandsRecyclerView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getBoolean(R.bool.pref_default_check_for_updates))) {
             new Updater(false).execute(this);
         }
+
     }
 
     @Override
@@ -125,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        ((Adapter)mCommandsRecyclerView.getAdapter()).updateRealmInstance();
     }
 
     @Override
@@ -177,21 +180,34 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int position = viewHolder.getAdapterPosition();
-                Adapter testAdapter = (Adapter)recyclerView.getAdapter();
-                if (testAdapter.isPendingRemoval(position)) {
-                    return 0;
-                }
-                return super.getSwipeDirs(recyclerView, viewHolder);
-            }
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                final int itemIndex = viewHolder.getAdapterPosition();
+                final Adapter adapter = (Adapter) mCommandsRecyclerView.getAdapter();
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle(getString(R.string.dialog_title_confirm_delete_command))
+                        .setMessage(String.format(getString(R.string.dialog_message_delete_command),
+                                adapter.getItemTitle(MainActivity.this, itemIndex)))
+                        .setPositiveButton(getString(R.string.dialog_delete_positive),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        adapter.remove(itemIndex);
+                                        dialog.dismiss();
+                                    }
+                                }
+                        )
+                        .setNeutralButton(getString(R.string.dialog_negative),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        Adapter adapter = (Adapter) mCommandsRecyclerView.getAdapter();
+                                        adapter.notifyItemChanged(itemIndex);
+                                        dialog.cancel();
+                                    }
+                                }
+                        )
+                        .create()
+                        .show();
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                int swipedPosition = viewHolder.getAdapterPosition();
-                Adapter adapter = (Adapter) mCommandsRecyclerView.getAdapter();
 
-                adapter.pendingRemoval(swipedPosition);
             }
 
             @Override

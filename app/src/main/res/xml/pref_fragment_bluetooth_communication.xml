@@ -4,7 +4,7 @@
         android:defaultValue="@bool/pref_default_bluetooth_communication_enabled"
         android:title="@string/pref_title_bluetooth_communication_enabled" />
 
-    <kg.delletenebre.serialmanager2.view.BluetoothDevicesListPreference
+    <kg.delletenebre.serialmanager2.views.BluetoothDevicesListPreference
         android:key="bluetooth_device"
         android:dependency="bluetooth_communication_enabled"
         android:title="@string/pref_title_bluetooth_device" />

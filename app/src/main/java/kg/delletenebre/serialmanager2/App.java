@@ -11,19 +11,23 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.hardware.display.DisplayManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.udojava.evalex.Expression;
 
@@ -42,7 +46,7 @@ import kg.delletenebre.serialmanager2.commands.Command;
 import kg.delletenebre.serialmanager2.commands.Migration;
 import kg.delletenebre.serialmanager2.utils.Utils;
 import kg.delletenebre.serialmanager2.utils.VirtualKeyboard;
-import kg.delletenebre.serialmanager2.view.AppChooserView;
+import kg.delletenebre.serialmanager2.views.AppChooserView;
 import xdroid.toaster.Toaster;
 
 @ReportsCrashes(
@@ -77,7 +81,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String LOCAL_ACTION_COMMAND_RECEIVED = "kg.serial.manager.local.new_data";
     public static final String LOCAL_ACTION_SETTINGS_UPDATED = "kg.serial.manager.local.settings_updated";
 
-    private static final String ACTION_COMMAND_RECEIVED = "kg.serial.manager.command_received";
+    public static final String ACTION_COMMAND_RECEIVED = "kg.serial.manager.command_received";
     public static final String ACTION_SEND_DATA = "kg.serial.manager.send";
     public static final String ACTION_SEND_DATA_COMPLETE = "kg.serial.manager.send.complete";
     public static final String ACTION_EXTERNAL_COMMAND = "kg.serial.manager.new_command";
@@ -115,13 +119,15 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
     private Realm mRealm;
+    private RealmConfiguration mRealmConfig;
     private SharedPreferences mPrefs;
-    private boolean mIsFullscreen = false;
-    private boolean mVisibleActivityStatus = false;
     private WindowManager mWindowManager;
     private VirtualKeyboard mVirtualKeyboard;
-
+    private AudioManager mAudioManager;
+    private boolean mIsFullscreen = false;
+    private boolean mVisibleActivityStatus = false;
     private long mBootedMillis;
+
 
 
 
@@ -135,11 +141,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
         setBootedMillis(android.os.SystemClock.uptimeMillis());
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        mRealm = Realm.getInstance(new RealmConfiguration.Builder()
+        mRealmConfig = new RealmConfiguration.Builder()
                 .schemaVersion(1)
                 .migration(new Migration())
-                //.deleteRealmIfMigrationNeeded()
-                .build());
+                .build();
+        mRealm = getNewRealmInstance();
 
         sDebugEnabled = mPrefs.getBoolean("debugging", false);
 
@@ -182,6 +188,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
             logStatus("VirtualKeyboard", "FAIL");
         }
 
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         sendBroadcast(new Intent(App.ACTION_APP_STARTED));
     }
 
@@ -191,13 +199,24 @@ public class App extends Application implements Application.ActivityLifecycleCal
         ACRA.init(this);
     }
 
+    public Realm getNewRealmInstance() {
+        return Realm.getInstance(mRealmConfig);
+    }
+
+
     public SharedPreferences getPrefs() {
         return mPrefs;
     }
     public Realm getRealm() {
+        if (mRealm.isClosed()) {
+            mRealm = getNewRealmInstance();
+        }
+
         return mRealm;
     }
 
+
+    Activity mVisibleActivity;
     public boolean isActivityVisible() {
         return mVisibleActivityStatus;
     }
@@ -208,10 +227,12 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @Override
     public void onActivityResumed(Activity activity) {
         mVisibleActivityStatus = true;
+        mVisibleActivity = activity;
     }
     @Override
     public void onActivityPaused(Activity activity) {
         mVisibleActivityStatus = false;
+        mVisibleActivity = null;
     }
     @Override
     public void onActivityStopped(Activity activity) {}
@@ -254,7 +275,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
 
             if (isActivityVisible()) {
-                Toaster.toast(incomingString);
+                // Toaster.toast(incomingString);
+                showSnackbar(mVisibleActivity, incomingString);
 
                 Intent intent = new Intent(LOCAL_ACTION_COMMAND_RECEIVED);
                 intent.putExtra("key", key);
@@ -263,7 +285,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             } else {
                 String intentValue = value;
 
-                Realm realm = Realm.getInstance(App.getInstance().getRealm().getConfiguration());
+                Realm realm = getNewRealmInstance();
                 RealmResults<Command> commands = realm.where(Command.class)
                         .equalTo("key", key)
                         .findAll();
@@ -574,6 +596,56 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         return stringBuffer.toString();
     }
+
+
+    public void emulateMediaButton(int buttonCode) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && mAudioManager != null) {
+            mAudioManager.dispatchMediaKeyEvent(
+                    new KeyEvent(KeyEvent.ACTION_DOWN, buttonCode));
+            mAudioManager.dispatchMediaKeyEvent(
+                    new KeyEvent(KeyEvent.ACTION_UP, buttonCode));
+        } else {
+            Intent downIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+            downIntent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_DOWN, buttonCode));
+            sendBroadcast(downIntent);
+
+            Intent upIntent = new Intent(Intent.ACTION_MEDIA_BUTTON);
+            upIntent.putExtra(Intent.EXTRA_KEY_EVENT, new KeyEvent(KeyEvent.ACTION_UP, buttonCode));
+            sendBroadcast(upIntent);
+        }
+    }
+
+
+
+    public void showSnackbar(Activity activity, String message, int length, Integer textColor) {
+        if (activity != null) {
+            Snackbar snackbar = Snackbar.make(
+                    activity.findViewById(android.R.id.content),
+                    message,
+                    length);
+
+            if (textColor != null) {
+                View snackbarView = snackbar.getView();
+                TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                textView.setTextColor(textColor);
+            }
+
+            snackbar.show();
+        }
+    }
+    public void showSnackbar(Activity activity, String message, int length) {
+        showSnackbar(activity, message, length, null);
+    }
+    public void showSnackbar(Activity activity, String message) {
+        showSnackbar(activity, message, Snackbar.LENGTH_SHORT, null);
+    }
+    public void showSnackbarSuccess(Activity activity, String message) {
+        showSnackbar(activity, message, Snackbar.LENGTH_LONG, Color.parseColor("#4CAF50"));
+    }
+    public void showSnackbarError(Activity activity, String message) {
+        showSnackbar(activity, message, Snackbar.LENGTH_LONG, Color.parseColor("#F44336"));
+    }
+
 
 
 }

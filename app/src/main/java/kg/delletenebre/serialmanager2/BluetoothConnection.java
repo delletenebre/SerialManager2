@@ -168,7 +168,7 @@ class BluetoothConnection {
                             mBluetoothSocket.close();
                         }
                         synchronized (this) {
-                            sleep(100);
+                            sleep(500);
                         }
                     } catch (Exception e1) {
                         // nothing

@@ -134,7 +134,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/app_chooser_title">
-                <kg.delletenebre.serialmanager2.view.AppChooserView android:id="@+id/app_chooser"
+                <kg.delletenebre.serialmanager2.views.AppChooserView
+                    android:id="@+id/app_chooser"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="2"

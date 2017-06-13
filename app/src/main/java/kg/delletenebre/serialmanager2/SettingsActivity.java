@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import kg.delletenebre.serialmanager2.utils.RealmBackupRestore;
+
 public class SettingsActivity extends PreferenceActivity {
 
     private AppCompatDelegate mDelegate;
@@ -185,7 +187,8 @@ public class SettingsActivity extends PreferenceActivity {
                 || BluetoothPreferenceFragment.class.getName().equals(fragmentName)
                 || WebSocketPreferenceFragment.class.getName().equals(fragmentName)
                 || SerialPreferenceFragment.class.getName().equals(fragmentName)
-                || ControllerPreferenceFragment.class.getName().equals(fragmentName);
+                || ControllerPreferenceFragment.class.getName().equals(fragmentName)
+                || BackupRestorePreferenceFragment.class.getName().equals(fragmentName);
     }
 
     public static class GeneralPreferenceFragment extends PreferenceFragment {
@@ -254,6 +257,38 @@ public class SettingsActivity extends PreferenceActivity {
             setHasOptionsMenu(true);
 
             //bindPreferenceSummaryToValue(findPreference("web_server_port"));
+        }
+    }
+
+    public static class BackupRestorePreferenceFragment extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_fragment_backup_restore);
+            setHasOptionsMenu(true);
+
+            final RealmBackupRestore realmBackupRestore = new RealmBackupRestore(getActivity());
+            Preference backup = findPreference("db_backup");
+            backup.setSummary(String.format(
+                    getString(R.string.pref_summary_commands_backup), RealmBackupRestore.JSON_FILE_PATH));
+            backup.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    realmBackupRestore.backupToJson();
+                    return true;
+                }
+            });
+
+            Preference restore = findPreference("db_restore");
+            restore.setSummary(String.format(
+                    getString(R.string.pref_summary_commands_restore), RealmBackupRestore.JSON_FILE_PATH));
+            restore.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    realmBackupRestore.restoreFromJson();
+                    return true;
+                }
+            });
         }
     }
 }
