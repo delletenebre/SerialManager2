@@ -112,7 +112,7 @@
     <string name="pref_title_serial_path">Путь</string>
     <string name="pref_title_serial_baud_rate">Скорость</string>
 
-    <string name="pref_header_controller_communication">Взаимодействие с конроллером</string>
+    <string name="pref_header_controller_communication">Взаимодействие с контроллером</string>
     <string name="pref_title_crlf">Добавлять CR&#38;LF</string>
     <string name="pref_summary_crlf">Добавлять управляющие символы CR и LF при отправке данных</string>
     <string name="pref_title_send_connection_state">Отправлять состояния соединения</string>

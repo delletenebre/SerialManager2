@@ -2,6 +2,7 @@ package kg.delletenebre.serialmanager2.commands;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;
+import io.realm.FieldAttribute;
 import io.realm.RealmMigration;
 import io.realm.RealmObjectSchema;
 import io.realm.RealmSchema;
@@ -25,6 +26,21 @@ public class Migration implements RealmMigration {
                     })
                     .removeField("notyDuration")
                     .renameField("notyDuration_temp", "notyDuration");
+            oldVersion++;
+        }
+
+        if (oldVersion == 1) {
+            RealmObjectSchema widgetReceiveModel = schema.create("WidgetReceiveModel")
+                    .addField("index", Integer.class, FieldAttribute.REQUIRED)
+                    .addField("key", String.class, FieldAttribute.REQUIRED)
+                    .addField("value", String.class)
+                    .addField("textColor", String.class)
+                    .addField("textSize", int.class)
+                    .addField("backgroundColor", String.class)
+                    .addField("backgroundImage", String.class)
+                    .addField("layoutAlignId", int.class)
+                    .addField("textAlignId", int.class);
+
             oldVersion++;
         }
     }
