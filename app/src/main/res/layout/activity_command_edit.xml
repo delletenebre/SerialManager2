@@ -250,17 +250,6 @@
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton android:id="@+id/noty_bg_color"
-                android:layout_width="0dip"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:text="@string/command_noty_background_color"
-                android:textSize="12sp" />
-            <TextView android:id="@+id/noty_bg_color_helper"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="gone" />
-
             <android.support.v7.widget.AppCompatButton android:id="@+id/noty_text_color"
                 android:layout_width="0dip"
                 android:layout_weight="1"
@@ -272,25 +261,54 @@
                 android:layout_height="0dp"
                 android:visibility="gone" />
 
-        </LinearLayout>
+            <android.support.v7.widget.AppCompatButton android:id="@+id/noty_bg_color"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/command_noty_background_color"
+                android:textSize="12sp" />
+            <TextView android:id="@+id/noty_bg_color_helper"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
 
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!--<android.support.v7.widget.AppCompatImageView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--app:srcCompat="@drawable/ic_swap_horiz_black_24dp" />-->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView style="@style/InputLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorHint"
+                    android:text="@string/command_noty_position_priority"
+                    android:translationY="-2dp"/>
+                <android.support.v7.widget.AppCompatSpinner android:id="@+id/noty_position_priority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="12dp"
+                    android:paddingEnd="12dp"
+                    android:entries="@array/array_position_priorities" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/textColorHint"
+                    android:layout_marginLeft="@dimen/input_label_horizontal_spacing"
+                    android:layout_marginRight="@dimen/input_label_horizontal_spacing"/>
+            </LinearLayout>
 
-            <!--<android.support.v7.widget.AppCompatSpinner android:id="@+id/noty_horiz_position"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_vertical"-->
-                <!--android:entries="@array/array_position_horiz_titles" />-->
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:orientation="vertical"

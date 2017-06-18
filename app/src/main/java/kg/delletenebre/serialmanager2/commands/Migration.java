@@ -30,7 +30,7 @@ public class Migration implements RealmMigration {
         }
 
         if (oldVersion == 1) {
-            RealmObjectSchema widgetReceiveModel = schema.create("WidgetReceiveModel")
+            schema.create("WidgetReceiveModel")
                     .addField("index", Integer.class, FieldAttribute.REQUIRED)
                     .addField("key", String.class, FieldAttribute.REQUIRED)
                     .addField("value", String.class)
@@ -40,6 +40,20 @@ public class Migration implements RealmMigration {
                     .addField("backgroundImage", String.class)
                     .addField("layoutAlignId", int.class)
                     .addField("textAlignId", int.class);
+
+            oldVersion++;
+        }
+
+        if (oldVersion == 2) {
+            RealmObjectSchema commandSchema = schema.get("Command");
+            commandSchema
+                    .addField("positionZ", int.class)
+                    .transform(new RealmObjectSchema.Function() {
+                        @Override
+                        public void apply(DynamicRealmObject obj) {
+                            obj.setInt("positionZ", 0);
+                        }
+                    });
 
             oldVersion++;
         }

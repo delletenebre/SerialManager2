@@ -22,10 +22,10 @@ import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.TextView;
 
@@ -103,17 +103,17 @@ public class App extends Application implements Application.ActivityLifecycleCal
         sDebugEnabled = debugEnabled;
     }
     public static void log(String message) {
-        if (sDebugEnabled) {
+        if (isDebugEnabled()) {
             Log.d(TAG, message);
         }
     }
     public static void logError(String message) {
-        if (sDebugEnabled) {
+        if (isDebugEnabled()) {
             Log.e(TAG, message);
         }
     }
     public static void logStatus(String message, String state) {
-        if (sDebugEnabled) {
+        if (isDebugEnabled()) {
             Log.d(TAG, message + " ........ " + state);
         }
     }
@@ -127,6 +127,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private boolean mIsFullscreen = false;
     private boolean mVisibleActivityStatus = false;
     private long mBootedMillis;
+    private int mHelperOverlayFirstHeight = 0;
 
 
 
@@ -142,38 +143,38 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRealmConfig = new RealmConfiguration.Builder()
-                .schemaVersion(2)
+                .schemaVersion(3)
                 .migration(new Migration())
                 .build();
         mRealm = getNewRealmInstance();
 
         sDebugEnabled = mPrefs.getBoolean("debugging", false);
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M
-                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this))) {
-            mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
-                    Context.LAYOUT_INFLATER_SERVICE);
-            View checkFullscreenView = layoutInflater.inflate(R.layout.check_fullscreen_overlay, null);
-            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
-                    0, ViewGroup.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                            | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                    PixelFormat.TRANSLUCENT);
-            checkFullscreenView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-                @Override
-                public void onLayoutChange(View view, int left, int top, int right, int bottom,
-                                           int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    mWindowManager.getDefaultDisplay().getMetrics(metrics);
-                    mIsFullscreen = bottom >= metrics.heightPixels;
-
-                    logStatus("Fullscreen", String.valueOf(mIsFullscreen));
-                }
-            });
-            mWindowManager.addView(checkFullscreenView, layoutParams);
+        if (isSystemOverlaysPermissionGranted()) {
+            createHelperOverlay();
+//            mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+//            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
+//                    Context.LAYOUT_INFLATER_SERVICE);
+//            View checkFullscreenView = layoutInflater.inflate(R.layout.check_fullscreen_overlay, null);
+//            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
+//                    0, ViewGroup.LayoutParams.MATCH_PARENT,
+//                    WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+//                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+//                            | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+//                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+//                    PixelFormat.TRANSLUCENT);
+//            checkFullscreenView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+//                @Override
+//                public void onLayoutChange(View view, int left, int top, int right, int bottom,
+//                                           int oldLeft, int oldTop, int oldRight, int oldBottom) {
+//                    DisplayMetrics metrics = new DisplayMetrics();
+//                    mWindowManager.getDefaultDisplay().getMetrics(metrics);
+//                    mIsFullscreen = bottom >= metrics.heightPixels;
+//
+//                    logStatus("Fullscreen", String.valueOf(mIsFullscreen));
+//                }
+//            });
+//            mWindowManager.addView(checkFullscreenView, layoutParams);
         }
 
         IntentFilter intentFilter = new IntentFilter();
@@ -213,6 +214,38 @@ public class App extends Application implements Application.ActivityLifecycleCal
         }
 
         return mRealm;
+    }
+
+    private void createHelperOverlay() {
+        mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        final WindowManager.LayoutParams p = new WindowManager.LayoutParams();
+        p.type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+        p.gravity = Gravity.END | Gravity.TOP;
+        p.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        p.width = 1;
+        p.height = WindowManager.LayoutParams.MATCH_PARENT;
+        p.format = PixelFormat.TRANSPARENT;
+        final View helperOverlay = new View(this);
+
+        mWindowManager.addView(helperOverlay, p);
+        final ViewTreeObserver vto = helperOverlay.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (mHelperOverlayFirstHeight == 0) {
+                    mHelperOverlayFirstHeight = helperOverlay.getHeight();
+                }
+                if (mWindowManager != null) {
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    mWindowManager.getDefaultDisplay().getMetrics(metrics);
+                    mIsFullscreen = helperOverlay.getHeight() != mHelperOverlayFirstHeight;
+
+                    log("helperOverlay.getHeight() = " + helperOverlay.getHeight());
+                    log("mHelperOverlayFirstHeight  = " + mHelperOverlayFirstHeight);
+                    logStatus("Fullscreen", String.valueOf(mIsFullscreen));
+                }
+            }
+        });
     }
 
 
@@ -307,7 +340,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
                                 String text = compileFormulas(
                                         replaceKeywords(command.getNotyMessage(), key, value));
 
-                                new NotyOverlay(this)
+                                new NotyOverlay(this, command.getPositionZ())
                                     .setPosition(command.getPositionX(), command.getPositionY(),
                                         command.getOffsetX(), command.getOffsetY())
                                     .setTextSize(command.getNotyTextSize())
@@ -646,6 +679,22 @@ public class App extends Application implements Application.ActivityLifecycleCal
         showSnackbar(activity, message, Snackbar.LENGTH_LONG, Color.parseColor("#F44336"));
     }
 
+
+
+    public boolean isSystemOverlaysPermissionGranted() {
+        return (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || Settings.canDrawOverlays(this));
+    }
+
+    public void requestSystemOverlaysPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+            startActivity(intent);
+        }
+
+    }
 
 
 }

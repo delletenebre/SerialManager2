@@ -66,6 +66,7 @@ public class EditActivity extends AppCompatActivity implements ColorPickerDialog
     @BindView(R.id.noty_text_size) EditText mEditTextNotyTextSize;
     @BindView(R.id.noty_bg_color_helper) TextView mTextViewNotyBgColor;
     @BindView(R.id.noty_text_color_helper) TextView mTextViewNotyTextColor;
+    @BindView(R.id.noty_position_priority) Spinner mSpinnerPositionZ;
     @BindView(R.id.noty_horiz_position) Spinner mSpinnerPositionX;
     @BindView(R.id.noty_vert_position) Spinner mSpinnerPositionY;
     @BindView(R.id.noty_horiz_offset) EditText mEditTextNotyOffsetX;
@@ -137,27 +138,22 @@ public class EditActivity extends AppCompatActivity implements ColorPickerDialog
                 mEditTextNotyTextSize.setText(String.valueOf(mCommand.getNotyTextSize()));
                 mTextViewNotyBgColor.setText(mCommand.getNotyBgColor());
                 mTextViewNotyTextColor.setText(mCommand.getNotyTextColor());
+                mSpinnerPositionZ.setSelection(mCommand.getPositionZ());
                 mSpinnerPositionX.setSelection(mCommand.getPositionX());
                 mSpinnerPositionY.setSelection(mCommand.getPositionY());
                 mEditTextNotyOffsetX.setText(String.valueOf(mCommand.getOffsetX()));
                 mEditTextNotyOffsetY.setText(String.valueOf(mCommand.getOffsetY()));
 
             } else {
-//                mEditTextKey.setText("");
-//                mEditTextValue.setText("");
-//                mEditTextScatter.setText(getString(R.string.default__command_scatter));
                 mEditTextIntentValueExtra.setText(
                         getString(R.string.default__command_intent_value_extra));
                 mSpinnerAction.setSelection(0);
-//                mAppChooserView.setValue("");
                 mEmulateKeySpinner.setSelection(0);
-//                mEditTextShellCommand.setText("");
-//                mEditTextSendData.setText("");
-//                mEditTextNotyMessage.setText("");
                 mEditTextNotyDuration.setText(getString(R.string.default__command_noty_duration));
                 mEditTextNotyTextSize.setText(getString(R.string.default__command_noty_text_size));
                 mTextViewNotyBgColor.setText(getString(R.string.default__command_noty_bg_color));
                 mTextViewNotyTextColor.setText(getString(R.string.default__command_noty_text_color));
+                mSpinnerPositionZ.setSelection(0);
                 mSpinnerPositionX.setSelection(0);
                 mSpinnerPositionY.setSelection(0);
                 mEditTextNotyOffsetX.setText(getString(R.string.default__command_noty_offset));
@@ -290,6 +286,7 @@ public class EditActivity extends AppCompatActivity implements ColorPickerDialog
                 mCommand.setNotyBgColor(mTextViewNotyBgColor.getText().toString());
                 mCommand.setNotyTextColor(mTextViewNotyTextColor.getText().toString());
 
+                mCommand.setPositionZ(mSpinnerPositionZ.getSelectedItemPosition());
                 mCommand.setPositionX(mSpinnerPositionX.getSelectedItemPosition());
                 mCommand.setPositionY(mSpinnerPositionY.getSelectedItemPosition());
 

@@ -33,7 +33,7 @@ import kg.delletenebre.serialmanager2.App;
 public class Utils {
     private static final String TAG = "SerialManager2";
 
-    public static String getAssetsFileContent(String path) {
+    static String getAssetsFileContent(String path) {
         String json = "";
         try {
             InputStream is = App.getInstance().getAssets().open(path);

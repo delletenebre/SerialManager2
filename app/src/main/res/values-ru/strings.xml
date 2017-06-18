@@ -51,9 +51,14 @@
     <string name="send_data">Отправить данные</string>
     <string name="command_noty_message">Текст уведомления</string>
     <string name="command_noty_duration">Продолжительность</string>
-    <string name="command_noty_text_size">Размер</string>
+    <string name="command_noty_text_size">Размер текста</string>
     <string name="command_noty_background_color">Цвет фона</string>
     <string name="command_noty_text_color">Цвет текста</string>
+    <string name="command_noty_position_priority">Приоритет</string>
+    <string-array name="array_position_priorities">
+        <item>Поверх всех окон</item>
+        <item>Поверх окон не системных приложений</item>
+    </string-array>
     <string name="horizontal_position">Позиция по горизонтали</string>
     <string name="vertical_position">Позиция по вертикали</string>
     <string name="noty_horiz_offset_title">Смещение по оси X</string>

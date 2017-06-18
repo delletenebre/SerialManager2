@@ -65,6 +65,11 @@
     <string name="send_data">Send data</string>
     <string name="command_noty_message">Notification message</string>
     <string name="command_noty_duration">Duration</string>
+    <string name="command_noty_position_priority">Position Priority</string>
+    <string-array name="array_position_priorities">
+        <item>On top of all windows</item>
+        <item>On top of application windows</item>
+    </string-array>
     <string name="command_noty_text_size">Text size</string>
     <string name="command_noty_background_color">Background color</string>
     <string name="command_noty_text_color">Text color</string>

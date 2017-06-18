@@ -37,11 +37,13 @@ public class Command extends RealmObject {
     private int emulatedKeyId;
     private String shellCommand;
     private String sendData;
+
     private String notyMessage;
     private float notyDuration;
     private int notyTextSize;
     private String notyBgColor;
     private String notyTextColor;
+    private int positionZ;
     private int positionX;
     private int positionY;
     private int offsetX;
@@ -182,6 +184,13 @@ public class Command extends RealmObject {
     }
     public void setChosenApp(String chosenApp) {
         this.chosenApp = chosenApp;
+    }
+
+    public int getPositionZ() {
+        return positionZ;
+    }
+    public void setPositionZ(int positionZ) {
+        this.positionZ = positionZ;
     }
 
     public int getPositionX() {

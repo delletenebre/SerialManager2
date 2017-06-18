@@ -2,18 +2,16 @@ package kg.delletenebre.serialmanager2;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.PixelFormat;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -23,27 +21,33 @@ class NotyOverlay {
     private WindowManager mWindowManager;
     private View mNotificationLayout;
     private TextView mMessageView;
-    private Context mContext;
     private WindowManager.LayoutParams mNotificationLayoutParams;
     private int mShowDuration = 5000;
 
 
-    NotyOverlay(Context context) {
-        mContext = context;
-        mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+    NotyOverlay(Context context, int positionZ) {
+        mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
 
-        LayoutInflater layoutInflater = (LayoutInflater) mContext.getSystemService(
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
-        mNotificationLayout = layoutInflater.inflate(R.layout.noty_overlay, null);
+        mNotificationLayout = layoutInflater.inflate(R.layout.noty_overlay, (ViewGroup) null);
+
+        int layoutType = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR; //HIGH
+        if (positionZ == 1) {
+            layoutType = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT; //LOW
+        }
 
         mNotificationLayoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
 
-                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,//WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+                layoutType,
 
+                // Keeps the button presses from going to the background window
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        // Enables the notification to recieve touch events
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        // Draws over status bar
                         | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
 
                 PixelFormat.TRANSLUCENT);
@@ -51,7 +55,7 @@ class NotyOverlay {
         mMessageView = (TextView) mNotificationLayout.findViewById(R.id.message);
     }
 
-    public NotyOverlay setTextSize(int size) {
+    NotyOverlay setTextSize(int size) {
         mMessageView.setTextSize(size);
         return this;
     }
@@ -75,9 +79,7 @@ class NotyOverlay {
     }
 
     void show(String message, int duration) {
-        if (Build.VERSION.SDK_INT < 23
-                || (Build.VERSION.SDK_INT >= 23 && Settings.canDrawOverlays(mContext))) {
-
+        if (App.getInstance().isSystemOverlaysPermissionGranted()) {
             if (mNotificationLayout.getWindowToken() != null) {
                 mWindowManager.removeView(mNotificationLayout);
             }
@@ -109,11 +111,7 @@ class NotyOverlay {
                 }
             });
         } else if (Build.VERSION.SDK_INT >= 23) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + mContext.getPackageName()));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-            mContext.startActivity(intent);
+            App.logError("SYSTEM_ALERT_WINDOW permission is not granted");
         }
     }
 
@@ -148,28 +146,28 @@ class NotyOverlay {
         }
     }
 
-    private int getStatusBarHeight(Resources resources) {
-        int result = 0;
-        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = resources.getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
-
-    private int getGravity(String vert, String horiz) {
-        return getVertGravity(vert) | getHorizGravity(horiz);
-    }
+//    private int getStatusBarHeight(Resources resources) {
+//        int result = 0;
+//        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+//        if (resourceId > 0) {
+//            result = resources.getDimensionPixelSize(resourceId);
+//        }
+//        return result;
+//    }
+//
+//    private int getGravity(String vert, String horiz) {
+//        return getVertGravity(vert) | getHorizGravity(horiz);
+//    }
 
     private int getGravity(int x, int y) {
         String[] positionsX = {"left", "center", "right"};
         String[] positionsY = {"top", "center", "bottom"};
 
-        return getVertGravity(positionsY[y]) | getHorizGravity(positionsX[x]);
+        return getVerticalGravity(positionsY[y]) | getHorizontalGravity(positionsX[x]);
     }
 
-    private int getVertGravity(String vertPosition) {
-        switch (vertPosition) {
+    private int getVerticalGravity(String positionY) {
+        switch (positionY) {
             case "top":
                 return Gravity.TOP;
 
@@ -184,8 +182,9 @@ class NotyOverlay {
         }
     }
 
-    private int getHorizGravity(String horizPosition) {
-        switch (horizPosition) {
+    @SuppressLint("RtlHardcoded")
+    private int getHorizontalGravity(String positionX) {
+        switch (positionX) {
             case "left":
                 return Gravity.LEFT;
 
