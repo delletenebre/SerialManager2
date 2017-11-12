@@ -29,16 +29,13 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.udojava.evalex.Expression;
-
-import org.acra.ACRA;
-import org.acra.ReportField;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
@@ -49,28 +46,28 @@ import kg.delletenebre.serialmanager2.utils.VirtualKeyboard;
 import kg.delletenebre.serialmanager2.views.AppChooserView;
 import xdroid.toaster.Toaster;
 
-@ReportsCrashes(
-        mailTo = "delletenebre@gmail.com",
-        formUri = "https://collector.tracepot.com/f61f59df",
-        customReportContent = {
-                ReportField.USER_COMMENT,
-                ReportField.APP_VERSION_CODE,
-                ReportField.APP_VERSION_NAME,
-                ReportField.ANDROID_VERSION,
-                ReportField.PHONE_MODEL,
-                ReportField.STACK_TRACE,
-                ReportField.LOGCAT,
-        },
-        logcatArguments = { "-t", "200", "-v", "threadtime" },
-        mode = ReportingInteractionMode.DIALOG,
-        resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
-        resDialogText = R.string.crash_dialog_text,
-        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
-        resDialogTitle = R.string.crash_dialog_title, // optional. default is your application name
-        resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. When defined, adds a user text field input with this text resource as a label
-        //resDialogEmailPrompt = R.string.crash_user_email_label, // optional. When defined, adds a user email text entry with this text resource as label. The email address will be populated from SharedPreferences and will be provided as an ACRA field if configured.
-        resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
-)
+//@ReportsCrashes(
+//        mailTo = "delletenebre@gmail.com",
+//        formUri = "https://collector.tracepot.com/f61f59df",
+//        customReportContent = {
+//                ReportField.USER_COMMENT,
+//                ReportField.APP_VERSION_CODE,
+//                ReportField.APP_VERSION_NAME,
+//                ReportField.ANDROID_VERSION,
+//                ReportField.PHONE_MODEL,
+//                ReportField.STACK_TRACE,
+//                ReportField.LOGCAT,
+//        },
+//        logcatArguments = { "-t", "200", "-v", "threadtime" },
+//        mode = ReportingInteractionMode.DIALOG,
+//        resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
+//        resDialogText = R.string.crash_dialog_text,
+//        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
+//        resDialogTitle = R.string.crash_dialog_title, // optional. default is your application name
+//        resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. When defined, adds a user text field input with this text resource as a label
+//        //resDialogEmailPrompt = R.string.crash_user_email_label, // optional. When defined, adds a user email text entry with this text resource as label. The email address will be populated from SharedPreferences and will be provided as an ACRA field if configured.
+//        resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
+//)
 public class App extends Application implements Application.ActivityLifecycleCallbacks {
     private static App sSelf;
     public static App getInstance() {
@@ -78,8 +75,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
     public static final String TAG = "kg.serial.manager";
-    public static final String LOCAL_ACTION_COMMAND_RECEIVED = "kg.serial.manager.local.new_data";
-    public static final String LOCAL_ACTION_SETTINGS_UPDATED = "kg.serial.manager.local.settings_updated";
+    public static final String LOCAL_ACTION_COMMAND_RECEIVED = "local.command_received";
+    public static final String LOCAL_ACTION_SETTINGS_UPDATED = "local.settings_updated";
+    public static final String LOCAL_ACTION_USB_CONNECTION_ESTABLISHED = "local.usb_connection_established";
+    public static final String LOCAL_ACTION_USB_CONNECTION_CLOSED = "local.usb_connection_closed";
 
     public static final String ACTION_COMMAND_RECEIVED = "kg.serial.manager.command_received";
     public static final String ACTION_SEND_DATA = "kg.serial.manager.send";
@@ -135,6 +134,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         sSelf = this;
         registerActivityLifecycleCallbacks(this);
         Realm.init(this);
@@ -194,16 +194,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
         sendBroadcast(new Intent(App.ACTION_APP_STARTED));
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        ACRA.init(this);
-    }
-
     public Realm getNewRealmInstance() {
         return Realm.getInstance(mRealmConfig);
     }
-
 
     public SharedPreferences getPrefs() {
         return mPrefs;

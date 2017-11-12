@@ -16,16 +16,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.IBinder;
-import android.support.v7.app.NotificationCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
-import com.felhr.usbserial.UsbSerialDevice;
-import com.felhr.usbserial.UsbSerialInterface;
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.WebSocket;
 import com.koushikdutta.async.http.server.AsyncHttpServer;
@@ -33,34 +31,29 @@ import com.koushikdutta.async.http.server.AsyncHttpServerRequest;
 import com.koushikdutta.async.http.server.AsyncHttpServerResponse;
 import com.koushikdutta.async.http.server.HttpServerRequestCallback;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import kg.delletenebre.serialmanager2.utils.Utils;
 
 public class CommunicationService extends Service implements SensorEventListener {
     private final static int NOTIFICATION_ID = 109;
-    public final static String LINE_SEPARATOR = System.getProperty("line.separator");
+    private final static String NOTIFICATION_CHANNEL_ID = "kg.serial.manager.notification.channelId";
 
     public final static String EXTRA_BLUETOOTH_ENABLED = "bluetooth_enabled";
     public final static String EXTRA_UPDATE_USB_CONNECTION = "update_usb";
     public final static String EXTRA_UPDATE_BLUETOOTH_CONNECTION = "update_bluetooth";
 
-
-    private UsbManager mUsbManager;
     private BroadcastReceiver mBroadcastReceiver;
+    private BroadcastReceiver mLocalBroadcastReceiver;
+    private LocalBroadcastManager mLocalBroadcastManager;
     private SharedPreferences mPrefs;
 
     // **** USB **** //
-    private HashMap<String,UsbSerialDevice> mConnectedUsbSerialDevices;
-    private HashMap<String,ByteArrayOutputStream> mUsbSerialReadBuffers;
+    private UsbConnection mUsbConnection;
 
     // **** BLUETOOTH **** //
     private BluetoothConnection mBluetoothConnection;
@@ -91,7 +84,7 @@ public class CommunicationService extends Service implements SensorEventListener
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             if (intent.getBooleanExtra(EXTRA_UPDATE_USB_CONNECTION, false)) {
-                startUsbCommunication();
+                mUsbConnection.findConnectedDevices();
             }
 
             if (intent.getBooleanExtra(EXTRA_BLUETOOTH_ENABLED, false)
@@ -108,17 +101,13 @@ public class CommunicationService extends Service implements SensorEventListener
         mPrefs = App.getInstance().getPrefs();
         initializeNotification();
 
-        mUsbManager = (UsbManager) getSystemService(Context.USB_SERVICE);
-        mConnectedUsbSerialDevices = new HashMap<>();
-        mUsbSerialReadBuffers = new HashMap<>();
-
+        mUsbConnection = new UsbConnection(this, App.getInstance().getIntPreference("usb_baud_rate"));
         mBluetoothConnection = new BluetoothConnection();
         if (App.getInstance().getBooleanPreference("bluetooth_adapter_turn_on")) {
-            mBluetoothConnection.getBluetoothAdapter().enable();
+            mBluetoothConnection.enableAdapter();
         }
 
-
-        startUsbCommunication();
+        mUsbConnection.findConnectedDevices();
         startBluetoothCommunication();
         startSerialCommunication();
         startWebServer();
@@ -128,69 +117,68 @@ public class CommunicationService extends Service implements SensorEventListener
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
 
-                switch (action) {
-                    case UsbManager.ACTION_USB_DEVICE_DETACHED:
-                        UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                        if (mConnectedUsbSerialDevices.containsKey(device.getDeviceName())) {
-                            mConnectedUsbSerialDevices.get(device.getDeviceName()).close();
-                            mConnectedUsbSerialDevices.remove(device.getDeviceName());
-                            updateNotificationText();
-                        }
-                        break;
+                if (action != null) {
 
-                    case BluetoothAdapter.ACTION_STATE_CHANGED:
-                        final int bluetoothState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
-                                BluetoothAdapter.ERROR);
-                        if (bluetoothState == BluetoothAdapter.STATE_TURNING_OFF) {
-                            stopBluetoothCommunication();
-                        }
-                        break;
+                    switch (action) {
+                        case UsbManager.ACTION_USB_DEVICE_DETACHED:
+                            UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                            mUsbConnection.close(device.getDeviceName());
+                            break;
 
-                    case App.ACTION_SEND_DATA:
-                        if (intent.hasExtra("data")) {
-                            if (intent.hasExtra("id")) {
-                                sendData(intent.getStringExtra("data"), intent.getStringExtra("id"));
+                        case BluetoothAdapter.ACTION_STATE_CHANGED:
+                            final int bluetoothState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                                    BluetoothAdapter.ERROR);
+                            if (bluetoothState == BluetoothAdapter.STATE_TURNING_OFF) {
+                                stopBluetoothCommunication();
+                            }
+                            break;
+
+                        case App.ACTION_SEND_DATA:
+                            if (intent.hasExtra("data")) {
+                                if (intent.hasExtra("id")) {
+                                    sendData(intent.getStringExtra("data"), intent.getStringExtra("id"));
+                                } else {
+                                    sendData(intent.getStringExtra("data"));
+                                }
+                            }
+                            break;
+
+                        case App.LOCAL_ACTION_SETTINGS_UPDATED:
+                            if (isCommunicationTypeEnabled("usb")) {
+                                if (!mUsbConnection.hasOpened()) {
+                                    mUsbConnection.findConnectedDevices();
+                                }
                             } else {
-                                sendData(intent.getStringExtra("data"));
+                                mUsbConnection.closeAll();
                             }
-                        }
-                        break;
 
-                    case App.LOCAL_ACTION_SETTINGS_UPDATED:
-                        if (isCommunicationTypeEnabled("usb")) {
-                            if (mConnectedUsbSerialDevices.isEmpty()) {
-                                startUsbCommunication();
+                            if (isCommunicationTypeEnabled("bluetooth")) {
+                                if (mBluetoothConnection == null) {
+                                    startBluetoothCommunication();
+                                }
+                            } else {
+                                stopBluetoothCommunication();
                             }
-                        } else {
-                            stopUsbCommunication();
-                        }
 
-                        if (isCommunicationTypeEnabled("bluetooth")) {
-                            if (mBluetoothConnection == null) {
-                                startBluetoothCommunication();
+                            if (isCommunicationTypeEnabled("web_socket")) {
+                                if (mWebServer == null) {
+                                    startWebServer();
+                                }
+                            } else {
+                                stopWebServer();
                             }
-                        } else {
-                            stopBluetoothCommunication();
-                        }
 
-                        if (isCommunicationTypeEnabled("web_socket")) {
-                            if (mWebServer == null) {
-                                startWebServer();
+                            if (isCommunicationTypeEnabled("serial")) {
+                                if (mSerialPort == null) {
+                                    startSerialCommunication();
+                                }
+                            } else {
+                                stopSerialCommunication();
                             }
-                        } else {
-                            stopWebServer();
-                        }
 
-                        if (isCommunicationTypeEnabled("serial")) {
-                            if (mSerialPort == null) {
-                                startSerialCommunication();
-                            }
-                        } else {
-                            stopSerialCommunication();
-                        }
-
-                        updateNotificationText();
-                        break;
+                            updateNotificationText();
+                            break;
+                    }
                 }
             }
         };
@@ -203,8 +191,76 @@ public class CommunicationService extends Service implements SensorEventListener
         intentFilter.addAction(App.ACTION_EXTERNAL_COMMAND);
         registerReceiver(mBroadcastReceiver, intentFilter);
 
+
+        mLocalBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+
+                if (action != null) {
+
+                    switch (action) {
+                        case App.LOCAL_ACTION_USB_CONNECTION_ESTABLISHED:
+                            updateNotificationText();
+                            break;
+
+                        case App.LOCAL_ACTION_USB_CONNECTION_CLOSED:
+                            updateNotificationText();
+                            break;
+
+                        case App.LOCAL_ACTION_COMMAND_RECEIVED:
+                            App.getInstance().detectCommand(intent.getStringExtra("command"));
+                            break;
+
+                        case App.LOCAL_ACTION_SETTINGS_UPDATED:
+                            if (isCommunicationTypeEnabled("usb")) {
+                                if (!mUsbConnection.hasOpened()) {
+                                    mUsbConnection.findConnectedDevices();
+                                }
+                            } else {
+                                mUsbConnection.closeAll();
+                            }
+
+                            if (isCommunicationTypeEnabled("bluetooth")) {
+                                if (mBluetoothConnection == null) {
+                                    startBluetoothCommunication();
+                                }
+                            } else {
+                                stopBluetoothCommunication();
+                            }
+
+                            if (isCommunicationTypeEnabled("web_socket")) {
+                                if (mWebServer == null) {
+                                    startWebServer();
+                                }
+                            } else {
+                                stopWebServer();
+                            }
+
+                            if (isCommunicationTypeEnabled("serial")) {
+                                if (mSerialPort == null) {
+                                    startSerialCommunication();
+                                }
+                            } else {
+                                stopSerialCommunication();
+                            }
+
+                            updateNotificationText();
+                            break;
+                    }
+                }
+            }
+        };
+        IntentFilter localIntentFilter = new IntentFilter();
+        localIntentFilter.addAction(App.LOCAL_ACTION_USB_CONNECTION_ESTABLISHED);
+        localIntentFilter.addAction(App.LOCAL_ACTION_USB_CONNECTION_CLOSED);
+        localIntentFilter.addAction(App.LOCAL_ACTION_COMMAND_RECEIVED);
+        localIntentFilter.addAction(App.LOCAL_ACTION_SETTINGS_UPDATED);
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
+        mLocalBroadcastManager.registerReceiver(mLocalBroadcastReceiver, localIntentFilter);
+
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        Sensor sensorLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
+        Sensor sensorLight = mSensorManager != null ? mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT) : null;
         if (sensorLight != null) {
             mSensorManager.registerListener(this, sensorLight, SensorManager.SENSOR_DELAY_NORMAL);
         }
@@ -221,9 +277,11 @@ public class CommunicationService extends Service implements SensorEventListener
         }
 
         unregisterReceiver(mBroadcastReceiver);
-        stopUsbCommunication();
-        mConnectedUsbSerialDevices = null;
-        mUsbSerialReadBuffers = null;
+        mBroadcastReceiver = null;
+        mLocalBroadcastManager.unregisterReceiver(mLocalBroadcastReceiver);
+        mLocalBroadcastManager = null;
+        mUsbConnection.closeAll();
+        mUsbConnection = null;
         stopBluetoothCommunication();
         stopWebServer();
         stopSerialCommunication();
@@ -234,6 +292,7 @@ public class CommunicationService extends Service implements SensorEventListener
 //        }
 
         mSensorManager.unregisterListener(this);
+        mSensorManager = null;
 
         sendBroadcast(new Intent(App.ACTION_SERVICE_STOPPED));
 
@@ -256,13 +315,13 @@ public class CommunicationService extends Service implements SensorEventListener
         mNotificationLayout = new RemoteViews(getPackageName(), R.layout.layout_notification);
 
         int textColor = getNotificationTextColor(
-                android.support.v7.appcompat.R.style.TextAppearance_AppCompat_Notification_Info);
+                android.support.v7.appcompat.R.style.TextAppearance_Compat_Notification_Info);
 
         Bitmap appIcon = getNotificationInfoIcon(R.drawable.notification_icon, textColor);
         mNotificationLayout.setImageViewBitmap(R.id.app_icon, appIcon);
 
         textColor = getNotificationTextColor(
-                android.support.v7.appcompat.R.style.TextAppearance_AppCompat_Notification_Title);
+                android.support.v7.appcompat.R.style.TextAppearance_Compat_Notification_Title);
 
         Bitmap usbIcon = getNotificationInfoIcon(R.drawable.ic_usb, textColor);
         mNotificationLayout.setImageViewBitmap(R.id.usb_connections_icon, usbIcon);
@@ -273,8 +332,7 @@ public class CommunicationService extends Service implements SensorEventListener
         Bitmap websocketIcon = getNotificationInfoIcon(R.drawable.ic_language_black_24dp, textColor);
         mNotificationLayout.setImageViewBitmap(R.id.web_socket_connections_icon, websocketIcon);
 
-        mNotification =
-                (NotificationCompat.Builder) new NotificationCompat.Builder(this)
+        mNotification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
                         .setOnlyAlertOnce(true)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContent(mNotificationLayout)
@@ -286,12 +344,8 @@ public class CommunicationService extends Service implements SensorEventListener
 
     private void updateNotificationText() {
         if (isCommunicationTypeEnabled("usb")) {
-            if (mNotificationLayout != null) {
-                String usbCountText = "0";
-                if (mConnectedUsbSerialDevices != null) {
-                    usbCountText = String.valueOf(mConnectedUsbSerialDevices.size());
-                }
-                mNotificationLayout.setTextViewText(R.id.usb_connections_count, usbCountText);
+            if (mNotificationLayout != null && mUsbConnection != null) {
+                mNotificationLayout.setTextViewText(R.id.usb_connections_count, String.valueOf(mUsbConnection.count()));
                 setNotificationInfoVisibility("usb", View.VISIBLE);
             }
         } else {
@@ -305,7 +359,7 @@ public class CommunicationService extends Service implements SensorEventListener
                     bluetoothIconId = R.drawable.ic_bluetooth_connected_black_24dp;
                 }
                 int textColor = getNotificationTextColor(
-                        android.support.v7.appcompat.R.style.TextAppearance_AppCompat_Notification_Title);
+                        android.support.v7.appcompat.R.style.TextAppearance_Compat_Notification_Title);
                 Bitmap bluetoothIcon = getNotificationInfoIcon(bluetoothIconId, textColor);
                 mNotificationLayout.setImageViewBitmap(R.id.bluetooth_connections_icon, bluetoothIcon);
             }
@@ -336,7 +390,9 @@ public class CommunicationService extends Service implements SensorEventListener
         mNotification.setContent(mNotificationLayout);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(NOTIFICATION_ID, mNotification.build());
+        if (notificationManager != null) {
+            notificationManager.notify(NOTIFICATION_ID, mNotification.build());
+        }
     }
 
     private void setNotificationInfoVisibility(String type, int visibility) {
@@ -349,100 +405,6 @@ public class CommunicationService extends Service implements SensorEventListener
     private Bitmap getNotificationInfoIcon(int iconResId, int color) {
         Bitmap usbIcon = Utils.getBitmapFromVectorDrawable(this, iconResId);
         return Utils.tintBitmap(usbIcon, color);
-    }
-
-
-    private void startUsbCommunication() {
-        if (isCommunicationTypeEnabled("usb")) {
-            for (UsbDevice device : mUsbManager.getDeviceList().values()) {
-                if (mUsbManager.hasPermission(device) &&
-                        !mConnectedUsbSerialDevices.containsKey(device.getDeviceName())) {
-                    if (setupUsbSerialConnection(device)) {
-                        String path = device.getDeviceName();
-                        String vid = String.valueOf(device.getVendorId());
-                        String pid = String.valueOf(device.getProductId());
-                        App.log("Connected usb device: " + path + " | VID:" + vid + " | PID: " + pid);
-                    }
-                }
-            }
-        }
-    }
-    private void stopUsbCommunication() {
-        if (!mConnectedUsbSerialDevices.isEmpty()) {
-            for (Iterator<Map.Entry<String, UsbSerialDevice>> iterator =
-                 mConnectedUsbSerialDevices.entrySet().iterator(); iterator.hasNext(); ) {
-                Map.Entry<String, UsbSerialDevice> entry = iterator.next();
-                entry.getValue().close(); // close usb serial port
-                iterator.remove();
-            }
-        }
-    }
-    private boolean setupUsbSerialConnection(UsbDevice device) {
-        UsbDeviceConnection connection = mUsbManager.openDevice(device);
-        UsbSerialDevice serialDevice = null;
-
-        try {
-            serialDevice = UsbSerialDevice.createUsbSerialDevice(device, connection);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (serialDevice != null && serialDevice.open()) {
-            serialDevice.setBaudRate(App.getInstance()
-                    .getIntPreference("usb_baud_rate", getString(R.string.pref_default_usb_baud_rate)));
-//            serialDevice.setDataBits(UsbSerialInterface.DATA_BITS_8);
-//            serialDevice.setStopBits(UsbSerialInterface.STOP_BITS_1);
-//            serialDevice.setParity(UsbSerialInterface.PARITY_NONE);
-
-            final String deviceName = device.getDeviceName();
-            mConnectedUsbSerialDevices.put(deviceName, serialDevice);
-            mUsbSerialReadBuffers.put(deviceName, new ByteArrayOutputStream());
-            serialDevice.read(new UsbSerialInterface.UsbReadCallback() {
-                @Override
-                public void onReceivedData(byte[] arg0) {
-                    try {
-                        ByteArrayOutputStream buffer = mUsbSerialReadBuffers.get(deviceName);
-                        buffer.write(arg0);
-                        String data = buffer.toString("UTF-8");
-                        if (data.contains(LINE_SEPARATOR)) {
-                            String[] dataParts = data.split(LINE_SEPARATOR);
-                            App.getInstance().detectCommand(dataParts[0].replaceAll("\r", "").replaceAll("\n", ""));
-                            buffer.reset();
-                            if (dataParts.length == 2) {
-                                buffer.write(dataParts[1].getBytes("UTF-8"));
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            //
-            // Some Arduinos would need some sleep because firmware wait some time to know whether
-            // a new sketch is going to be uploaded or not
-//            try {
-//                Thread.sleep(2000); // sleep some. YMMV with different chips.
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-            if (isConnectionStateMessageEnabled()) {
-                serialDevice.write((App.ACTION_CONNECTION_ESTABLISHED + "\n").getBytes());
-            }
-            updateNotificationText();
-
-            return true;
-        }
-
-        return false;
-    }
-    private void usbSend(String message) {
-        if (!mConnectedUsbSerialDevices.isEmpty()) {
-            for (Map.Entry<String, UsbSerialDevice> entry : mConnectedUsbSerialDevices.entrySet()) {
-                UsbSerialDevice serial = entry.getValue();
-                serial.write(message.getBytes());
-            }
-        }
     }
 
 
@@ -621,7 +583,7 @@ public class CommunicationService extends Service implements SensorEventListener
         if (App.getInstance().getBooleanPreference("crlf")) {
             message += App.CRLF;
         }
-        usbSend(message);
+        mUsbConnection.send(message);
         bluetoothSend(message);
         webSocketSend(message);
         serialSend(message);
@@ -663,22 +625,6 @@ public class CommunicationService extends Service implements SensorEventListener
             if (value >= SensorManager.LIGHT_SUNLIGHT_MAX) {
                 mode++;
             }
-//
-//            if (value >= SensorManager.LIGHT_SUNLIGHT_MAX) {
-//                mode = 7;
-//            } else if (value >= SensorManager.LIGHT_SUNLIGHT) {
-//                mode = 6;
-//            } else if (value >= SensorManager.LIGHT_SHADE) {
-//                mode = 5;
-//            } else if (value >= SensorManager.LIGHT_OVERCAST) {
-//                mode = 4;
-//            } else if (value >= SensorManager.LIGHT_SUNRISE) {
-//                mode = 3;
-//            } else if (value >= SensorManager.LIGHT_CLOUDY) {
-//                mode = 2;
-//            } else if (value >= SensorManager.LIGHT_FULLMOON) {
-//                mode = 1;
-//            }
 
             if (mLastLightSensorMode != mode
                     && System.currentTimeMillis() - mLastLightSensorMillis > 3000) {

@@ -37,8 +37,6 @@ import kg.delletenebre.serialmanager2.R;
 import kg.delletenebre.serialmanager2.views.AppChooserView;
 
 public class EditActivity extends AppCompatActivity implements ColorPickerDialogListener {
-    private static final String TAG = "EditActivity";
-
     private static final int DIALOG_ID_NOTY_BACKGROUND_COLOR = 0;
     private static final int DIALOG_ID_NOTY_TEXT_COLOR = 1;
 

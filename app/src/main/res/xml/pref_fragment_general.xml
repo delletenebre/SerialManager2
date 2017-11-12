@@ -1,10 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <CheckBoxPreference android:key="check_for_updates"
-        android:defaultValue="@bool/pref_default_check_for_updates"
-        android:title="@string/pref_title_check_for_updates"
-        android:summary="@string/pref_summary_check_for_updates" />
-
     <CheckBoxPreference android:key="start_on_boot"
         android:defaultValue="@bool/pref_default_start_on_boot"
         android:title="@string/pref_title_start_on_boot"

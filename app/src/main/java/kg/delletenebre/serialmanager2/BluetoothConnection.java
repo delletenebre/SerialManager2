@@ -127,6 +127,13 @@ class BluetoothConnection {
         r.write(out);
     }
 
+    void enableAdapter() {
+        BluetoothAdapter bluetoothAdapter = getBluetoothAdapter();
+        if (bluetoothAdapter != null) {
+            bluetoothAdapter.enable();
+        }
+    }
+
 
     private class CommunicationThread extends Thread {
         private BluetoothSocket mBluetoothSocket;

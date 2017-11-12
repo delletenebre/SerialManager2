@@ -6,7 +6,6 @@
     <string name="settings">Settings</string>
     <string name="restart_service">Restart Service</string>
     <string name="send_report">Send report</string>
-    <string name="check_for_updates">Check for updates</string>
     <string name="error">Error</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -108,8 +107,6 @@
     </string-array>
 
     <string name="pref_header_general">General</string>
-    <string name="pref_title_check_for_updates">Check for updates</string>
-    <string name="pref_summary_check_for_updates">Automatically check for updates when app starts</string>
     <string name="pref_title_start_on_boot">Start on boot</string>
     <string name="pref_summary_start_on_boot">Start the service on device boot completed</string>
     <string name="pref_title_start_on_boot_delay">Start delay after boot (sec)</string>

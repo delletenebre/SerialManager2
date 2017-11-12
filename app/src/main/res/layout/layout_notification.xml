@@ -24,14 +24,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Notification.Info" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Info" />
 
         <TextView android:id="@+id/ip_address"
             android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
-            android:textAppearance="@style/TextAppearance.AppCompat.Notification.Info" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Info" />
 
     </LinearLayout>
 
@@ -56,7 +56,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/notification_default_connections_count"
-            android:textAppearance="@style/TextAppearance.AppCompat.Notification.Title" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title" />
 
         <ImageView android:id="@+id/web_socket_connections_icon"
             android:visibility="gone"
@@ -72,7 +72,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
             android:text="@string/notification_default_connections_count"
-            android:textAppearance="@style/TextAppearance.AppCompat.Notification.Title" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title" />
 
         <ImageView android:id="@+id/bluetooth_connections_icon"
             android:visibility="gone"

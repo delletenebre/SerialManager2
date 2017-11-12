@@ -28,4 +28,7 @@
     <!-- 0x04d8 / 0x8011: AVK AudioBox -->
     <usb-device vendor-id="1240" product-id="32785" />
 
+    <!-- 0x1b4f Sparkfun -->
+    <usb-device vendor-id="6991" />
+
 </resources>

@@ -3,15 +3,12 @@ package kg.delletenebre.serialmanager2;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -56,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        mCommandsRecyclerView = (RecyclerView) findViewById(R.id.commands_recycler_view);
+        mCommandsRecyclerView = findViewById(R.id.commands_recycler_view);
         mCommandsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCommandsRecyclerView.setAdapter(new Adapter());
         mCommandsRecyclerView.setHasFixedSize(true);
@@ -65,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupItemTouchHelper();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,13 +72,6 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if (prefs.getBoolean("check_for_updates",
-                getResources().getBoolean(R.bool.pref_default_check_for_updates))) {
-            new Updater(false).execute(this);
-        }
-
     }
 
     @Override
@@ -104,15 +94,6 @@ public class MainActivity extends AppCompatActivity {
                 stopService(communicationServiceIntent);
                 startService(communicationServiceIntent);
                 break;
-
-            case R.id.report_crash:
-                sendCrashReport();
-                break;
-
-            case R.id.check_updates:
-                new Updater(true).execute(this);
-                break;
-
         }
 
         return super.onOptionsItemSelected(item);
@@ -249,73 +230,5 @@ public class MainActivity extends AppCompatActivity {
 
         ItemTouchHelper mItemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         mItemTouchHelper.attachToRecyclerView(mCommandsRecyclerView);
-    }
-
-    private void sendCrashReport() {
-        throw new RuntimeException("User report");
-    }
-
-    public void update(final String lastAppVersion) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setMessage(String.format(getString(R.string.new_update_available), lastAppVersion))
-                        .setCancelable(true)
-                        .setPositiveButton(getString(R.string.yes),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                                        String apkUrl = "https://raw.githubusercontent.com/delletenebre/SerialManager2/master/apk/SerialManager-" + lastAppVersion + ".apk";
-                                        intent.setData(Uri.parse(apkUrl));
-
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                        dialog.dismiss();
-                                    }
-                                }
-                        )
-                        .setNegativeButton(getString(R.string.no),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                }
-                        )
-                        .setNeutralButton(getString(R.string.ignore_this_version),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                                        SharedPreferences.Editor editor = prefs.edit();
-                                        editor.putString(Updater.PREF_NAME_LAST_IGNORED_VERSION, lastAppVersion);
-                                        editor.apply();
-                                        dialog.cancel();
-                                    }
-                                }
-                        )
-                        .create()
-                        .show();
-            }
-        });
-    }
-
-    public void showNoUpdatesAvailable() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setMessage(getString(R.string.no_updates_available))
-                        .setCancelable(true)
-                        .setPositiveButton(getString(R.string.awesome),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.dismiss();
-                                    }
-                                }
-                        )
-                        .create()
-                        .show();
-            }
-        });
     }
 }
