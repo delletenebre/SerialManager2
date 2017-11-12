@@ -148,10 +148,10 @@ public class Adapter extends RecyclerView.Adapter {
 
         ViewHolder(View layout) {
             super(layout);
-            mTitle = (TextView) layout.findViewById(R.id.title);
-            mSummary = (TextView) layout.findViewById(R.id.summary);
-//            mIcon = (ImageView) layout.findViewById(R.id.icon);
-            mUndo = (Button) layout.findViewById(R.id.undo_button);
+            mTitle = layout.findViewById(R.id.title);
+            mSummary = layout.findViewById(R.id.summary);
+//            mIcon = layout.findViewById(R.id.icon);
+            mUndo = layout.findViewById(R.id.undo_button);
 
             layout.setOnClickListener(this);
         }

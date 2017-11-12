@@ -22,9 +22,9 @@ import kg.delletenebre.serialmanager2.R;
 import kg.delletenebre.serialmanager2.commands.Command;
 
 public class RealmBackupRestore {
-    private static final File EXPORT_REALM_FOLDER = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-    private static final String JSON_FILE_NAME = "_serial_manager_backup.json";
-    public static final String JSON_FILE_PATH = EXPORT_REALM_FOLDER + "/" + JSON_FILE_NAME;
+    private static final File EXPORT_REALM_FOLDER = Environment.getExternalStorageDirectory();
+    private static  String JSON_FILE_NAME = "serial_manager_backup.json";
+    public static  String JSON_FILE_PATH = EXPORT_REALM_FOLDER + "/" + JSON_FILE_NAME;
 
     private Activity mActivity;
     private Realm mRealm;
@@ -106,8 +106,11 @@ public class RealmBackupRestore {
                 List<Command> commands = mRealm.where(Command.class).findAll();
                 if (commands.size() > 0) {
                     Gson gson = new Gson();
-
                     File file = new File(JSON_FILE_PATH);
+                    if (file.exists()) {
+                        file.delete(); // Delete any previous recording
+                    }
+                    file.createNewFile();
                     FileOutputStream stream = new FileOutputStream(file);
                     try {
                         stream.write(gson.toJson(mRealm.copyFromRealm(commands)).getBytes());
@@ -119,6 +122,7 @@ public class RealmBackupRestore {
                             mActivity.getString(R.string.pref_toast_commands_backup_success));
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 App.logError(e.getLocalizedMessage());
                 App.getInstance().showSnackbarError(mActivity,
                         mActivity.getString(R.string.pref_toast_commands_backup_error));
