@@ -2,6 +2,7 @@ package kg.delletenebre.serialmanager2.commands;
 
 
 import android.content.Context;
+import android.support.annotation.Keep;
 
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
@@ -10,6 +11,7 @@ import kg.delletenebre.serialmanager2.App;
 import kg.delletenebre.serialmanager2.R;
 import kg.delletenebre.serialmanager2.utils.Utils;
 
+@Keep
 public class Command extends RealmObject {
     @Ignore
     public static final int ACTION_NONE = 0;
