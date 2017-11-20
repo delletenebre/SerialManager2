@@ -40,7 +40,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 import kg.delletenebre.serialmanager2.commands.Command;
-import kg.delletenebre.serialmanager2.commands.Migration;
+import kg.delletenebre.serialmanager2.utils.RealmMigration;
 import kg.delletenebre.serialmanager2.utils.Utils;
 import kg.delletenebre.serialmanager2.utils.VirtualKeyboard;
 import kg.delletenebre.serialmanager2.views.AppChooserView;
@@ -129,8 +129,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     private int mHelperOverlayFirstHeight = 0;
 
 
-
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -144,7 +142,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRealmConfig = new RealmConfiguration.Builder()
                 .schemaVersion(4)
-                .migration(new Migration())
+                .migration(new RealmMigration())
                 .build();
         mRealm = getNewRealmInstance();
 

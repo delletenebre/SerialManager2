@@ -2,10 +2,11 @@ package kg.delletenebre.serialmanager2.widgets
 
 import android.support.annotation.Keep
 import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
 
 @Keep
-open class WidgetReceiveModel : RealmObject() {
-    var id: Int = 0
+open class WidgetSimpleModel : RealmObject() {
+    @PrimaryKey var id: Int = 0
     var key: String = ""
     var value: String = ""
     var textColor: String = ""

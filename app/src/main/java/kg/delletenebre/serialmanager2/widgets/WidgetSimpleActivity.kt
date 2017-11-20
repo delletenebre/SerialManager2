@@ -11,7 +11,7 @@ import kg.delletenebre.serialmanager2.App
 import kg.delletenebre.serialmanager2.R
 
 
-class WidgetReceiveActivity: AppCompatActivity() {
+class WidgetReceiveActivity : AppCompatActivity() {
     private var mWidgetId: Int = AppWidgetManager.INVALID_APPWIDGET_ID
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,8 +26,7 @@ class WidgetReceiveActivity: AppCompatActivity() {
 
         val realm = App.getInstance().realm
         realm.executeTransaction {
-            val widget = realm.createObject(WidgetReceiveModel::class.java)
-            widget.id = mWidgetId
+            realm.createObject(WidgetSimpleModel::class.java, mWidgetId)
         }
 
         val resultIntent = Intent()
@@ -51,8 +50,6 @@ class WidgetReceiveActivity: AppCompatActivity() {
             }
 
             else -> {
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
                 super.onOptionsItemSelected(item)
             }
         }

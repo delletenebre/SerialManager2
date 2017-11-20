@@ -27,7 +27,7 @@ class WidgetSimple : AppWidgetProvider() {
 
     override fun onDeleted(context: Context, widgetIds: IntArray) {
         val realm = App.getInstance().realm
-        val widgets = realm.where(WidgetReceiveModel::class.java)
+        val widgets = realm.where(WidgetSimpleModel::class.java)
                 .`in`("id", widgetIds.toTypedArray()).findAll()
         realm.executeTransaction {
             widgets.deleteAllFromRealm()
@@ -51,7 +51,7 @@ class WidgetSimple : AppWidgetProvider() {
             val widgetManager = AppWidgetManager.getInstance(context)
 
             val realm = App.getInstance().realm
-            val widgets = realm.where(WidgetReceiveModel::class.java)
+            val widgets = realm.where(WidgetSimpleModel::class.java)
                     .equalTo("key", key).findAll()!!
             for (widget in widgets) {
                 update(context, widgetManager, widget.id, value)
@@ -62,7 +62,7 @@ class WidgetSimple : AppWidgetProvider() {
     private fun update(context: Context, widgetManager: AppWidgetManager,
                        widgetId: Int, value: String) {
         val widgetViews = RemoteViews(context.packageName, R.layout.widget_simple)
-        val widget = App.getInstance().realm.where(WidgetReceiveModel::class.java)
+        val widget = App.getInstance().realm.where(WidgetSimpleModel::class.java)
                 .equalTo("id", widgetId).findFirst()
         if (widget != null) {
             val position = widget.textAlignId + widget.layoutAlignId * 3
