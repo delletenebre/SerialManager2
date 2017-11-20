@@ -46,7 +46,7 @@ public class VirtualKeyboard {
             os.flush();
             Thread.sleep(sleepTime);
 
-            os.writeBytes("rm " + filePath + "\n");
+            os.writeBytes("[ -fe " + filePath + " ] && rm " + filePath + "\n");
             os.flush();
             Thread.sleep(sleepTime);
 

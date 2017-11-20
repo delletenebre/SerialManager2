@@ -120,6 +120,9 @@ public class RealmBackupRestore {
 
                     App.getInstance().showSnackbarSuccess(mActivity,
                             mActivity.getString(R.string.pref_toast_commands_backup_success));
+                } else {
+                    App.getInstance().showSnackbar(mActivity,
+                            mActivity.getString(R.string.pref_toast_commands_nothing_to_backup));
                 }
             } catch (Exception e) {
                 e.printStackTrace();

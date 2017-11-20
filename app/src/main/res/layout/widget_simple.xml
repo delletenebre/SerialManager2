@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#88000000"
+    android:padding="@dimen/widget_margin">
+
+    <TextView android:id="@+id/text_top_left"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="top|left" />
+
+    <TextView android:id="@+id/text_top_center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="top|center_horizontal" />
+
+    <TextView android:id="@+id/text_top_right"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="top|right" />
+
+
+    <TextView android:id="@+id/text_middle_left"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|left" />
+
+    <TextView android:id="@+id/text_middle_center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="center" />
+
+    <TextView android:id="@+id/text_middle_right"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical|right" />
+
+
+    <TextView android:id="@+id/text_bottom_left"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="bottom|left" />
+
+    <TextView android:id="@+id/text_bottom_center"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="bottom|center_horizontal" />
+
+    <TextView android:id="@+id/text_bottom_right"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fontFamily="@font/fontawesome"
+        android:textAlignment="gravity"
+        android:gravity="bottom|right" />
+
+</RelativeLayout>

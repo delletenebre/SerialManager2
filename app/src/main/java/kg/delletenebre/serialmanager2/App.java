@@ -143,7 +143,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRealmConfig = new RealmConfiguration.Builder()
-                .schemaVersion(3)
+                .schemaVersion(4)
                 .migration(new Migration())
                 .build();
         mRealm = getNewRealmInstance();
@@ -152,29 +152,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         if (isSystemOverlaysPermissionGranted()) {
             createHelperOverlay();
-//            mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-//            LayoutInflater layoutInflater = (LayoutInflater) getSystemService(
-//                    Context.LAYOUT_INFLATER_SERVICE);
-//            View checkFullscreenView = layoutInflater.inflate(R.layout.check_fullscreen_overlay, null);
-//            WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
-//                    0, ViewGroup.LayoutParams.MATCH_PARENT,
-//                    WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-//                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-//                            | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-//                            | WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-//                    PixelFormat.TRANSLUCENT);
-//            checkFullscreenView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
-//                @Override
-//                public void onLayoutChange(View view, int left, int top, int right, int bottom,
-//                                           int oldLeft, int oldTop, int oldRight, int oldBottom) {
-//                    DisplayMetrics metrics = new DisplayMetrics();
-//                    mWindowManager.getDefaultDisplay().getMetrics(metrics);
-//                    mIsFullscreen = bottom >= metrics.heightPixels;
-//
-//                    logStatus("Fullscreen", String.valueOf(mIsFullscreen));
-//                }
-//            });
-//            mWindowManager.addView(checkFullscreenView, layoutParams);
         }
 
         IntentFilter intentFilter = new IntentFilter();
@@ -211,16 +188,20 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     private void createHelperOverlay() {
         mWindowManager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        final WindowManager.LayoutParams p = new WindowManager.LayoutParams();
-        p.type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
-        p.gravity = Gravity.END | Gravity.TOP;
-        p.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
-        p.width = 1;
-        p.height = WindowManager.LayoutParams.MATCH_PARENT;
-        p.format = PixelFormat.TRANSPARENT;
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            params.type = WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+        }
+        params.gravity = Gravity.END | Gravity.TOP;
+        params.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+        params.width = 1;
+        params.height = WindowManager.LayoutParams.MATCH_PARENT;
+        params.format = PixelFormat.TRANSPARENT;
         final View helperOverlay = new View(this);
 
-        mWindowManager.addView(helperOverlay, p);
+        mWindowManager.addView(helperOverlay, params);
         final ViewTreeObserver vto = helperOverlay.getViewTreeObserver();
         vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -663,7 +644,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         showSnackbar(activity, message, length, null);
     }
     public void showSnackbar(Activity activity, String message) {
-        showSnackbar(activity, message, Snackbar.LENGTH_SHORT, null);
+        showSnackbar(activity, message, Snackbar.LENGTH_LONG, null);
     }
     public void showSnackbarSuccess(Activity activity, String message) {
         showSnackbar(activity, message, Snackbar.LENGTH_LONG, Color.parseColor("#4CAF50"));

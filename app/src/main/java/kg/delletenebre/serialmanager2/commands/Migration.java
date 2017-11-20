@@ -54,7 +54,24 @@ public class Migration implements RealmMigration {
                             obj.setInt("positionZ", 0);
                         }
                     });
+            oldVersion++;
+        }
 
+        if (oldVersion == 3) {
+            RealmObjectSchema widgetReceiveSchema = schema.get("WidgetReceiveModel");
+            widgetReceiveSchema
+                    .addField("id", int.class)
+                    .transform(new RealmObjectSchema.Function() {
+                        @Override
+                        public void apply(DynamicRealmObject obj) {
+                            obj.setFloat("id", obj.getInt("index"));
+                        }
+                    })
+                    .removeField("index")
+                    .setRequired("value", true)
+                    .setRequired("textColor", true)
+                    .setRequired("backgroundColor", true)
+                    .setRequired("backgroundImage", true);
             oldVersion++;
         }
     }

@@ -132,11 +132,15 @@
     <string name="pref_summary_commands_restore">Восстанавливает команды из файла: %1$s</string>
     <string name="pref_toast_commands_restore_success">Восстановление завершено успешно!</string>
     <string name="pref_toast_commands_restore_error">Ошибка восстановления команд</string>
+    <string name="pref_toast_commands_nothing_to_backup">Сохранять нечего</string>
 
 
     <!-- Strings related to Widgets -->
+    <string name="action_save">Сохранить</string>
     <string name="pref_default_widget_receive_text">Данные: %key / %value</string>
     <string name="appwidget_text">ПРИМЕР</string>
     <string name="configure">Настройка</string>
     <string name="add_widget">Добавить виджет</string>
+
+    <string name="widget_parameter_text">Текст</string>
 </resources>
