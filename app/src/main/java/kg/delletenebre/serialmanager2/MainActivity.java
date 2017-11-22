@@ -17,6 +17,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,8 +25,10 @@ import android.view.ViewConfiguration;
 
 import java.lang.reflect.Field;
 
+import io.realm.RealmResults;
 import kg.delletenebre.serialmanager2.commands.Adapter;
 import kg.delletenebre.serialmanager2.commands.EditActivity;
+import kg.delletenebre.serialmanager2.widgets.WidgetSimpleModel;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -103,6 +106,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         ((Adapter)mCommandsRecyclerView.getAdapter()).updateRealmInstance();
+
+        RealmResults<WidgetSimpleModel> widgets = App.getInstance().getRealm().where(WidgetSimpleModel.class).findAll();
+        for (WidgetSimpleModel widget : widgets) {
+            Log.d("@@@@", String.valueOf(widget.getId()) + " / " + widget.getChosenAppLabel());
+        }
     }
 
     @Override

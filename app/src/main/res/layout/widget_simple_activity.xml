@@ -57,24 +57,24 @@
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton android:id="@+id/xTextColor"
+            <android.support.v7.widget.AppCompatButton android:id="@+id/xTextColorButton"
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:text="@string/command_noty_text_color"
                 android:textSize="12sp" />
-            <TextView android:id="@+id/noty_text_color_helper"
+            <TextView android:id="@+id/xTextColor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone" />
 
-            <android.support.v7.widget.AppCompatButton android:id="@+id/xBackgroundColor"
+            <android.support.v7.widget.AppCompatButton android:id="@+id/xBackgroundColorButton"
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:text="@string/command_noty_background_color"
                 android:textSize="12sp" />
-            <TextView android:id="@+id/noty_bg_color_helper"
+            <TextView android:id="@+id/xBackgroundColor"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:visibility="gone" />
@@ -188,7 +188,7 @@
                     android:drawableTint="@color/inputBottomLine" />
             </android.support.design.widget.TextInputLayout>
 
-            <LinearLayout android:id="@+id/emulate_key_layout"
+            <LinearLayout android:id="@+id/xEmulateKeyLayout"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

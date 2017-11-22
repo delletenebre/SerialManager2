@@ -101,7 +101,7 @@
         </receiver>
 
         <activity
-            android:name=".widgets.WidgetReceiveActivity">
+            android:name=".widgets.WidgetSimpleActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>

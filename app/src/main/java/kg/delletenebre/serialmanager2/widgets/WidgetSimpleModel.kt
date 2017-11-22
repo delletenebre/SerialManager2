@@ -9,8 +9,8 @@ open class WidgetSimpleModel : RealmObject() {
     @PrimaryKey var id: Int = 0
     var key: String = ""
     var text: String = ""
-    var textColor: String = "#ffffffff"
     var textSize: Int = 14
+    var textColor: String = "#ffffffff"
     var backgroundColor: String = "#88000000"
     var backgroundImage: String = ""
     var textVerticalPositionId: Int = 1
