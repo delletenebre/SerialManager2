@@ -65,9 +65,9 @@ class WidgetSimple : AppWidgetProvider() {
         val widget = App.getInstance().realm.where(WidgetSimpleModel::class.java)
                 .equalTo("id", widgetId).findFirst()
         if (widget != null) {
-            val position = widget.textAlignId + widget.layoutAlignId * 3
+            val position = widget.textAlignmentId + widget.textVerticalPositionId * 3
             val visibleTextViewId = sTextViewIds[position]
-            val text = context.getString(R.string.widget_receive_default_text)
+            val text = widget.text
             val textSize = widget.textSize.toFloat()
             val backgroundColor = Color.parseColor(widget.backgroundColor)
 

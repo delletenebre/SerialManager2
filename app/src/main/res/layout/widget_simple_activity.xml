@@ -11,6 +11,7 @@
         android:layout_gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="@dimen/activity_margin"
+        android:baselineAligned="false"
         android:showDividers="middle"
         android:divider="@drawable/form_elements_divider"
         android:clickable="true"
@@ -22,108 +23,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/command_key">
-            <android.support.design.widget.TextInputEditText android:id="@+id/key"
+            <android.support.design.widget.TextInputEditText android:id="@+id/xKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1" />
         </android.support.design.widget.TextInputLayout>
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView style="@style/InputLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textColorHint"
-                android:text="@string/command_action" />
-            <android.support.v7.widget.AppCompatSpinner android:id="@+id/action"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingRight="12dp"
-                android:paddingEnd="12dp"
-                android:entries="@array/array_command_actions" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/textColorHint"
-                android:layout_marginLeft="@dimen/input_label_horizontal_spacing"
-                android:layout_marginRight="@dimen/input_label_horizontal_spacing"/>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.design.widget.TextInputLayout android:id="@+id/app_chooser_parent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/app_chooser_title">
-                <kg.delletenebre.serialmanager2.views.AppChooserView
-                    android:id="@+id/app_chooser"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="2"
-                    android:drawableTint="@color/inputBottomLine" />
-            </android.support.design.widget.TextInputLayout>
-
-            <LinearLayout android:id="@+id/emulate_key_layout"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView style="@style/InputLabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/textColorHint"
-                    android:text="@string/command_emulated_key" />
-                <android.support.v7.widget.AppCompatSpinner android:id="@+id/emulate_key"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingRight="12dp"
-                    android:paddingEnd="12dp" />
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/textColorHint"
-                    android:layout_marginLeft="@dimen/input_label_horizontal_spacing"
-                    android:layout_marginRight="@dimen/input_label_horizontal_spacing"/>
-            </LinearLayout>
-
-            <android.support.design.widget.TextInputLayout android:id="@+id/shell_command_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/shell_command">
-                <android.support.design.widget.TextInputEditText android:id="@+id/shell_command"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout android:id="@+id/send_data_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/send_data">
-                <android.support.design.widget.TextInputEditText android:id="@+id/send_data"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
-
-        </RelativeLayout>
-
-
-        <View
-            android:visibility="invisible"
-            style="@style/MaxWidthStyle"
-            android:layout_height="1dp" />
-
-
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/widget_parameter_text">
-            <android.support.design.widget.TextInputEditText android:id="@+id/text"
+            <android.support.design.widget.TextInputEditText android:id="@+id/xText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1" />
@@ -140,14 +50,14 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/command_noty_text_size"
                 android:gravity="center_vertical">
-                <android.support.design.widget.TextInputEditText android:id="@+id/noty_text_size"
+                <android.support.design.widget.TextInputEditText android:id="@+id/xTextSize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:inputType="number" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton android:id="@+id/noty_text_color"
+            <android.support.v7.widget.AppCompatButton android:id="@+id/xTextColor"
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -158,7 +68,7 @@
                 android:layout_height="0dp"
                 android:visibility="gone" />
 
-            <android.support.v7.widget.AppCompatButton android:id="@+id/noty_bg_color"
+            <android.support.v7.widget.AppCompatButton android:id="@+id/xBackgroundColor"
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -174,7 +84,8 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -187,7 +98,7 @@
                     android:textColor="@color/textColorHint"
                     android:text="@string/vertical_position"
                     android:translationY="-2dp"/>
-                <android.support.v7.widget.AppCompatSpinner android:id="@+id/widget_text_vertical_position"
+                <android.support.v7.widget.AppCompatSpinner android:id="@+id/xTextVerticalPosition"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="12dp"
@@ -212,7 +123,7 @@
                     android:textColor="@color/textColorHint"
                     android:text="@string/widget_text_alignment"
                     android:translationY="-2dp"/>
-                <android.support.v7.widget.AppCompatSpinner android:id="@+id/widget_text_alignment"
+                <android.support.v7.widget.AppCompatSpinner android:id="@+id/xTextAlignment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="12dp"
@@ -227,6 +138,99 @@
             </LinearLayout>
 
         </LinearLayout>
+
+
+        <View
+            android:visibility="invisible"
+            style="@style/MaxWidthStyle"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/activity_margin"
+            android:layout_marginBottom="@dimen/activity_margin" />
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView style="@style/InputLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/textColorHint"
+                android:text="@string/command_action" />
+            <android.support.v7.widget.AppCompatSpinner android:id="@+id/xAction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="12dp"
+                android:paddingEnd="12dp"
+                android:entries="@array/array_command_actions" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/textColorHint"
+                android:layout_marginLeft="@dimen/input_label_horizontal_spacing"
+                android:layout_marginRight="@dimen/input_label_horizontal_spacing"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputLayout android:id="@+id/xAppChooserLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/app_chooser_title">
+                <kg.delletenebre.serialmanager2.views.AppChooserView
+                    android:id="@+id/xAppChooser"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:drawableTint="@color/inputBottomLine" />
+            </android.support.design.widget.TextInputLayout>
+
+            <LinearLayout android:id="@+id/emulate_key_layout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView style="@style/InputLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColorHint"
+                    android:text="@string/command_emulated_key" />
+                <android.support.v7.widget.AppCompatSpinner android:id="@+id/xEmulateKey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="12dp"
+                    android:paddingEnd="12dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/textColorHint"
+                    android:layout_marginLeft="@dimen/input_label_horizontal_spacing"
+                    android:layout_marginRight="@dimen/input_label_horizontal_spacing"/>
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout android:id="@+id/xShellCommandLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/shell_command">
+                <android.support.design.widget.TextInputEditText android:id="@+id/xShellCommand"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout android:id="@+id/xSendDataLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/send_data">
+                <android.support.design.widget.TextInputEditText android:id="@+id/xSendData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+        </RelativeLayout>
 
     </LinearLayout>
 

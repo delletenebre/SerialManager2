@@ -47,13 +47,13 @@ open class RealmMigration : io.realm.RealmMigration {
             schema.create("WidgetSimpleModel")
                     .addField("id", Int::class.java, FieldAttribute.PRIMARY_KEY)
                     .addField("key", String::class.java)
-                    .addField("value", String::class.java)
+                    .addField("text", String::class.java)
                     .addField("textColor", String::class.java)
                     .addField("textSize", Int::class.java)
                     .addField("backgroundColor", String::class.java)
                     .addField("backgroundImage", String::class.java)
-                    .addField("layoutAlignId", Int::class.java)
-                    .addField("textAlignId", Int::class.java)
+                    .addField("textVerticalPositionId", Int::class.java)
+                    .addField("textAlignmentId", Int::class.java)
 
             currentVersion++
         }

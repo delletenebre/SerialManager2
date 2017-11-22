@@ -90,6 +90,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String ACTION_CONNECTION_ESTABLISHED = "kg.serial.manager.connection_established";
     public static final String ACTION_CONNECTION_LOST = "kg.serial.manager.connection_lost";
 
+    public static final String EXTRA_APPWIDGET_EDIT = "kg.serial.manager.extra.appWidgetEdit";
+
     public final static char CR  = (char) 0x0D;
     public final static char LF  = (char) 0x0A;
     public final static String CRLF  = "" + CR + LF;
@@ -143,6 +145,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         mRealmConfig = new RealmConfiguration.Builder()
                 .schemaVersion(4)
                 .migration(new RealmMigration())
+                .deleteRealmIfMigrationNeeded()
                 .build();
         mRealm = getNewRealmInstance();
 
