@@ -39,7 +39,15 @@
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="kg.delletenebre.serialmanager2.MainActivity" />
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".WidgetsActivity"
+            android:label="@string/title_widgets"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".commands.EditActivity"
@@ -101,11 +109,22 @@
         </receiver>
 
         <activity
-            android:name=".widgets.WidgetSimpleActivity">
+            android:name=".widgets.WidgetSimpleActivity"
+            android:label="@string/widget_receive_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".widgets.WidgetActionActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.Transparent">
+        </activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="fc7a81f8b1040fa56a369753ec3eab1da3343c05" />

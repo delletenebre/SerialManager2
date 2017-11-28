@@ -91,6 +91,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String ACTION_CONNECTION_LOST = "kg.serial.manager.connection_lost";
 
     public static final String EXTRA_APPWIDGET_EDIT = "kg.serial.manager.extra.appWidgetEdit";
+    public static final String EXTRA_APPWIDGET_KEY = "kg.serial.manager.extra.appWidgetKey";
+    public static final String EXTRA_APPWIDGET_VALUE = "kg.serial.manager.extra.appWidgetValue";
+    public static final String EXTRA_APPWIDGET_ACTION_ID = "kg.serial.manager.extra.appWidgetActionId";
+    public static final String EXTRA_SELECTED_ACTION_CHOSEN_APP = "kg.serial.manager.extra.selected_action.chosen_app";
+    public static final String EXTRA_SELECTED_ACTION_EMULATE_KEY = "kg.serial.manager.extra.selected_action.emulateed_key_id";
+    public static final String EXTRA_SELECTED_ACTION_SHELL_COMMAND = "kg.serial.manager.extra.selected_action.shell_command";
+    public static final String EXTRA_SELECTED_ACTION_SEND_DATA = "kg.serial.manager.extra.selected_action.send_data";
 
     public final static char CR  = (char) 0x0D;
     public final static char LF  = (char) 0x0A;
@@ -145,7 +152,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         mRealmConfig = new RealmConfiguration.Builder()
                 .schemaVersion(4)
                 .migration(new RealmMigration())
-                .deleteRealmIfMigrationNeeded()
+                // .deleteRealmIfMigrationNeeded()
                 .build();
         mRealm = getNewRealmInstance();
 
@@ -274,19 +281,20 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
     public void detectCommand(String incomingString) {
+        log("Receive " + incomingString);
         Pattern pattern = Pattern.compile("^<(.+?):(.+?)>$");
         Matcher matcher = pattern.matcher(incomingString);
         if (matcher.find()) {
             String key = matcher.group(1);
             String value = matcher.group(2);
-            log("Receive | key:" + key + " / value:" + value);
+            //log("Receive | key:" + key + " / value:" + value);
 
 
             if (isActivityVisible()) {
                 // Toaster.toast(incomingString);
                 showSnackbar(mVisibleActivity, incomingString);
 
-                Intent intent = new Intent(LOCAL_ACTION_COMMAND_RECEIVED);
+                Intent intent = new Intent(ACTION_COMMAND_RECEIVED);
                 intent.putExtra("key", key);
                 intent.putExtra("value", value);
                 sendBroadcast(intent);
@@ -325,62 +333,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
                             }
                         }
 
-                        switch (command.getActionId()) {
-                            case Command.ACTION_RUN_APPLICATION:
-                                if (!command.getChosenApp().isEmpty()) {
-                                    Intent intent = AppChooserView.getIntentValue(
-                                            command.getChosenApp(), null);
-                                    if (intent == null) {
-                                        Toaster.toast(getString(R.string.app_chooser_toast_app_not_found,
-                                                AppChooserView.getLabelByValue(this, command.getChosenApp())));
-                                    } else {
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                    }
-                                }
-                                break;
-
-                            case Command.ACTION_EMULATE_KEY:
-                                if (mVirtualKeyboard != null) {
-                                    mVirtualKeyboard.emulateKey(command.getEmulatedKeyId());
-                                }
-                                break;
-
-                            case Command.ACTION_SHELL_COMMAND:
-                                try {
-                                    // Executes the command.
-                                    Process process = Runtime.getRuntime()
-                                            .exec(command.getShellCommand());
-
-                                    // Reads stdout.
-                                    // NOTE: You can write to stdin of the command using
-                                    //       process.getOutputStream().
-//                                    BufferedReader reader = new BufferedReader(
-//                                            new InputStreamReader(process.getInputStream()));
-//                                    int read;
-//                                    char[] buffer = new char[4096];
-//                                    StringBuffer output = new StringBuffer();
-//                                    while ((read = reader.read(buffer)) > 0) {
-//                                        output.append(buffer, 0, read);
-//                                    }
-//                                    reader.close();
-//
-//                                    // Waits for the command to finish.
-//                                    process.waitFor();
-//
-//                                    return output.toString();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                break;
-
-                            case Command.ACTION_SEND_DATA:
-                                Intent intent = new Intent(ACTION_SEND_DATA);
-                                intent.putExtra("data", compileFormulas(
-                                        replaceKeywords(command.getSendData(), key, value)));
-                                sendBroadcast(intent);
-                                break;
-                        }
+                        executeCommandAction(command.getActionId(), command.getChosenApp(),
+                                command.getEmulatedKeyId(), command.getShellCommand(),
+                                command.getSendData(), key, value);
 
                         intentValue = replaceKeywords(command.getIntentValueExtra(), key, value);
                     }
@@ -672,4 +627,45 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
+    public void executeCommandAction(int actionId, String chosenApp, int emulatedKeyId,
+                                     String shellCommand, String sendData,
+                                     String key, String value) {
+        switch (actionId) {
+            case Command.ACTION_RUN_APPLICATION: {
+                Intent intent = AppChooserView.getIntentValue(chosenApp, null);
+                if (intent == null) {
+                    Toaster.toast(getString(R.string.app_chooser_toast_app_not_found,
+                            AppChooserView.getLabelByValue(this, chosenApp)));
+                } else {
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+                break;
+            }
+
+            case Command.ACTION_EMULATE_KEY: {
+                if (mVirtualKeyboard != null) {
+                    mVirtualKeyboard.emulateKey(emulatedKeyId);
+                }
+                break;
+            }
+
+            case Command.ACTION_SHELL_COMMAND: {
+                try {
+                    Runtime.getRuntime().exec(shellCommand);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+
+            case Command.ACTION_SEND_DATA: {
+                Intent intent = new Intent(ACTION_SEND_DATA);
+                intent.putExtra("data", App.getInstance().compileFormulas(
+                        App.getInstance().replaceKeywords(sendData, key, value)));
+                sendBroadcast(intent);
+                break;
+            }
+        }
+    }
 }

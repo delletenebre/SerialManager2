@@ -96,7 +96,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/textColorHint"
-                    android:text="@string/vertical_position"
+                    android:maxLines="1"
+                    android:text="@string/widget_text_vertical_position"
                     android:translationY="-2dp"/>
                 <android.support.v7.widget.AppCompatSpinner android:id="@+id/xTextVerticalPosition"
                     android:layout_width="match_parent"

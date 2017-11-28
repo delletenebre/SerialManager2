@@ -136,11 +136,15 @@
 
 
     <!-- Strings related to Widgets -->
+    <string name="title_widgets">Виджеты</string>
     <string name="action_save">Сохранить</string>
-    <string name="pref_default_widget_receive_text">Данные: %key / %value</string>
-    <string name="appwidget_text">ПРИМЕР</string>
-    <string name="configure">Настройка</string>
-    <string name="add_widget">Добавить виджет</string>
-
+    <string name="widget_simple_default_text">Данные: %key / %value</string>
     <string name="widget_parameter_text">Текст</string>
+    <string name="widget_text_alignment">Выравнивание текста</string>
+    <string name="widget_text_vertical_position">Положение текста по верт.</string>
+    <string-array name="array_widget_text_alignment_titles">
+        <item>По левому краю</item>
+        <item>По центру</item>
+        <item>По правому краю</item>
+    </string-array>
 </resources>

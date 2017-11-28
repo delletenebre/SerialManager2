@@ -6,7 +6,11 @@
         android:orderInCategory="100"
         android:title="@string/settings" />
     <item
-        android:id="@+id/restart_service"
+        android:id="@+id/action_widgets"
         android:orderInCategory="101"
+        android:title="@string/title_widgets" />
+    <item
+        android:id="@+id/restart_service"
+        android:orderInCategory="102"
         android:title="@string/restart_service" />
 </menu>

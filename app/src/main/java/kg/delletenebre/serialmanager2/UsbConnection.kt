@@ -10,9 +10,10 @@ import com.felhr.usbserial.UsbSerialDevice
 import java.io.ByteArrayOutputStream
 import java.util.*
 
+
+
 class UsbConnection(context: Context, baudRate: Int) {
     companion object {
-        val LINE_SEPARATOR = System.getProperty("line.separator")!!
         val sConnectedDevices = HashMap<String, UsbSerialDevice>()
         val sBuffers = HashMap<String, ByteArrayOutputStream>()
     }
@@ -52,29 +53,23 @@ class UsbConnection(context: Context, baudRate: Int) {
             val deviceName = device.deviceName
             sConnectedDevices.put(deviceName, serialDevice)
             sBuffers.put(deviceName, ByteArrayOutputStream())
-            serialDevice.read { arg0 ->
-                try {
+            serialDevice.read { bytes ->
+                if (bytes.isNotEmpty()) {
                     val buffer = sBuffers[deviceName]
                     if (buffer != null) {
-                        buffer.write(arg0)
-                        val data = buffer.toString("UTF-8")
-                        if (data.contains(LINE_SEPARATOR)) {
-                            val dataParts = data.split(LINE_SEPARATOR)
+                        buffer.write(bytes)
+                        if (buffer.toByteArray().contains(0x0A)) {
+                            val data = buffer.toString("UTF-8")
+                            val dataParts = data.split("\n".toRegex(), 2)
                             val command = dataParts[0]
                                     .replace("\r", "")
-                                    .replace("\n", "")
                             mLocalBroadcastManager.sendBroadcast(
                                     Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
-                                            .putExtra("command", command)
-                            )
+                                            .putExtra("command", command))
                             buffer.reset()
-                            dataParts
-                                    .filterIndexed { index, value -> index > 0 }
-                                    .forEach { buffer.write(it.toByteArray(Charsets.UTF_8)) }
+                            buffer.write(dataParts[1].toByteArray(Charsets.UTF_8))
                         }
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
                 }
             }
 

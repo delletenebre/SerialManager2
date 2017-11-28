@@ -64,7 +64,8 @@ class WidgetSimpleActivity : AppCompatActivity(), ColorPickerDialogListener {
         if (!intent.extras.getBoolean(App.EXTRA_APPWIDGET_EDIT, false)) {
             mRealm?.executeTransaction {
                 mWidget = mRealm?.createObject(WidgetSimpleModel::class.java, mWidgetId)
-                mWidget?.text = getString(R.string.widget_receive_default_text)
+                mWidget?.text = getString(R.string.widget_simple_default_text)
+                mWidget?.position = mRealm?.where(WidgetSimpleModel::class.java)?.count() ?: 0
             }
         } else {
             mWidget = App.getInstance().realm.where(WidgetSimpleModel::class.java)
@@ -74,9 +75,8 @@ class WidgetSimpleActivity : AppCompatActivity(), ColorPickerDialogListener {
 
         setWidgetDataToViews()
 
-        val resultIntent = Intent()
-        resultIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId)
-        setResult(Activity.RESULT_CANCELED, resultIntent)
+        setResult(Activity.RESULT_CANCELED,
+                (Intent()).putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mWidgetId))
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

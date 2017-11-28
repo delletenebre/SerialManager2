@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.RemoteViews
 import kg.delletenebre.serialmanager2.App
 import kg.delletenebre.serialmanager2.R
+import java.util.*
 
 
 class WidgetSimple : AppWidgetProvider() {
@@ -67,9 +68,10 @@ class WidgetSimple : AppWidgetProvider() {
         val widget = App.getInstance().realm.where(WidgetSimpleModel::class.java)
                 .equalTo("id", widgetId).findFirst()
         if (widget != null) {
+            val app = App.getInstance()
             val position = widget.textAlignmentId + widget.textVerticalPositionId * 3
             val visibleTextViewId = sTextViewIds[position]
-            val text = widget.text
+            val text = app.compileFormulas(app.replaceKeywords(widget.text, widget.key, value))
             val textSize = widget.textSize.toFloat()
             val textColor = Color.parseColor(widget.textColor)
             val backgroundColor = Color.parseColor(widget.backgroundColor)
@@ -87,44 +89,20 @@ class WidgetSimple : AppWidgetProvider() {
             }
             widgetViews.setViewVisibility(visibleTextViewId, View.VISIBLE)
 
-            val intent = Intent(context, WidgetSimpleActivity::class.java)
+            val intent = Intent(context, WidgetActionActivity::class.java)
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
-            intent.putExtra(App.EXTRA_APPWIDGET_EDIT, true)
+            intent.putExtra(App.EXTRA_APPWIDGET_ACTION_ID, widget.actionId)
+            intent.putExtra(App.EXTRA_APPWIDGET_KEY, widget.key)
+            intent.putExtra(App.EXTRA_APPWIDGET_VALUE, value)
+            intent.putExtra(App.EXTRA_SELECTED_ACTION_CHOSEN_APP, widget.chosenApp)
+            intent.putExtra(App.EXTRA_SELECTED_ACTION_EMULATE_KEY, widget.emulatedKeyId)
+            intent.putExtra(App.EXTRA_SELECTED_ACTION_SHELL_COMMAND, widget.shellCommand)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))
-            val pendingIntent = PendingIntent.getActivity(context, 0,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getActivity(context, (Random()).nextInt(),
+                    intent, PendingIntent.FLAG_CANCEL_CURRENT)
             widgetViews.setOnClickPendingIntent(R.id.widget_container, pendingIntent)
-
-//            widgetViews.setOnClickFillInIntent()
-//            when (widget.actionId) {
-//                Command.ACTION_RUN_APPLICATION -> if (widget.chosenApp.none()) {
-//                    val intent = AppChooserView.getIntentValue(widget.chosenApp, null)
-//                    if (intent == null) {
-//                        Toaster.toast(context.getString(R.string.app_chooser_toast_app_not_found,
-//                                AppChooserView.getLabelByValue(context, widget.chosenApp)))
-//                    } else {
-//                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-//                        context.startActivity(intent)
-//                    }
-//                }
-//
-//                Command.ACTION_EMULATE_KEY -> {}
-//
-//                Command.ACTION_SHELL_COMMAND -> try {
-//                    Runtime.getRuntime().exec(widget.shellCommand)
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//
-//                Command.ACTION_SEND_DATA -> {
-//                    val intent = Intent(App.ACTION_SEND_DATA)
-//                    intent.putExtra("data", App.getInstance().compileFormulas(
-//                            App.getInstance().replaceKeywords(widget.sendData, widget.key, value)))
-//                    context.sendBroadcast(intent)
-//                }
-//            }
         }
 
         widgetManager.updateAppWidget(widgetId, widgetViews)

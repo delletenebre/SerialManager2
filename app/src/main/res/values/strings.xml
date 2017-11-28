@@ -172,16 +172,15 @@
 
 
     <!-- Strings related to Widgets -->
+    <string name="title_widgets">Widgets</string>
+    <string name="widgets_list_item_title" translatable="false">%1$d | %2$s</string>
     <string name="action_save">Save</string>
-    <string name="widget_receive_label" translatable="false">Serial Manager Receive</string>
-    <string name="pref_default_widget_receive_text">Data: %key / %value</string>
-    <string name="widget_receive_default_text">Data: %key / %value</string>
-    <string name="widget_default_text">EXAMPLE</string>
-    <string name="configure">Configure</string>
-    <string name="add_widget">Add widget</string>
+    <string name="widget_receive_label" translatable="false">SM Simple Widget</string>
+    <string name="widget_simple_default_text">Data: %key / %value</string>
 
     <string name="widget_parameter_text">Text</string>
     <string name="widget_text_alignment">Text alignment</string>
+    <string name="widget_text_vertical_position">Vertical position of text</string>
     <string-array name="array_widget_text_alignment_titles">
         <item>Left</item>
         <item>Center</item>
