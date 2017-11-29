@@ -152,7 +152,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         mRealmConfig = new RealmConfiguration.Builder()
                 .schemaVersion(4)
                 .migration(new RealmMigration())
-                // .deleteRealmIfMigrationNeeded()
+                //.deleteRealmIfMigrationNeeded()
                 .build();
         mRealm = getNewRealmInstance();
 
@@ -282,16 +282,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public void detectCommand(String incomingString) {
         log("Receive " + incomingString);
-        Pattern pattern = Pattern.compile("^<(.+?):(.+?)>$");
+        Pattern pattern = Pattern.compile(getStringPreference("command_format_regex"));
         Matcher matcher = pattern.matcher(incomingString);
         if (matcher.find()) {
             String key = matcher.group(1);
             String value = matcher.group(2);
-            //log("Receive | key:" + key + " / value:" + value);
 
-
-            if (isActivityVisible()) {
-                // Toaster.toast(incomingString);
+            if (isActivityVisible() && !getBooleanPreference("always_execute_command_action")) {
                 showSnackbar(mVisibleActivity, incomingString);
 
                 Intent intent = new Intent(ACTION_COMMAND_RECEIVED);
@@ -470,7 +467,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public String replaceKeywords(String str, String key, String value) {
         return str.replaceAll("(%key)", key)
-                .replaceAll("(%value)", value);
+                .replaceAll("(%k)", key)
+                .replaceAll("(%value)", value)
+                .replaceAll("(%v)", value);
     }
 
     public String compileFormulas(String str) {

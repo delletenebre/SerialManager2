@@ -201,6 +201,7 @@ public class SettingsActivity extends PreferenceActivity {
             bindPreferenceSummaryToValue(findPreference("start_on_boot_delay"));
             bindPreferenceSummaryToValue(findPreference("start_when_screen_on_delay"));
             bindPreferenceSummaryToValue(findPreference("stop_when_screen_off_delay"));
+            bindPreferenceSummaryToValue(findPreference("command_format_regex"));
         }
     }
 

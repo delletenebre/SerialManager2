@@ -80,8 +80,8 @@
 
     <!-- Strings related to Settings -->
     <string name="title_activity_settings">@string/settings</string>
-
     <string name="pref_header_general">Общие</string>
+    <string name="danger_zone">Опасная зона</string>
     <string name="pref_title_start_on_boot">Запускать при загрузке</string>
     <string name="pref_summary_start_on_boot">Запускать сервис по завершению загрузки устройства</string>
     <string name="pref_title_start_on_boot_delay">Задержка запуска после загрузки (сек)</string>
@@ -93,6 +93,9 @@
     <string name="pref_title_stop_when_screen_off_delay">Задержка после выключения экрана (сек)</string>
     <string name="pref_title_debugging">Отладка</string>
     <string name="pref_summary_debugging">Включить всплывающие окна и отправлять дополнительную информацию в logcat</string>
+    <string name="pref_title_command_format_regex">Формат команд (regex)</string>
+    <string name="pref_title_always_execute_command_action">Всегда выполнять действия команды</string>
+    <string name="pref_summary_always_execute_command_action">Выполнять действие команды даже при открытом Serial Manager</string>
 
     <string name="pref_header_usb">USB соединение</string>
     <string name="pref_title_usb_communication_enabled">Включить USB соединение</string>

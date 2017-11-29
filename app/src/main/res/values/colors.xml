@@ -6,4 +6,5 @@
     <color name="textColorHint">#808080</color>
     <color name="inputBottomLine">#6d6d6d</color>
     <color name="danger">#F44336</color>
+    <color name="danger_background">#44F44336</color>
 </resources>

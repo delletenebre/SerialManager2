@@ -11,7 +11,7 @@
         android:title="@string/pref_title_start_on_boot_delay"
         android:inputType="number"
         android:selectAllOnFocus="true"
-        android:singleLine="true" />
+        android:maxLines="1" />
 
     <CheckBoxPreference android:key="start_when_screen_on"
         android:defaultValue="@bool/pref_default_start_when_screen_on"
@@ -24,7 +24,7 @@
         android:title="@string/pref_title_start_when_screen_on_delay"
         android:inputType="number"
         android:selectAllOnFocus="true"
-        android:singleLine="true" />
+        android:maxLines="1" />
 
     <CheckBoxPreference android:key="stop_when_screen_off"
         android:defaultValue="@bool/pref_default_stop_when_screen_off"
@@ -37,8 +37,7 @@
         android:title="@string/pref_title_stop_when_screen_off_delay"
         android:inputType="number"
         android:selectAllOnFocus="true"
-        android:singleLine="true" />
-
+        android:maxLines="1" />
 
     <!--<CheckBoxPreference android:key="volume_show_ui"-->
         <!--android:defaultValue="true"-->
@@ -48,5 +47,23 @@
         android:defaultValue="@bool/pref_default_debugging"
         android:title="@string/pref_title_debugging"
         android:summary="@string/pref_summary_debugging" />
+
+    <PreferenceCategory
+        android:layout="@layout/preference_category_danger_zone"
+        android:title="@string/danger_zone">
+
+        <EditTextPreference android:key="command_format_regex"
+            android:defaultValue="@string/pref_default_command_format_regex"
+            android:title="@string/pref_title_command_format_regex"
+            android:inputType="text"
+            android:selectAllOnFocus="true"
+            android:maxLines="1" />
+
+        <CheckBoxPreference android:key="always_execute_command_action"
+            android:defaultValue="@bool/pref_default_always_execute_command_action"
+            android:title="@string/pref_title_always_execute_command_action"
+            android:summary="@string/pref_summary_always_execute_command_action" />
+
+    </PreferenceCategory>
 
 </PreferenceScreen>

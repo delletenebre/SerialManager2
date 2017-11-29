@@ -107,6 +107,7 @@
     </string-array>
 
     <string name="pref_header_general">General</string>
+    <string name="danger_zone">Danger Zone</string>
     <string name="pref_title_start_on_boot">Start on boot</string>
     <string name="pref_summary_start_on_boot">Start the service on device boot completed</string>
     <string name="pref_title_start_on_boot_delay">Start delay after boot (sec)</string>
@@ -121,6 +122,12 @@
     <string name="pref_default_stop_when_screen_off_delay" translatable="false">0</string>
     <string name="pref_title_debugging">Enable debugging</string>
     <string name="pref_summary_debugging">Enable popups and send additional information to logcat</string>
+    <string name="pref_default_command_format_regex" translatable="false">^\u003c(.+?):(.+?)\u003e$</string>
+    <string name="pref_title_command_format_regex">Commands format (regex)</string>
+    <string name="pref_title_always_execute_command_action">Always execute command\'s action</string>
+    <string name="pref_summary_always_execute_command_action">Execute command\'s action even when Serial Manager is open</string>
+
+
 
     <string name="pref_header_usb">USB connection</string>
     <string name="pref_title_usb_communication_enabled">Enable USB communication</string>

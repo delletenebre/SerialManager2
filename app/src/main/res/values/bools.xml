@@ -13,4 +13,5 @@
     <bool name="pref_default_send_connection_state">false</bool>
     <bool name="pref_default_send_light_sensor_data">false</bool>
     <bool name="pref_default_send_screen_state">false</bool>
+    <bool name="pref_default_always_execute_command_action">false</bool>
 </resources>
