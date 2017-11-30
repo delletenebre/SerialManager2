@@ -27,6 +27,7 @@ public class VirtualKeyboard {
     private int mFileDescriptor;
     private JSONArray mKeymap;
     private long mKeyAltTabTabTimer = 0;
+    private final int ALT_TAB_TAB_DELAY = 1500;
 
     public VirtualKeyboard() {
         final String path = "/system/usr/keylayout/";
@@ -186,7 +187,7 @@ public class VirtualKeyboard {
                             sendKeyUp(mFileDescriptor, 15);
                             sendKeyUp(mFileDescriptor, 56);
                         } else if (name.equals("Alt + Tab .. Tab ...")) {
-                            if (System.currentTimeMillis() - mKeyAltTabTabTimer >= 1500) {
+                            if (System.currentTimeMillis() - mKeyAltTabTabTimer >= ALT_TAB_TAB_DELAY) {
                                 sendKeyDown(mFileDescriptor, 56);
                             }
                             sendKeyDown(mFileDescriptor, 15);
@@ -196,14 +197,14 @@ public class VirtualKeyboard {
                                 @Override
                                 public void run() {
                                     try {
-                                        if (System.currentTimeMillis() - mKeyAltTabTabTimer >= 1500) {
+                                        if (System.currentTimeMillis() - mKeyAltTabTabTimer >= ALT_TAB_TAB_DELAY) {
                                             sendKeyUp(mFileDescriptor, 56);
                                         }
                                     } catch(Exception e) {
-                                        App.log(e.getLocalizedMessage());
+                                        e.printStackTrace();
                                     }
                                 }
-                            }, 1500);
+                            }, ALT_TAB_TAB_DELAY);
                         }
                     }
                 } catch (Exception e) {

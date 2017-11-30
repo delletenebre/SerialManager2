@@ -109,7 +109,7 @@
         </receiver>
 
         <activity
-            android:name=".widgets.WidgetSimpleActivity"
+            android:name=".widgets.WidgetSimpleSettingsActivity"
             android:label="@string/widget_receive_label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

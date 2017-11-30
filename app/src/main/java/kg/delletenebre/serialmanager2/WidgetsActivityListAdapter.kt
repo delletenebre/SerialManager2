@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
-import kg.delletenebre.serialmanager2.widgets.WidgetSimpleActivity
 import kg.delletenebre.serialmanager2.widgets.WidgetSimpleModel
+import kg.delletenebre.serialmanager2.widgets.WidgetSimpleSettingsActivity
 
 
 class WidgetsActivityListAdapter : RecyclerView.Adapter<WidgetsActivityListAdapter.ViewHolder>() {
@@ -67,7 +67,7 @@ class WidgetsActivityListAdapter : RecyclerView.Adapter<WidgetsActivityListAdapt
 
         override fun onClick(view: View) {
             val context = view.context
-            val intent = Intent(view.context, WidgetSimpleActivity::class.java)
+            val intent = Intent(view.context, WidgetSimpleSettingsActivity::class.java)
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
             intent.putExtra(App.EXTRA_APPWIDGET_EDIT, true)
             context.startActivity(intent)
