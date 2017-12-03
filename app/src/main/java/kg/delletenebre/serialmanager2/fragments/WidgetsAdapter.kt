@@ -1,4 +1,4 @@
-package kg.delletenebre.serialmanager2
+package kg.delletenebre.serialmanager2.fragments
 
 import android.appwidget.AppWidgetManager
 import android.content.Intent
@@ -10,11 +10,12 @@ import android.view.ViewGroup
 import android.widget.TextView
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
+import kg.delletenebre.serialmanager2.App
+import kg.delletenebre.serialmanager2.R
 import kg.delletenebre.serialmanager2.widgets.WidgetSimpleModel
 import kg.delletenebre.serialmanager2.widgets.WidgetSimpleSettingsActivity
 
-
-class WidgetsActivityListAdapter : RecyclerView.Adapter<WidgetsActivityListAdapter.ViewHolder>() {
+class WidgetsAdapter : RecyclerView.Adapter<WidgetsAdapter.ViewHolder>() {
 
     //private lateinit var mItems: OrderedRealmCollection<WidgetSimpleModel>
     private var mRealm: Realm? = null

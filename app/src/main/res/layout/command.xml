@@ -25,9 +25,9 @@
         android:layout_alignParentRight="true"
 
         android:ellipsize="marquee"
-        android:maxLines="1"
         android:text="Description"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/title"

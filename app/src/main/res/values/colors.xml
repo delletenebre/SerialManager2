@@ -7,4 +7,5 @@
     <color name="inputBottomLine">#6d6d6d</color>
     <color name="danger">#F44336</color>
     <color name="danger_background">#44F44336</color>
+    <color name="gray_background">#cfd8dc</color>
 </resources>

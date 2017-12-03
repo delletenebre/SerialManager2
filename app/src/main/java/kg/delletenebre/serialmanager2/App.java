@@ -76,6 +76,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public static final String TAG = "kg.serial.manager";
     public static final String LOCAL_ACTION_COMMAND_RECEIVED = "local.command_received";
+    public static final String LOCAL_ACTION_SEND_DATA = "local.send_data";
     public static final String LOCAL_ACTION_SETTINGS_UPDATED = "local.settings_updated";
     public static final String LOCAL_ACTION_USB_CONNECTION_ESTABLISHED = "local.usb_connection_established";
     public static final String LOCAL_ACTION_USB_CONNECTION_CLOSED = "local.usb_connection_closed";

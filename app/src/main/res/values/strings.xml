@@ -10,9 +10,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="awesome">Awesome</string>
-    <string name="ignore_this_version">Ignore this version</string>
-    <string name="new_update_available">Serial Manager v%1$s is available. Do you wish to download it?</string>
-    <string name="no_updates_available">You are using the latest version of the application</string>
+
+    <string name="autoscroll">Autoscroll</string>
+    <string name="send">Send</string>
 
     <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
     <string name="crash_dialog_title">Send Crash Report?</string>

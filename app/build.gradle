@@ -27,7 +27,7 @@ android {
         applicationId "kg.delletenebre.serialmanager2"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 16
+        versionCode 17
         versionName "2.4.0"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {

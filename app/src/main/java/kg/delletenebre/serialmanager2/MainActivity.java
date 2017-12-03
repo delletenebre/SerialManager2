@@ -28,7 +28,7 @@ import kg.delletenebre.serialmanager2.commands.Adapter;
 import kg.delletenebre.serialmanager2.commands.EditActivity;
 
 
-public class MainActivity extends AppCompatActivity {
+class MainActivity1 extends AppCompatActivity {
 
     private RecyclerView mCommandsRecyclerView;
 
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        mCommandsRecyclerView = findViewById(R.id.commands_recycler_view);
+        mCommandsRecyclerView = findViewById(R.id.recycler_view);
         mCommandsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mCommandsRecyclerView.setAdapter(new Adapter());
         mCommandsRecyclerView.setHasFixedSize(true);
@@ -62,14 +62,14 @@ public class MainActivity extends AppCompatActivity {
 
         setupItemTouchHelper(this, mCommandsRecyclerView);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.floating_action_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                Intent intent = new Intent(MainActivity1.this, EditActivity.class);
                 intent.putExtra("CommandIndex", mCommandsRecyclerView.getAdapter().getItemCount());
                 intent.putExtra("isNew", true);
-                MainActivity.this.startActivity(intent);
+                MainActivity1.this.startActivity(intent);
             }
         });
     }
@@ -87,10 +87,6 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
-                break;
-
-            case R.id.action_widgets:
-                startActivity(new Intent(this, WidgetsActivity.class));
                 break;
 
             case R.id.restart_service:

@@ -212,6 +212,10 @@ public class CommunicationService extends Service implements SensorEventListener
                             App.getInstance().detectCommand(intent.getStringExtra("command"));
                             break;
 
+                        case App.LOCAL_ACTION_SEND_DATA:
+                            sendData(intent.getStringExtra("data"));
+                            break;
+
                         case App.LOCAL_ACTION_SETTINGS_UPDATED:
                             if (isCommunicationTypeEnabled("usb")) {
                                 if (!mUsbConnection.hasOpened()) {
@@ -256,6 +260,7 @@ public class CommunicationService extends Service implements SensorEventListener
         localIntentFilter.addAction(App.LOCAL_ACTION_USB_CONNECTION_CLOSED);
         localIntentFilter.addAction(App.LOCAL_ACTION_COMMAND_RECEIVED);
         localIntentFilter.addAction(App.LOCAL_ACTION_SETTINGS_UPDATED);
+        localIntentFilter.addAction(App.LOCAL_ACTION_SEND_DATA);
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(this);
         mLocalBroadcastManager.registerReceiver(mLocalBroadcastReceiver, localIntentFilter);
 

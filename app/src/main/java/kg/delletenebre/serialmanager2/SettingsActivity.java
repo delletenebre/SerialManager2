@@ -49,9 +49,18 @@ public class SettingsActivity extends PreferenceActivity {
         }
     };
 
+    private static boolean isLargeTablet(Context context) {
+        return (context.getResources().getConfiguration().screenLayout
+                & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    }
+
     private static boolean isXLargeTablet(Context context) {
         return (context.getResources().getConfiguration().screenLayout
                 & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_XLARGE;
+    }
+
+    private static boolean isLandscape(Context context) {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     private static void bindPreferenceSummaryToValue(Preference preference) {
@@ -148,7 +157,7 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     public boolean onIsMultiPane() {
-        return isXLargeTablet(this);
+        return isXLargeTablet(this) || (isLargeTablet(this) && isLandscape(this));
     }
 
     @Override

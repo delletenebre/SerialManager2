@@ -9,9 +9,9 @@
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="awesome">Отлично</string>
-    <string name="ignore_this_version">Игнорировать эту версию</string>
-    <string name="new_update_available">Доступно обновление Serial Manager до версии %1$s. Желаете скачать APK-файл?</string>
-    <string name="no_updates_available">Вы пользуетесь самой свежей версией приложения</string>
+
+    <string name="autoscroll">Автопрокрутка</string>
+    <string name="send">Отправить</string>
 
     <string name="crash_toast_text">Упс! Возникла критическая ошибка, но Вы можете отправить информацию разработчику, что поможет (наверное) решить проблему.</string>
     <string name="crash_dialog_title">Отправить отчёт?</string>
