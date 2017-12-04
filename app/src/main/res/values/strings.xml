@@ -11,6 +11,9 @@
     <string name="no">No</string>
     <string name="awesome">Awesome</string>
 
+    <string name="tab_title_commands">Commands</string>
+    <string name="tab_title_widgets">Widgets</string>
+    <string name="tab_title_logs">Logs</string>
     <string name="autoscroll">Autoscroll</string>
     <string name="send">Send</string>
     <string name="connection_established">Connection established</string>

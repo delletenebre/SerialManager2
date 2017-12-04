@@ -10,6 +10,9 @@
     <string name="no">Нет</string>
     <string name="awesome">Отлично</string>
 
+    <string name="tab_title_commands">Команды</string>
+    <string name="tab_title_widgets">Виджеты</string>
+    <string name="tab_title_logs">Логи</string>
     <string name="autoscroll">Автопрокрутка</string>
     <string name="send">Отправить</string>
     <string name="connection_established">Соединение установлено</string>

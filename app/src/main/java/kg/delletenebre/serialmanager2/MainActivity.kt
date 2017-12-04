@@ -68,9 +68,9 @@ class MainActivity: AppCompatActivity() {
         val commandsFragmentInstance = CommandsFragment()
 
         val adapter = ViewPagerAdapter(supportFragmentManager)
-        adapter.addFragment(commandsFragmentInstance, "Commands")
-        adapter.addFragment(WidgetsFragment(), "Widgets")
-        adapter.addFragment(LogsFragment(), "Logs")
+        adapter.addFragment(commandsFragmentInstance, getString(R.string.tab_title_commands))
+        adapter.addFragment(WidgetsFragment(), getString(R.string.tab_title_widgets))
+        adapter.addFragment(LogsFragment(), getString(R.string.tab_title_logs))
         viewPager.adapter = adapter
 
 //        supportFragmentManager.addOnBackStackChangedListener {
