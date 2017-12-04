@@ -36,8 +36,7 @@ class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val viewHolder = holder as CommandsAdapter.ViewHolder
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val item = mItems!![position]
 
         viewHolder.itemView.setBackgroundColor(Color.WHITE)

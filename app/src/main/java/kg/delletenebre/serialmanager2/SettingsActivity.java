@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuInflater;
@@ -134,7 +135,8 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onStop() {
         super.onStop();
         getDelegate().onStop();
-        sendBroadcast(new Intent(App.LOCAL_ACTION_SETTINGS_UPDATED));
+        (LocalBroadcastManager.getInstance(this))
+                .sendBroadcast(new Intent(App.LOCAL_ACTION_SETTINGS_UPDATED));
     }
 
     @Override

@@ -112,6 +112,8 @@ public class CommunicationService extends Service implements SensorEventListener
         startSerialCommunication();
         startWebServer();
 
+        App.setDebugEnabled(mPrefs.getBoolean("debugging", false));
+
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -142,42 +144,6 @@ public class CommunicationService extends Service implements SensorEventListener
                                 }
                             }
                             break;
-
-                        case App.LOCAL_ACTION_SETTINGS_UPDATED:
-                            if (isCommunicationTypeEnabled("usb")) {
-                                if (!mUsbConnection.hasOpened()) {
-                                    mUsbConnection.findConnectedDevices();
-                                }
-                            } else {
-                                mUsbConnection.closeAll();
-                            }
-
-                            if (isCommunicationTypeEnabled("bluetooth")) {
-                                if (mBluetoothConnection == null) {
-                                    startBluetoothCommunication();
-                                }
-                            } else {
-                                stopBluetoothCommunication();
-                            }
-
-                            if (isCommunicationTypeEnabled("web_socket")) {
-                                if (mWebServer == null) {
-                                    startWebServer();
-                                }
-                            } else {
-                                stopWebServer();
-                            }
-
-                            if (isCommunicationTypeEnabled("serial")) {
-                                if (mSerialPort == null) {
-                                    startSerialCommunication();
-                                }
-                            } else {
-                                stopSerialCommunication();
-                            }
-
-                            updateNotificationText();
-                            break;
                     }
                 }
             }
@@ -187,7 +153,6 @@ public class CommunicationService extends Service implements SensorEventListener
         intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
         intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         intentFilter.addAction(App.ACTION_SEND_DATA);
-        intentFilter.addAction(App.LOCAL_ACTION_SETTINGS_UPDATED);
         intentFilter.addAction(App.ACTION_EXTERNAL_COMMAND);
         registerReceiver(mBroadcastReceiver, intentFilter);
 
@@ -200,11 +165,11 @@ public class CommunicationService extends Service implements SensorEventListener
                 if (action != null) {
 
                     switch (action) {
-                        case App.LOCAL_ACTION_USB_CONNECTION_ESTABLISHED:
+                        case App.LOCAL_ACTION_CONNECTION_ESTABLISHED:
                             updateNotificationText();
                             break;
 
-                        case App.LOCAL_ACTION_USB_CONNECTION_CLOSED:
+                        case App.LOCAL_ACTION_CONNECTION_CLOSED:
                             updateNotificationText();
                             break;
 
@@ -217,6 +182,8 @@ public class CommunicationService extends Service implements SensorEventListener
                             break;
 
                         case App.LOCAL_ACTION_SETTINGS_UPDATED:
+                            App.setDebugEnabled(mPrefs.getBoolean("debugging", false));
+
                             if (isCommunicationTypeEnabled("usb")) {
                                 if (!mUsbConnection.hasOpened()) {
                                     mUsbConnection.findConnectedDevices();
@@ -256,8 +223,8 @@ public class CommunicationService extends Service implements SensorEventListener
             }
         };
         IntentFilter localIntentFilter = new IntentFilter();
-        localIntentFilter.addAction(App.LOCAL_ACTION_USB_CONNECTION_ESTABLISHED);
-        localIntentFilter.addAction(App.LOCAL_ACTION_USB_CONNECTION_CLOSED);
+        localIntentFilter.addAction(App.LOCAL_ACTION_CONNECTION_ESTABLISHED);
+        localIntentFilter.addAction(App.LOCAL_ACTION_CONNECTION_CLOSED);
         localIntentFilter.addAction(App.LOCAL_ACTION_COMMAND_RECEIVED);
         localIntentFilter.addAction(App.LOCAL_ACTION_SETTINGS_UPDATED);
         localIntentFilter.addAction(App.LOCAL_ACTION_SEND_DATA);
@@ -283,8 +250,7 @@ public class CommunicationService extends Service implements SensorEventListener
 
         unregisterReceiver(mBroadcastReceiver);
         mBroadcastReceiver = null;
-        mLocalBroadcastManager.unregisterReceiver(mLocalBroadcastReceiver);
-        mLocalBroadcastManager = null;
+
         mUsbConnection.closeAll();
         mUsbConnection = null;
         stopBluetoothCommunication();
@@ -300,6 +266,10 @@ public class CommunicationService extends Service implements SensorEventListener
         mSensorManager = null;
 
         sendBroadcast(new Intent(App.ACTION_SERVICE_STOPPED));
+
+        mLocalBroadcastManager.unregisterReceiver(mLocalBroadcastReceiver);
+        mLocalBroadcastManager = null;
+        mLocalBroadcastReceiver = null;
 
         super.onDestroy();
     }
@@ -427,6 +397,10 @@ public class CommunicationService extends Service implements SensorEventListener
                     if (isConnectionStateMessageEnabled()) {
                         bluetoothSend(App.ACTION_CONNECTION_ESTABLISHED);
                     }
+                    mLocalBroadcastManager.sendBroadcast(
+                            new Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
+                                    .putExtra("type", "bluetooth")
+                                    .putExtra("name", name + " ("+ address + ")"));
                     updateNotificationText();
                 }
 
@@ -440,7 +414,10 @@ public class CommunicationService extends Service implements SensorEventListener
             });
             mBluetoothConnection.setOnDataReceivedListener(new BluetoothConnection.OnDataReceivedListener() {
                 public void onDataReceived(String message) {
-                    App.getInstance().detectCommand(message);
+                    mLocalBroadcastManager.sendBroadcast(
+                            new Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
+                                    .putExtra("from", "bluetooth")
+                                    .putExtra("command", message));
                 }
             });
         }
@@ -449,6 +426,11 @@ public class CommunicationService extends Service implements SensorEventListener
         if (mBluetoothConnection != null) {
             mBluetoothConnection.stop();
             mBluetoothConnection = null;
+
+            mLocalBroadcastManager.sendBroadcast(
+                    new Intent(App.LOCAL_ACTION_CONNECTION_CLOSED)
+                            .putExtra("type", "bluetooth"));
+
             updateNotificationText();
         }
     }
@@ -513,6 +495,10 @@ public class CommunicationService extends Service implements SensorEventListener
                                     e.printStackTrace();
                                 }
                             } finally {
+                                mLocalBroadcastManager.sendBroadcast(
+                                        new Intent(App.LOCAL_ACTION_CONNECTION_CLOSED)
+                                                .putExtra("type", "web")
+                                                .putExtra("name", webSocket.toString()));
                                 mWebSockets.remove(webSocket);
                                 updateNotificationText();
                             }
@@ -521,14 +507,20 @@ public class CommunicationService extends Service implements SensorEventListener
                     webSocket.setStringCallback(new WebSocket.StringCallback() {
                         @Override
                         public void onStringAvailable(String message) {
-                            App.log("Received from WebSocket: " + message);
-                            App.getInstance().detectCommand(message);
+                            mLocalBroadcastManager.sendBroadcast(
+                                    new Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
+                                            .putExtra("from", "web")
+                                            .putExtra("command", message));
                         }
                     });
                     mWebSockets.add(webSocket);
                     if (isConnectionStateMessageEnabled()) {
                         webSocket.send(App.ACTION_CONNECTION_ESTABLISHED);
                     }
+                    mLocalBroadcastManager.sendBroadcast(
+                            new Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
+                                    .putExtra("type", "web")
+                                    .putExtra("name", webSocket.toString()));
                     updateNotificationText();
                 }
             });
@@ -592,6 +584,9 @@ public class CommunicationService extends Service implements SensorEventListener
         bluetoothSend(message);
         webSocketSend(message);
         serialSend(message);
+
+        LocalBroadcastManager.getInstance(this)
+                .sendBroadcast(new Intent(App.LOCAL_ACTION_DATA_SENT).putExtra("data", message));
     }
     private void sendData(String message, String id) {
         sendData(message);

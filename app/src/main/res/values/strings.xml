@@ -13,6 +13,8 @@
 
     <string name="autoscroll">Autoscroll</string>
     <string name="send">Send</string>
+    <string name="connection_established">Connection established</string>
+    <string name="connection_closed">Connection closed</string>
 
     <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
     <string name="crash_dialog_title">Send Crash Report?</string>
@@ -192,11 +194,6 @@
         <item>Left</item>
         <item>Center</item>
         <item>Right</item>
-    </string-array>
-    <string-array name="array_widget_text_alignment_values" translatable="false">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
     </string-array>
 
 </resources>

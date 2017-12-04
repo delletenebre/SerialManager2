@@ -1,6 +1,9 @@
 package kg.delletenebre.serialmanager2.fragments
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
@@ -23,6 +26,8 @@ class LogsFragment : Fragment() {
     private lateinit var mSendButton: Button
     private lateinit var mTextView: TextView
     private lateinit var mAutoscrollCheckbox: CheckBox
+    private lateinit var mLocalBroadcastManager: LocalBroadcastManager
+    private lateinit var mLocalBroadcastReceiver: BroadcastReceiver
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val layoutInflater = activity!!.layoutInflater
@@ -30,25 +35,63 @@ class LogsFragment : Fragment() {
 
         mSendTextView = layout.findViewById(R.id.send_text)
         mSendButton = layout.findViewById(R.id.send_button)
-        mTextView = layout.findViewById(R.id.text)
+        mTextView = layout.findViewById(R.id.logs_text)
         mAutoscrollCheckbox = layout.findViewById(R.id.autoscroll_checkbox)
 
         mSendButton.setOnClickListener {
-            val message = mSendTextView.text.toString()
-            addMessage(message)
-            sendData(message)
+            sendData(mSendTextView.text.toString())
         }
 
         mTextView.movementMethod = ScrollingMovementMethod()
 
+        mLocalBroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                when (intent.action) {
+                    App.LOCAL_ACTION_CONNECTION_ESTABLISHED -> {
+                        addMessage("${App.ICONS["ok"]} ${App.ICONS[intent.getStringExtra("type")]}\t${getString(R.string.connection_established)}\t[ ${intent.getStringExtra("name")} ]")
+                    }
+
+                    App.LOCAL_ACTION_CONNECTION_CLOSED -> {
+                        addMessage("${App.ICONS["cancel"]} ${App.ICONS[intent.getStringExtra("type")]}\t${getString(R.string.connection_closed)}\t[ ${intent.getStringExtra("name")} ]")
+                    }
+
+                    App.LOCAL_ACTION_COMMAND_RECEIVED -> {
+                        addMessage("${App.ICONS["receive"]} ${App.ICONS[intent.getStringExtra("from")]}\t${intent.getStringExtra("command")}")
+                    }
+
+                    App.LOCAL_ACTION_DATA_SENT -> {
+                        addMessage("${App.ICONS["send"]} ${App.ICONS["controller"]}\t${intent.getStringExtra("data")}")
+                    }
+                }
+            }
+        }
+        val localIntentFilter = IntentFilter()
+        localIntentFilter.addAction(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
+        localIntentFilter.addAction(App.LOCAL_ACTION_CONNECTION_CLOSED)
+        localIntentFilter.addAction(App.LOCAL_ACTION_COMMAND_RECEIVED)
+        localIntentFilter.addAction(App.LOCAL_ACTION_DATA_SENT)
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context!!)
+        mLocalBroadcastManager.registerReceiver(mLocalBroadcastReceiver, localIntentFilter)
+
         return layout
+    }
+
+    override fun onDestroy() {
+        mLocalBroadcastManager.unregisterReceiver(mLocalBroadcastReceiver)
+        super.onDestroy()
     }
 
     fun addMessage(message: String) {
         if (message.isNotBlank()) {
             val timestamp = (SimpleDateFormat("HH:mm:ss", Locale.ROOT))
                     .format(Calendar.getInstance().time)
-            mTextView.append("$timestamp\t\ue801\ue800\t$message\r\n")
+
+            var crlf = ""
+            if (message.last() != '\n') {
+                crlf = "\r\n"
+            }
+            mTextView.append("$timestamp\t$message$crlf")
+            mTextView.text = mTextView.text // update text to apply lineheight
 
             val editable = mTextView.editableText
             if (mAutoscrollCheckbox.isChecked) {

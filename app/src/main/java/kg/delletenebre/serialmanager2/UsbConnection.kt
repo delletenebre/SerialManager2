@@ -65,6 +65,7 @@ class UsbConnection(context: Context, baudRate: Int) {
                                     .replace("\r", "")
                             mLocalBroadcastManager.sendBroadcast(
                                     Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
+                                            .putExtra("from", "usb")
                                             .putExtra("command", command))
                             buffer.reset()
                             buffer.write(dataParts[1].toByteArray(Charsets.UTF_8))
@@ -77,9 +78,13 @@ class UsbConnection(context: Context, baudRate: Int) {
             // a new sketch is going to be uploaded or not
             Thread.sleep(2000)
 
-            serialDevice.write((App.ACTION_CONNECTION_ESTABLISHED + "\n").toByteArray())
-            mLocalBroadcastManager.sendBroadcast(Intent(App.LOCAL_ACTION_USB_CONNECTION_ESTABLISHED))
-
+            if (App.getInstance().getBooleanPreference("send_connection_state")) {
+                serialDevice.write((App.ACTION_CONNECTION_ESTABLISHED + "\n").toByteArray())
+            }
+            mLocalBroadcastManager.sendBroadcast(
+                    Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
+                            .putExtra("type", "usb")
+                            .putExtra("name", deviceName))
             return true
         }
 
@@ -97,7 +102,10 @@ class UsbConnection(context: Context, baudRate: Int) {
             sConnectedDevices[deviceName]?.close()
             sConnectedDevices.remove(deviceName)
             sBuffers.remove(deviceName)
-            mLocalBroadcastManager.sendBroadcast(Intent(App.LOCAL_ACTION_USB_CONNECTION_CLOSED))
+            mLocalBroadcastManager.sendBroadcast(
+                    Intent(App.LOCAL_ACTION_CONNECTION_CLOSED)
+                            .putExtra("type", "usb")
+                            .putExtra("name", deviceName))
         }
     }
 

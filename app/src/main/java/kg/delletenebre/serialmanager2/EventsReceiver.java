@@ -36,92 +36,91 @@ public class EventsReceiver extends BroadcastReceiver {
         startIntent.putExtra(CommunicationService.EXTRA_UPDATE_USB_CONNECTION, true);
         startIntent.putExtra(CommunicationService.EXTRA_UPDATE_BLUETOOTH_CONNECTION, true);
 
-        switch (action) {
-            case Intent.ACTION_BOOT_COMPLETED:
-                if (debug) {
-                    App.log("Boot completed");
-                }
-                app.setBootedMillis(SystemClock.uptimeMillis());
-                if (startOnBoot) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!stopWhenScreenOff || app.isScreenOn()) {
-                                context.startService(startIntent);
+        if (action != null) {
+            switch (action) {
+                case Intent.ACTION_BOOT_COMPLETED:
+                    if (debug) {
+                        App.log("Boot completed");
+                    }
+                    app.setBootedMillis(SystemClock.uptimeMillis());
+                    if (startOnBoot) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!stopWhenScreenOff || app.isScreenOn()) {
+                                    context.startService(startIntent);
+                                }
                             }
-                        }
-                    }, startOnBootDelay);
-                }
-                break;
+                        }, startOnBootDelay);
+                    }
+                    break;
 
-            case Intent.ACTION_SCREEN_ON:
-                App.logStatus("Screen state", "ON");
 
-                if (sendScreenState) {
-                    sendIntent.putExtra("data", String.format(Locale.getDefault(),
-                            context.getString(R.string.send_data_to_controller_format),
-                            "screen", "on"));
-                    context.sendBroadcast(sendIntent);
-                }
+                case Intent.ACTION_SCREEN_ON:
+                    App.logStatus("Screen state", "ON");
 
-                if (startWhenScreenOn && (!startOnBoot
-                        || SystemClock.uptimeMillis() > 150000
-                        || SystemClock.uptimeMillis() - app.getBootedMillis() - startOnBootDelay > 0)) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (app.isScreenOn()) {
-                                context.startService(startIntent);
+                    if (sendScreenState) {
+                        sendIntent.putExtra("data", String.format(Locale.getDefault(),
+                                context.getString(R.string.send_data_to_controller_format),
+                                "screen", "on"));
+                        context.sendBroadcast(sendIntent);
+                    }
+
+                    if (startWhenScreenOn && (!startOnBoot
+                            || SystemClock.uptimeMillis() > 150000
+                            || SystemClock.uptimeMillis() - app.getBootedMillis() - startOnBootDelay > 0)) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (app.isScreenOn()) {
+                                    context.startService(startIntent);
+                                }
                             }
-                        }
-                    }, app.getIntPreference("start_when_screen_on_delay") * 1000);
-                }
-                break;
+                        }, app.getIntPreference("start_when_screen_on_delay") * 1000);
+                    }
+                    break;
 
-            case Intent.ACTION_SCREEN_OFF:
-                App.logStatus("Screen state", "OFF");
 
-                if (sendScreenState) {
-                    sendIntent.putExtra("data", String.format(Locale.getDefault(),
-                            context.getString(R.string.send_data_to_controller_format),
-                            "screen", "off"));
-                    context.sendBroadcast(sendIntent);
-                }
+                case Intent.ACTION_SCREEN_OFF:
+                    App.logStatus("Screen state", "OFF");
 
-                if (stopWhenScreenOff) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (app.isScreenOff()) {
-                                context.stopService(new Intent(context, CommunicationService.class));
+                    if (sendScreenState) {
+                        sendIntent.putExtra("data", String.format(Locale.getDefault(),
+                                context.getString(R.string.send_data_to_controller_format),
+                                "screen", "off"));
+                        context.sendBroadcast(sendIntent);
+                    }
+
+                    if (stopWhenScreenOff) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (app.isScreenOff()) {
+                                    context.stopService(new Intent(context, CommunicationService.class));
+                                }
                             }
-                        }
-                    }, app.getIntPreference("stop_when_screen_off_delay") * 1000);
-                }
-                break;
+                        }, app.getIntPreference("stop_when_screen_off_delay") * 1000);
+                    }
+                    break;
 
 
-            case App.LOCAL_ACTION_SETTINGS_UPDATED:
-                App.setDebugEnabled(prefs.getBoolean("debugging", false));
-                break;
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+                    App.log("**** BluetoothAdapter.ACTION_STATE_CHANGED ****");
 
+                    final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
+                            BluetoothAdapter.ERROR);
 
-            case BluetoothAdapter.ACTION_STATE_CHANGED:
-                App.log("**** BluetoothAdapter.ACTION_STATE_CHANGED ****");
+                    Intent bluetoothIntent = new Intent(context, CommunicationService.class);
 
-                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
-                        BluetoothAdapter.ERROR);
+                    switch (state) {
+                        case BluetoothAdapter.STATE_ON:
+                            bluetoothIntent.putExtra(CommunicationService.EXTRA_BLUETOOTH_ENABLED, true);
+                            context.startService(bluetoothIntent);
+                            break;
+                    }
 
-                Intent bluetoothIntent = new Intent(context, CommunicationService.class);
-
-                switch (state) {
-                    case BluetoothAdapter.STATE_ON:
-                        bluetoothIntent.putExtra(CommunicationService.EXTRA_BLUETOOTH_ENABLED, true);
-                        context.startService(bluetoothIntent);
-                        break;
-                }
-
-                break;
+                    break;
+            }
         }
     }
 }

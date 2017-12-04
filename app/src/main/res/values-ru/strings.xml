@@ -12,6 +12,8 @@
 
     <string name="autoscroll">Автопрокрутка</string>
     <string name="send">Отправить</string>
+    <string name="connection_established">Соединение установлено</string>
+    <string name="connection_closed">Соединение закрыто</string>
 
     <string name="crash_toast_text">Упс! Возникла критическая ошибка, но Вы можете отправить информацию разработчику, что поможет (наверное) решить проблему.</string>
     <string name="crash_dialog_title">Отправить отчёт?</string>

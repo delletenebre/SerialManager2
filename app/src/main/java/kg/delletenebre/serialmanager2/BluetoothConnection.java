@@ -143,13 +143,6 @@ class BluetoothConnection {
 
         CommunicationThread(BluetoothDevice device) {
             mBluetoothDevice = device;
-
-            // Get a BluetoothSocket for a connection with the given BluetoothDevice
-//            try {
-//                mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(CONNECTION_UUID);
-//            } catch (IOException e) {
-//                App.logStatus("createRfcommSocketToServiceRecord",  "FAIL");
-//            }
         }
 
         public void run() {

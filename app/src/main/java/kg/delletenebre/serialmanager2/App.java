@@ -32,6 +32,8 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.udojava.evalex.Expression;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -77,9 +79,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String TAG = "kg.serial.manager";
     public static final String LOCAL_ACTION_COMMAND_RECEIVED = "local.command_received";
     public static final String LOCAL_ACTION_SEND_DATA = "local.send_data";
+    public static final String LOCAL_ACTION_DATA_SENT = "local.data_sent";
     public static final String LOCAL_ACTION_SETTINGS_UPDATED = "local.settings_updated";
-    public static final String LOCAL_ACTION_USB_CONNECTION_ESTABLISHED = "local.usb_connection_established";
-    public static final String LOCAL_ACTION_USB_CONNECTION_CLOSED = "local.usb_connection_closed";
+    public static final String LOCAL_ACTION_CONNECTION_ESTABLISHED = "local.connection_established";
+    public static final String LOCAL_ACTION_CONNECTION_CLOSED = "local.connection_closed";
+
 
     public static final String ACTION_COMMAND_RECEIVED = "kg.serial.manager.command_received";
     public static final String ACTION_SEND_DATA = "kg.serial.manager.send";
@@ -99,6 +103,20 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String EXTRA_SELECTED_ACTION_EMULATE_KEY = "kg.serial.manager.extra.selected_action.emulateed_key_id";
     public static final String EXTRA_SELECTED_ACTION_SHELL_COMMAND = "kg.serial.manager.extra.selected_action.shell_command";
     public static final String EXTRA_SELECTED_ACTION_SEND_DATA = "kg.serial.manager.extra.selected_action.send_data";
+
+    public static final Map<String, String> ICONS;
+    static
+    {
+        ICONS = new HashMap<>();
+        ICONS.put("controller", "\ue800");
+        ICONS.put("usb", "\ue801");
+        ICONS.put("bluetooth", "\ue802");
+        ICONS.put("web", "\ue803");
+        ICONS.put("receive", "\ue804");
+        ICONS.put("send", "\ue805");
+        ICONS.put("ok", "\ue806");
+        ICONS.put("cancel", "\ue807");
+    }
 
     public final static char CR  = (char) 0x0D;
     public final static char LF  = (char) 0x0A;
