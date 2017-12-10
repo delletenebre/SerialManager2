@@ -15,6 +15,7 @@
     <string name="tab_title_widgets">Widgets</string>
     <string name="tab_title_logs">Logs</string>
     <string name="autoscroll">Autoscroll</string>
+    <string name="clear">Clear</string>
     <string name="send">Send</string>
     <string name="connection_established">Connection established</string>
     <string name="connection_closed">Connection closed</string>

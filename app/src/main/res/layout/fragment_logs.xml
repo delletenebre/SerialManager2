@@ -25,6 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/send" />
+
     </android.support.v7.widget.LinearLayoutCompat>
 
     <TextView android:id="@+id/logs_text"
@@ -40,11 +41,24 @@
         android:padding="4dp"
         android:fontFamily="@font/serialmanager" />
 
-    <CheckBox android:id="@+id/autoscroll_checkbox"
+    <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:checked="true"
-        android:text="@string/autoscroll" />
+        android:orientation="horizontal">
+
+        <CheckBox android:id="@+id/autoscroll_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:checked="true"
+            android:text="@string/autoscroll" />
+
+        <Button android:id="@+id/clear_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clear" />
+
+    </android.support.v7.widget.LinearLayoutCompat>
 
 </android.support.v7.widget.LinearLayoutCompat>

@@ -5,6 +5,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="ic_clear_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="preference_category_margin">16dp</dimen>
     <dimen name="input_label_vertical_spacing">8dp</dimen>
     <dimen name="input_label_horizontal_spacing">4dp</dimen>
 

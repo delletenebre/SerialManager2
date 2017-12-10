@@ -14,6 +14,7 @@
     <string name="tab_title_widgets">Виджеты</string>
     <string name="tab_title_logs">Логи</string>
     <string name="autoscroll">Автопрокрутка</string>
+    <string name="clear">Очистить</string>
     <string name="send">Отправить</string>
     <string name="connection_established">Соединение установлено</string>
     <string name="connection_closed">Соединение закрыто</string>

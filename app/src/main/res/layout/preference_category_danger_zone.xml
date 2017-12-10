@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/preference_category_margin"
+    android:paddingStart="@dimen/preference_category_margin"
+    android:paddingRight="@dimen/preference_category_margin"
+    android:paddingEnd="@dimen/preference_category_margin"
     android:background="@color/danger_background">
 
     <TextView

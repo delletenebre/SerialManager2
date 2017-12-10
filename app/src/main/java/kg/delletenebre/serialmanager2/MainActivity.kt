@@ -72,37 +72,7 @@ class MainActivity: AppCompatActivity() {
         adapter.addFragment(WidgetsFragment(), getString(R.string.tab_title_widgets))
         adapter.addFragment(LogsFragment(), getString(R.string.tab_title_logs))
         viewPager.adapter = adapter
-
-//        supportFragmentManager.addOnBackStackChangedListener {
-//            val topFragment = getCurrentTopFragment(supportFragmentManager)
-//            if (topFragment != null) {
-//                if (topFragment is CommandsFragment) {
-//                    commandsFragmentInstance.updateItemsList()
-//                } else {
-//
-//                }
-//            }
-//        }
     }
-
-    private fun getCurrentTopFragment(fm: FragmentManager): Fragment? {
-        val stackCount = fm.backStackEntryCount
-
-        if (stackCount > 0) {
-            val backEntry: FragmentManager.BackStackEntry = fm.getBackStackEntryAt(stackCount - 1)
-            return fm.findFragmentByTag(backEntry.name)
-        } else {
-            val fragments = fm.fragments;
-            if (fragments != null && fragments.size > 0) {
-                fragments
-                        .filter { it != null && !it.isHidden }
-                        .forEach { return it }
-            }
-        }
-        return null
-    }
-
-
 
     inner class ViewPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
         private val mFragmentList = mutableListOf<Fragment>()

@@ -22,8 +22,6 @@ import java.util.*
 
 
 class LogsFragment : Fragment() {
-    private lateinit var mSendTextView: TextView
-    private lateinit var mSendButton: Button
     private lateinit var mTextView: TextView
     private lateinit var mAutoscrollCheckbox: CheckBox
     private lateinit var mLocalBroadcastManager: LocalBroadcastManager
@@ -33,13 +31,18 @@ class LogsFragment : Fragment() {
         val layoutInflater = activity!!.layoutInflater
         val layout = layoutInflater.inflate(R.layout.fragment_logs, container, false)
 
-        mSendTextView = layout.findViewById(R.id.send_text)
-        mSendButton = layout.findViewById(R.id.send_button)
         mTextView = layout.findViewById(R.id.logs_text)
         mAutoscrollCheckbox = layout.findViewById(R.id.autoscroll_checkbox)
 
-        mSendButton.setOnClickListener {
-            sendData(mSendTextView.text.toString())
+        val clearButton : Button = layout.findViewById(R.id.clear_button)
+        clearButton.setOnClickListener {
+            mTextView.text = ""
+        }
+
+        val sendButton : Button = layout.findViewById(R.id.send_button)
+        sendButton.setOnClickListener {
+            val sendTextView : TextView = layout.findViewById(R.id.send_text)
+            sendData(sendTextView.text.toString())
         }
 
         mTextView.movementMethod = ScrollingMovementMethod()
