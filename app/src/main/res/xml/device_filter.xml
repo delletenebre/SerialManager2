@@ -31,4 +31,9 @@
     <!-- 0x1b4f Sparkfun -->
     <usb-device vendor-id="6991" />
 
+    <!-- 0x0483 / 0x572b: STM32F3 -->
+    <usb-device vendor-id="1155" product-id="22315" />
+    <!-- 0x0483 / 0x5750: STM32F1 -->
+    <usb-device vendor-id="1155" product-id="22352" />
+
 </resources>
