@@ -19,6 +19,7 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -41,12 +42,11 @@ import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import kg.delletenebre.serialmanager2.commands.Command;
+import kg.delletenebre.serialmanager2.commands.CommandModel;
 import kg.delletenebre.serialmanager2.utils.RealmMigration;
 import kg.delletenebre.serialmanager2.utils.Utils;
 import kg.delletenebre.serialmanager2.utils.VirtualKeyboard;
 import kg.delletenebre.serialmanager2.views.AppChooserView;
-import xdroid.toaster.Toaster;
 
 //@ReportsCrashes(
 //        mailTo = "delletenebre@gmail.com",
@@ -78,11 +78,13 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public static final String TAG = "kg.serial.manager";
     public static final String LOCAL_ACTION_COMMAND_RECEIVED = "local.command_received";
+    public static final String LOCAL_ACTION_COMMAND_DETECTED = "local.command_detected";
     public static final String LOCAL_ACTION_SEND_DATA = "local.send_data";
     public static final String LOCAL_ACTION_DATA_SENT = "local.data_sent";
     public static final String LOCAL_ACTION_SETTINGS_UPDATED = "local.settings_updated";
     public static final String LOCAL_ACTION_CONNECTION_ESTABLISHED = "local.connection_established";
     public static final String LOCAL_ACTION_CONNECTION_CLOSED = "local.connection_closed";
+
 
 
     public static final String ACTION_COMMAND_RECEIVED = "kg.serial.manager.command_received";
@@ -169,7 +171,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRealmConfig = new RealmConfiguration.Builder()
-                .schemaVersion(4)
+                .schemaVersion(5)
                 .migration(new RealmMigration())
                 //.deleteRealmIfMigrationNeeded()
                 .build();
@@ -307,22 +309,30 @@ public class App extends Application implements Application.ActivityLifecycleCal
             String key = matcher.group(1);
             String value = matcher.group(2);
 
+            Intent detectedCommandIntent = new Intent(LOCAL_ACTION_COMMAND_DETECTED);
+            detectedCommandIntent.putExtra("key", key);
+            detectedCommandIntent.putExtra("value", value);
+            LocalBroadcastManager localBroadcastManager = LocalBroadcastManager.getInstance(this);
+            localBroadcastManager.sendBroadcast(detectedCommandIntent);
+
             if (isActivityVisible() && !getBooleanPreference("always_execute_command_action")) {
                 showSnackbar(mVisibleActivity, incomingString);
 
-                Intent intent = new Intent(ACTION_COMMAND_RECEIVED);
-                intent.putExtra("key", key);
-                intent.putExtra("value", value);
-                sendBroadcast(intent);
+                Intent receivedCommandIntent = new Intent(ACTION_COMMAND_RECEIVED);
+                receivedCommandIntent.putExtra("key", key);
+                receivedCommandIntent.putExtra("value", value);
+                sendBroadcast(receivedCommandIntent);
+
+
             } else {
                 String intentValue = value;
 
                 Realm realm = getNewRealmInstance();
-                RealmResults<Command> commands = realm.where(Command.class)
+                RealmResults<CommandModel> commands = realm.where(CommandModel.class)
                         .equalTo("key", key)
                         .findAll();
 
-                for (Command command : commands) {
+                for (CommandModel command : commands) {
                     boolean inRange = false;
                     if (Utils.isNumber(command.getValue()) && Utils.isNumber(value)) {
                         float commandValue = Float.parseFloat(command.getValue());
@@ -344,7 +354,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
                                         command.getOffsetX(), command.getOffsetY())
                                     .setTextSize(command.getNotyTextSize())
                                     .setTextColor(Color.parseColor(command.getNotyTextColor()))
-                                    .setBackgroundColor(Color.parseColor(command.getNotyBgColor()))
+                                    .setBackgroundColor(Color.parseColor(command.getNotyBackgroundColor()))
                                     .show(text, command.getNotyDurationInMillis());
                             }
                         }
@@ -649,11 +659,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
                                      String shellCommand, String sendData,
                                      String key, String value) {
         switch (actionId) {
-            case Command.ACTION_RUN_APPLICATION: {
+            case CommandModel.ACTION_RUN_APPLICATION: {
                 Intent intent = AppChooserView.getIntentValue(chosenApp, null);
                 if (intent == null) {
-                    Toaster.toast(getString(R.string.app_chooser_toast_app_not_found,
-                            AppChooserView.getLabelByValue(this, chosenApp)));
+//                    Toaster.toast(getString(R.string.app_chooser_toast_app_not_found,
+//                            AppChooserView.getLabelByValue(this, chosenApp)));
                 } else {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -661,14 +671,14 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 break;
             }
 
-            case Command.ACTION_EMULATE_KEY: {
+            case CommandModel.ACTION_EMULATE_KEY: {
                 if (mVirtualKeyboard != null) {
                     mVirtualKeyboard.emulateKey(emulatedKeyId);
                 }
                 break;
             }
 
-            case Command.ACTION_SHELL_COMMAND: {
+            case CommandModel.ACTION_SHELL_COMMAND: {
                 try {
                     Runtime.getRuntime().exec(shellCommand);
                 } catch (Exception e) {
@@ -677,7 +687,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 break;
             }
 
-            case Command.ACTION_SEND_DATA: {
+            case CommandModel.ACTION_SEND_DATA: {
                 Intent intent = new Intent(ACTION_SEND_DATA);
                 intent.putExtra("data", App.getInstance().compileFormulas(
                         App.getInstance().replaceKeywords(sendData, key, value)));

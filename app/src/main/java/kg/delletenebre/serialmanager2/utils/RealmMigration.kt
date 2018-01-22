@@ -3,6 +3,7 @@ package kg.delletenebre.serialmanager2.utils
 import io.realm.DynamicRealm
 import io.realm.FieldAttribute
 
+
 open class RealmMigration : io.realm.RealmMigration {
     override fun migrate(realm: DynamicRealm, oldVersion: Long, newVersion: Long) {
         var currentVersion = oldVersion
@@ -61,6 +62,26 @@ open class RealmMigration : io.realm.RealmMigration {
                     .addField("emulatedKeyId", Int::class.java, FieldAttribute.REQUIRED)
                     .addField("shellCommand", String::class.java, FieldAttribute.REQUIRED)
                     .addField("sendData", String::class.java, FieldAttribute.REQUIRED)
+
+            currentVersion++
+        }
+
+        if (currentVersion == 4L) {
+            schema.rename("Command", "CommandModel")
+            val commandSchema = schema.get("CommandModel")
+            commandSchema!!
+                    .addIndex("index")
+                    .setRequired("key", true)
+                    .setRequired("value", true)
+                    .setRequired("intentValueExtra", true)
+                    .setRequired("chosenApp", true)
+                    .setRequired("chosenAppLabel", true)
+                    .setRequired("shellCommand", true)
+                    .setRequired("sendData", true)
+                    .setRequired("notyMessage", true)
+                    .renameField("notyBgColor", "notyBackgroundColor")
+                    .setRequired("notyBackgroundColor", true)
+                    .setRequired("notyTextColor", true)
 
             currentVersion++
         }

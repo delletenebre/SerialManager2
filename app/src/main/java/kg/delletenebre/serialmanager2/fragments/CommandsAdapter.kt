@@ -14,13 +14,13 @@ import io.realm.Realm
 import io.realm.RealmResults
 import kg.delletenebre.serialmanager2.App
 import kg.delletenebre.serialmanager2.R
-import kg.delletenebre.serialmanager2.commands.Command
-import kg.delletenebre.serialmanager2.commands.EditActivity
+import kg.delletenebre.serialmanager2.commands.CommandEditActivity
+import kg.delletenebre.serialmanager2.commands.CommandModel
 
 class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
 
     private var mRealm: Realm? = null
-    private var mItems: OrderedRealmCollection<Command>? = null
+    private var mItems: OrderedRealmCollection<CommandModel>? = null
 
     // Provide a suitable constructor (depends on the kind of dataset)
     init {
@@ -61,7 +61,7 @@ class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
 
     fun updateRealmInstance() {
         mRealm = App.getInstance().realm
-        mItems = mRealm!!.where(Command::class.java).findAllAsync().sort("index")
+        mItems = mRealm!!.where(CommandModel::class.java).findAllAsync().sort("index")
         notifyDataSetChanged()
     }
 
@@ -70,26 +70,26 @@ class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
         return item.getTitleLabel(context)
     }
 
-    fun add(position: Int, command: Command) {
+    fun add(position: Int, command: CommandModel) {
         mItems!!.add(position, command)
         notifyItemInserted(position)
     }
 
     fun updatePositions(oldIndex: Int, newIndex: Int) {
         mRealm!!.executeTransaction { realm ->
-            val movedCommand = realm.where(Command::class.java).equalTo("index", oldIndex)
+            val movedCommand = realm.where(CommandModel::class.java).equalTo("index", oldIndex)
                     .findFirst()
             if (movedCommand != null) {
-                val commands: RealmResults<Command>
+                val commands: RealmResults<CommandModel>
                 var way = 1
                 if (oldIndex < newIndex) {
-                    commands = realm.where(Command::class.java)
+                    commands = realm.where(CommandModel::class.java)
                             .greaterThan("index", oldIndex)
                             .lessThanOrEqualTo("index", newIndex)
                             .findAll()
                     way = -1
                 } else {
-                    commands = realm.where(Command::class.java)
+                    commands = realm.where(CommandModel::class.java)
                             .greaterThanOrEqualTo("index", newIndex)
                             .lessThan("index", oldIndex)
                             .findAll()
@@ -107,13 +107,13 @@ class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
         val item = mItems!![position]
         if (mItems!!.contains(item)) {
             mRealm!!.executeTransaction { realm ->
-                val removedCommand = realm.where(Command::class.java)
+                val removedCommand = realm.where(CommandModel::class.java)
                         .equalTo("index", position)
                         .findFirst()
                 if (removedCommand != null) {
                     removedCommand.deleteFromRealm()
 
-                    val commands = realm.where(Command::class.java)
+                    val commands = realm.where(CommandModel::class.java)
                             .greaterThan("index", position)
                             .findAll()
                     for (command in commands) {
@@ -130,7 +130,7 @@ class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
         internal var mTitle: TextView = layout.findViewById(R.id.title)
         internal var mSummary: TextView = layout.findViewById(R.id.summary)
         internal var mUndo: Button = layout.findViewById(R.id.undo_button)
-        internal var mCommand: Command? = null
+        internal var mCommand: CommandModel? = null
 
         init {
             layout.setOnClickListener(this)
@@ -138,7 +138,7 @@ class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
 
         override fun onClick(view: View) {
             val context = view.context
-            val intent = Intent(view.context, EditActivity::class.java)
+            val intent = Intent(view.context, CommandEditActivity::class.java)
             intent.putExtra("CommandIndex", mCommand!!.index)
             context.startActivity(intent)
         }

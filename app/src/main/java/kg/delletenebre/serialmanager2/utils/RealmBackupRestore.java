@@ -19,7 +19,7 @@ import java.util.List;
 import io.realm.Realm;
 import kg.delletenebre.serialmanager2.App;
 import kg.delletenebre.serialmanager2.R;
-import kg.delletenebre.serialmanager2.commands.Command;
+import kg.delletenebre.serialmanager2.commands.CommandModel;
 
 public class RealmBackupRestore {
     private static final File EXPORT_REALM_FOLDER = Environment.getExternalStorageDirectory();
@@ -76,11 +76,11 @@ public class RealmBackupRestore {
                 public void execute(Realm realm) {
                     try {
                         InputStream stream = new FileInputStream(new File(JSON_FILE_PATH));
-                        mRealm.createAllFromJson(Command.class, stream);
-                        List<Command> items = mRealm.where(Command.class).findAll().sort("index");
+                        mRealm.createAllFromJson(CommandModel.class, stream);
+                        List<CommandModel> items = mRealm.where(CommandModel.class).findAll().sort("index");
                         if (items.size() > 0) {
                             int index = 0;
-                            for (Command command : items) {
+                            for (CommandModel command : items) {
                                 command.setIndex(index);
                                 index++;
                             }
@@ -103,7 +103,7 @@ public class RealmBackupRestore {
     public void backupToJson() {
         if (checkStoragePermissions(mActivity)) {
             try {
-                List<Command> commands = mRealm.where(Command.class).findAll();
+                List<CommandModel> commands = mRealm.where(CommandModel.class).findAll();
                 if (commands.size() > 0) {
                     Gson gson = new Gson();
                     File file = new File(JSON_FILE_PATH);

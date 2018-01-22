@@ -20,7 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kg.delletenebre.serialmanager2.R
-import kg.delletenebre.serialmanager2.commands.EditActivity
+import kg.delletenebre.serialmanager2.commands.CommandEditActivity
 
 
 class CommandsFragment: Fragment() {
@@ -40,7 +40,7 @@ class CommandsFragment: Fragment() {
         setupItemTouchHelper(context!!, mRecyclerView)
 
         layout.findViewById<FloatingActionButton>(R.id.floating_action_button).setOnClickListener({
-            val intent = Intent(context, EditActivity::class.java)
+            val intent = Intent(context, CommandEditActivity::class.java)
             intent.putExtra("CommandIndex", mRecyclerView.adapter.itemCount)
             intent.putExtra("isNew", true)
             context?.startActivity(intent)

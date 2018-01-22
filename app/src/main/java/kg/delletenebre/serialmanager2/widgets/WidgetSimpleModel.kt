@@ -6,7 +6,7 @@ import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 import kg.delletenebre.serialmanager2.App
 import kg.delletenebre.serialmanager2.R
-import kg.delletenebre.serialmanager2.commands.Command
+import kg.delletenebre.serialmanager2.commands.CommandModel
 
 
 @Keep
@@ -37,17 +37,17 @@ open class WidgetSimpleModel : RealmObject() {
         val actions = context.resources.getStringArray(R.array.array_command_actions)
 
         when (actionId) {
-            Command.ACTION_RUN_APPLICATION -> return chosenAppLabel
+            CommandModel.ACTION_RUN_APPLICATION -> return chosenAppLabel
 
-            Command.ACTION_EMULATE_KEY -> return context.getString(R.string.command_subtitle,
+            CommandModel.ACTION_EMULATE_KEY -> return context.getString(R.string.command_subtitle,
                     actions[actionId],
                     App.getInstance().virtualKeyboard.getNameById(emulatedKeyId))
 
-            Command.ACTION_SHELL_COMMAND -> return context.getString(R.string.command_subtitle,
+            CommandModel.ACTION_SHELL_COMMAND -> return context.getString(R.string.command_subtitle,
                     actions[actionId],
                     shellCommand)
 
-            Command.ACTION_SEND_DATA -> return context.getString(R.string.command_subtitle,
+            CommandModel.ACTION_SEND_DATA -> return context.getString(R.string.command_subtitle,
                     actions[actionId],
                     sendData)
 

@@ -17,7 +17,7 @@ import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
 import io.realm.Realm
 import kg.delletenebre.serialmanager2.App
 import kg.delletenebre.serialmanager2.R
-import kg.delletenebre.serialmanager2.commands.Command
+import kg.delletenebre.serialmanager2.commands.CommandModel
 import kotlinx.android.synthetic.main.widget_simple_activity.*
 
 
@@ -160,10 +160,10 @@ class WidgetSimpleSettingsActivity : AppCompatActivity(), ColorPickerDialogListe
         xSendDataLayout.visibility = View.GONE
 
         when (actionId) {
-            Command.ACTION_RUN_APPLICATION -> xAppChooserLayout.visibility = View.VISIBLE
-            Command.ACTION_EMULATE_KEY -> xEmulateKeyLayout.visibility = View.VISIBLE
-            Command.ACTION_SHELL_COMMAND -> xShellCommandLayout.visibility = View.VISIBLE
-            Command.ACTION_SEND_DATA -> xSendDataLayout.visibility = View.VISIBLE
+            CommandModel.ACTION_RUN_APPLICATION -> xAppChooserLayout.visibility = View.VISIBLE
+            CommandModel.ACTION_EMULATE_KEY -> xEmulateKeyLayout.visibility = View.VISIBLE
+            CommandModel.ACTION_SHELL_COMMAND -> xShellCommandLayout.visibility = View.VISIBLE
+            CommandModel.ACTION_SEND_DATA -> xSendDataLayout.visibility = View.VISIBLE
         }
     }
 
