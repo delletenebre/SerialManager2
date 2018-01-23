@@ -85,5 +85,15 @@ open class RealmMigration : io.realm.RealmMigration {
 
             currentVersion++
         }
+
+        if (currentVersion == 5L) {
+            val commandSchema = schema.get("CommandModel")
+            commandSchema!!
+                    .addPrimaryKey("index")
+
+            currentVersion++
+        }
+
+
     }
 }
