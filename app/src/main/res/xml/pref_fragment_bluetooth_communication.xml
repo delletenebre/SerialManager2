@@ -4,9 +4,10 @@
         android:defaultValue="@bool/pref_default_bluetooth_communication_enabled"
         android:title="@string/pref_title_bluetooth_communication_enabled" />
 
-    <kg.delletenebre.serialmanager2.views.BluetoothDevicesListPreference
+    <kg.delletenebre.serialmanager2.bluetooth.BluetoothDevicesListPreference
         android:key="bluetooth_device"
         android:dependency="bluetooth_communication_enabled"
+        android:defaultValue="@string/pref_default_bluetooth_device"
         android:title="@string/pref_title_bluetooth_device" />
 
     <CheckBoxPreference
@@ -14,6 +15,13 @@
         android:dependency="bluetooth_communication_enabled"
         android:defaultValue="@bool/pref_default_bluetooth_adapter_turn_on"
         android:title="@string/pref_title_bluetooth_adapter_turn_on"
-        android:summary="@string/pref_summary_bluetooth_adapter_turn_on"/>
+        android:summary="@string/pref_summary_bluetooth_adapter_turn_on" />
+
+    <CheckBoxPreference
+        android:key="bluetooth_le_protocol"
+        android:dependency="bluetooth_communication_enabled"
+        android:defaultValue="@bool/pref_default_bluetooth_le_protocol"
+        android:title="@string/pref_title_bluetooth_le_protocol"
+        android:summary="@string/pref_summary_bluetooth_le_protocol" />
 
 </PreferenceScreen>

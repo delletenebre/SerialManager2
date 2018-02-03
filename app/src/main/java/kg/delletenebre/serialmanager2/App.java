@@ -48,28 +48,7 @@ import kg.delletenebre.serialmanager2.utils.Utils;
 import kg.delletenebre.serialmanager2.utils.VirtualKeyboard;
 import kg.delletenebre.serialmanager2.views.AppChooserView;
 
-//@ReportsCrashes(
-//        mailTo = "delletenebre@gmail.com",
-//        formUri = "https://collector.tracepot.com/f61f59df",
-//        customReportContent = {
-//                ReportField.USER_COMMENT,
-//                ReportField.APP_VERSION_CODE,
-//                ReportField.APP_VERSION_NAME,
-//                ReportField.ANDROID_VERSION,
-//                ReportField.PHONE_MODEL,
-//                ReportField.STACK_TRACE,
-//                ReportField.LOGCAT,
-//        },
-//        logcatArguments = { "-t", "200", "-v", "threadtime" },
-//        mode = ReportingInteractionMode.DIALOG,
-//        resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
-//        resDialogText = R.string.crash_dialog_text,
-//        resDialogIcon = android.R.drawable.ic_dialog_info, //optional. default is a warning sign
-//        resDialogTitle = R.string.crash_dialog_title, // optional. default is your application name
-//        resDialogCommentPrompt = R.string.crash_dialog_comment_prompt, // optional. When defined, adds a user text field input with this text resource as a label
-//        //resDialogEmailPrompt = R.string.crash_user_email_label, // optional. When defined, adds a user email text entry with this text resource as label. The email address will be populated from SharedPreferences and will be provided as an ACRA field if configured.
-//        resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast message when the user accepts to send a report.
-//)
+
 public class App extends Application implements Application.ActivityLifecycleCallbacks {
     private static App sSelf;
     public static App getInstance() {
@@ -177,7 +156,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 .build();
         mRealm = getNewRealmInstance();
 
-        sDebugEnabled = mPrefs.getBoolean("debugging", false);
+        setDebugEnabled(getBooleanPreference("debugging"));
 
         if (isSystemOverlaysPermissionGranted()) {
             createHelperOverlay();
@@ -495,10 +474,14 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
 
     public String replaceKeywords(String str, String key, String value) {
-        return str.replaceAll("(%key)", key)
-                .replaceAll("(%k)", key)
-                .replaceAll("(%value)", value)
-                .replaceAll("(%v)", value);
+        if (str != null) {
+            return str.replaceAll("(%key)", key)
+                    .replaceAll("(%k)", key)
+                    .replaceAll("(%value)", value)
+                    .replaceAll("(%v)", value);
+        }
+
+        return "";
     }
 
     public String compileFormulas(String str) {
@@ -689,8 +672,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
             case CommandModel.ACTION_SEND_DATA: {
                 Intent intent = new Intent(ACTION_SEND_DATA);
-                intent.putExtra("data", App.getInstance().compileFormulas(
-                        App.getInstance().replaceKeywords(sendData, key, value)));
+                intent.putExtra("data", App.getInstance().replaceKeywords(sendData, key, value));
                 sendBroadcast(intent);
                 break;
             }

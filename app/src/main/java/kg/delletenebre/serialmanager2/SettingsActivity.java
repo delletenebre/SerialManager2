@@ -137,6 +137,8 @@ public class SettingsActivity extends PreferenceActivity {
         getDelegate().onStop();
         (LocalBroadcastManager.getInstance(this))
                 .sendBroadcast(new Intent(App.LOCAL_ACTION_SETTINGS_UPDATED));
+
+        App.setDebugEnabled(App.getInstance().getBooleanPreference("debugging"));
     }
 
     @Override

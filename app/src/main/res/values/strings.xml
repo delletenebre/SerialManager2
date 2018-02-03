@@ -143,10 +143,13 @@
     <string name="pref_header_bluetooth">Bluetooth connection</string>
     <string name="pref_title_bluetooth_communication_enabled">Enable Bluetooth communication</string>
     <string name="pref_title_bluetooth_device">Bluetooth device</string>
+    <string name="pref_default_bluetooth_device" translatable="false"></string>
     <string name="no_device">No device</string>
     <string name="pref_template_bluetooth_device_list_item" translatable="false">%1$s [ %2$s ]</string>
     <string name="pref_title_bluetooth_adapter_turn_on">Turn on bluetooth adapter</string>
     <string name="pref_summary_bluetooth_adapter_turn_on">Turn on bluetooth adapter on Service create, if it is off</string>
+    <string name="pref_title_bluetooth_le_protocol">Use BLE protocol</string>
+    <string name="pref_summary_bluetooth_le_protocol">Use Bluetooth Low Energy protocol for receiving/sending data</string>
 
     <string name="pref_header_web_socket">WebSocket connection</string>
     <string name="pref_title_web_socket_communication_enabled">Enable WebSocket communication</string>

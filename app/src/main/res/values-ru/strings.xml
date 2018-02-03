@@ -113,6 +113,8 @@
     <string name="no_device">Нет</string>
     <string name="pref_title_bluetooth_adapter_turn_on">Включать bluetooth</string>
     <string name="pref_summary_bluetooth_adapter_turn_on">Включать bluetooth при запуске сервиса, если он был выключен</string>
+    <string name="pref_title_bluetooth_le_protocol">Использовать BLE протокол</string>
+    <string name="pref_summary_bluetooth_le_protocol">Использовать Bluetooth Low Energy протокол для приёма/отправки данных</string>
 
     <string name="pref_header_web_socket">WebSocket соединение</string>
     <string name="pref_title_web_socket_communication_enabled">Включить WebSocket соединение</string>

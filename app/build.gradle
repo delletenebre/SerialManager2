@@ -22,13 +22,13 @@ apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.1'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "kg.delletenebre.serialmanager2"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 23
-        versionName "2.5.3"
+        versionCode 24
+        versionName "2.5.4"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
             cmake {
@@ -60,17 +60,19 @@ dependencies {
     compile "com.android.support:support-v4:$supportLibsVersion"
     compile "com.android.support:support-vector-drawable:$supportLibsVersion"
 
-    compile 'org.apache.commons:commons-lang3:3.6'
-    compile 'me.palazzetti:adktoolkit:0.3.0'
-    compile 'com.github.felHR85:UsbSerial:4.5'
+    compile 'org.apache.commons:commons-lang3:3.7'
+    compile 'com.github.douglasjunior.AndroidBluetoothLibrary:BluetoothClassicLibrary:0.3.4'
+    compile 'com.github.douglasjunior.AndroidBluetoothLibrary:BluetoothLowEnergyLibrary:0.3.4'
+    // compile 'me.palazzetti:adktoolkit:0.3.0'
+    compile 'com.github.felHR85:UsbSerial:4.5.2'
     compile 'com.jrummyapps:colorpicker:2.1.5'
-    compile 'com.udojava:EvalEx:1.6'
+    compile 'com.udojava:EvalEx:2.0'
     compile 'com.koushikdutta.async:androidasync:2.2.1'
     compile 'com.google.code.gson:gson:2.8.2'
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') { transitive = true }
+    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') { transitive = true }
 
-    compile 'com.jakewharton:butterknife:8.8.1'
-    kapt 'com.jakewharton:butterknife-compiler:8.8.1'
+    // compile 'com.jakewharton:butterknife:8.8.1'
+    // kapt 'com.jakewharton:butterknife-compiler:8.8.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
 }

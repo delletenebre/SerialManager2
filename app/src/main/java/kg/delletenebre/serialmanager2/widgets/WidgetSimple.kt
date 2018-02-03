@@ -97,6 +97,7 @@ class WidgetSimple : AppWidgetProvider() {
             intent.putExtra(App.EXTRA_SELECTED_ACTION_CHOSEN_APP, widget.chosenApp)
             intent.putExtra(App.EXTRA_SELECTED_ACTION_EMULATE_KEY, widget.emulatedKeyId)
             intent.putExtra(App.EXTRA_SELECTED_ACTION_SHELL_COMMAND, widget.shellCommand)
+            intent.putExtra(App.EXTRA_SELECTED_ACTION_SEND_DATA, widget.sendData)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))

@@ -3,6 +3,7 @@
     <bool name="pref_default_usb_communication_enabled">true</bool>
     <bool name="pref_default_bluetooth_communication_enabled">true</bool>
     <bool name="pref_default_bluetooth_adapter_turn_on">true</bool>
+    <bool name="pref_default_bluetooth_le_protocol">false</bool>
     <bool name="pref_default_web_socket_communication_enabled">false</bool>
     <bool name="pref_default_serial_communication_enabled">false</bool>
     <bool name="pref_default_debugging">false</bool>
