@@ -207,11 +207,11 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
         mRealm.executeTransaction({ realm ->
             if (mCommand == null) {
                 mCommand = realm.createObject(CommandModel::class.java)
-                mCommand!!.index = mCommandIndex
+                mCommand?.index = mCommandIndex
             }
 
-            mCommand!!.key = xKey.text.toString()
-            mCommand!!.value = xValue.text.toString()
+            mCommand?.key = xKey.text.toString()
+            mCommand?.value = xValue.text.toString()
 
             var scatter = 0.0f
             try {
@@ -220,17 +220,17 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
                 App.logError(e.localizedMessage)
             }
 
-            mCommand!!.scatter = scatter
+            mCommand?.scatter = scatter
 
-            mCommand!!.intentValueExtra = xIntentValueExtra.text.toString()
-            mCommand!!.actionId = xAction.selectedItemPosition
-            mCommand!!.chosenApp = xAppChooser.value
-            mCommand!!.chosenAppLabel = xAppChooser.label
-            mCommand!!.emulatedKeyId = xEmulateKey.selectedItemPosition
-            mCommand!!.shellCommand = xShellCommand.text.toString()
-            mCommand!!.sendData = xSendData.text.toString()
+            mCommand?.intentValueExtra = xIntentValueExtra.text.toString()
+            mCommand?.actionId = xAction.selectedItemPosition
+            mCommand?.chosenApp = xAppChooser.value
+            mCommand?.chosenAppLabel = xAppChooser.label
+            mCommand?.emulatedKeyId = xEmulateKey.selectedItemPosition
+            mCommand?.shellCommand = xShellCommand.text.toString()
+            mCommand?.sendData = xSendData.text.toString()
 
-            mCommand!!.notyMessage = xNotyMessage.text.toString()
+            mCommand?.notyMessage = xNotyMessage.text.toString()
 
             var duration = 0f
             try {
@@ -239,7 +239,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
                 App.logError(e.localizedMessage)
             }
 
-            mCommand!!.notyDuration = duration
+            mCommand?.notyDuration = duration
 
             var textSize = 0
             try {
@@ -248,14 +248,14 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
                 App.logError(e.localizedMessage)
             }
 
-            mCommand!!.notyTextSize = textSize
+            mCommand?.notyTextSize = textSize
 
-            mCommand!!.notyBackgroundColor = xNotyBackgroundColorHelper.text.toString()
-            mCommand!!.notyTextColor = xNotyTextColorHelper.text.toString()
+            mCommand?.notyBackgroundColor = xNotyBackgroundColorHelper.text.toString()
+            mCommand?.notyTextColor = xNotyTextColorHelper.text.toString()
 
-            mCommand!!.positionZ = xNotyPositionZ.selectedItemPosition
-            mCommand!!.positionX = xNotyPositionX.selectedItemPosition
-            mCommand!!.positionY = xNotyPositionY.selectedItemPosition
+            mCommand?.positionZ = xNotyPositionZ.selectedItemPosition
+            mCommand?.positionX = xNotyPositionX.selectedItemPosition
+            mCommand?.positionY = xNotyPositionY.selectedItemPosition
 
             var offsetX = 0
             try {
@@ -264,7 +264,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
                 App.logError(e.localizedMessage)
             }
 
-            mCommand!!.offsetX = offsetX
+            mCommand?.offsetX = offsetX
 
             var offsetY = 0
             try {
@@ -273,7 +273,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
                 App.logError(e.localizedMessage)
             }
 
-            mCommand!!.offsetY = offsetY
+            mCommand?.offsetY = offsetY
         })
     }
 

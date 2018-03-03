@@ -23,6 +23,7 @@ import kg.delletenebre.serialmanager2.R
 import kg.delletenebre.serialmanager2.commands.CommandEditActivity
 
 
+
 class CommandsFragment: Fragment() {
     private lateinit var mRecyclerView: RecyclerView
 
@@ -53,6 +54,7 @@ class CommandsFragment: Fragment() {
         super.onResume()
         (mRecyclerView.adapter as CommandsAdapter).updateRealmInstance()
     }
+
 
     private fun setupItemTouchHelper(context: Context, recyclerView: RecyclerView) {
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,

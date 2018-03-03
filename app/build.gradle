@@ -10,6 +10,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'io.fabric'
 
 repositories {
@@ -27,8 +28,8 @@ android {
         applicationId "kg.delletenebre.serialmanager2"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 24
-        versionName "2.5.4"
+        versionCode 25
+        versionName "2.5.5"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
             cmake {
@@ -53,7 +54,7 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
-    ext.supportLibsVersion = "27.0.2"
+    ext.supportLibsVersion = "27.1.0"
     compile "com.android.support:appcompat-v7:$supportLibsVersion"
     compile "com.android.support:recyclerview-v7:$supportLibsVersion"
     compile "com.android.support:design:$supportLibsVersion"
@@ -71,8 +72,6 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.2'
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') { transitive = true }
 
-    // compile 'com.jakewharton:butterknife:8.8.1'
-    // kapt 'com.jakewharton:butterknife-compiler:8.8.1'
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
 }

@@ -150,7 +150,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRealmConfig = new RealmConfiguration.Builder()
-                .schemaVersion(6)
+                .schemaVersion(7)
                 .migration(new RealmMigration())
                 //.deleteRealmIfMigrationNeeded()
                 .build();

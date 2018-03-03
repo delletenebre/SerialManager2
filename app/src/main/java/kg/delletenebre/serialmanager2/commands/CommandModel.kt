@@ -4,7 +4,6 @@ import android.content.Context
 import android.support.annotation.Keep
 import io.realm.RealmObject
 import io.realm.annotations.Ignore
-import io.realm.annotations.PrimaryKey
 import kg.delletenebre.serialmanager2.App
 import kg.delletenebre.serialmanager2.R
 import kg.delletenebre.serialmanager2.utils.Utils
@@ -24,7 +23,6 @@ open class CommandModel : RealmObject() {
         const val ACTION_SEND_DATA = 4
     }
 
-    @PrimaryKey
     var index: Int = 0
 
     var folder: Boolean = false

@@ -94,6 +94,14 @@ open class RealmMigration : io.realm.RealmMigration {
             currentVersion++
         }
 
+        if (currentVersion == 6L) {
+            val commandSchema = schema.get("CommandModel")
+            commandSchema!!
+                    .removePrimaryKey()
+
+            currentVersion++
+        }
+
 
     }
 }
