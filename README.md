@@ -4,10 +4,8 @@
 * [Обсуждение на DRIVE2.RU](https://www.drive2.ru/b/487607019713331355/)
 * [Обсуждение на pccar.ru](http://pccar.ru/showthread.php?t=24120)
 
-<img src="https://user-images.githubusercontent.com/3936845/36942953-1ef99710-1faa-11e8-8df8-f1ff00468303.png" width="240">
-<img src="https://user-images.githubusercontent.com/3936845/36942952-1ecd2608-1faa-11e8-8fd5-d8d038ce7458.png" width="240">
-<img src="https://user-images.githubusercontent.com/3936845/36942951-1ea517d0-1faa-11e8-9528-472ac780381d.png" width="240">
-<img src="https://user-images.githubusercontent.com/3936845/36942954-1f2218f2-1faa-11e8-95fb-f2598367999b.png" width="240">
+<img src="https://user-images.githubusercontent.com/3936845/36942953-1ef99710-1faa-11e8-8df8-f1ff00468303.png" width="240"> <img src="https://user-images.githubusercontent.com/3936845/36942952-1ecd2608-1faa-11e8-8fd5-d8d038ce7458.png" width="240">
+<img src="https://user-images.githubusercontent.com/3936845/36942951-1ea517d0-1faa-11e8-9528-472ac780381d.png" width="240"> <img src="https://user-images.githubusercontent.com/3936845/36942954-1f2218f2-1faa-11e8-95fb-f2598367999b.png" width="240">
 
 
 ## Возможности
