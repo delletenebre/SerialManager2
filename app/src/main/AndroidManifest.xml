@@ -4,7 +4,8 @@
     package="kg.delletenebre.serialmanager2">
 
     <uses-feature android:name="android.hardware.usb.host" android:required="false" />
-    <uses-feature android:name="android.hardware.bluetooth" />
+    <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
     <uses-sdk tools:overrideLibrary="com.github.douglasjunior.bluetoothlowenergylibrary" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
