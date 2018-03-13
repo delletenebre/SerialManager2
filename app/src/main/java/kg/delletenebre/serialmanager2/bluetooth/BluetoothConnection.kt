@@ -25,59 +25,61 @@ class BluetoothConnection {
         return mBluetoothStatus == BluetoothStatus.CONNECTED
     }
 
-    fun start(communicationService: CommunicationService) {
+    fun start(communicationService: CommunicationService?) {
         disconnect()
-        init(communicationService.applicationContext)
+        if (communicationService != null) {
+            init(communicationService.applicationContext)
 
-        mBluetoothService?.setOnEventCallback(object : BluetoothService.OnBluetoothEventCallback {
-            override fun onDataRead(buffer: ByteArray, length: Int) {
-                val data = String(buffer, Charset.forName("UTF-8"))
-                App.log(String.format("bluetooth data read: %s", data))
+            mBluetoothService?.setOnEventCallback(object : BluetoothService.OnBluetoothEventCallback {
+                override fun onDataRead(buffer: ByteArray, length: Int) {
+                    val data = String(buffer, Charset.forName("UTF-8"))
+                    App.log(String.format("bluetooth data read: %s", data))
 
-                communicationService.localBroadcastManager?.sendBroadcast(
-                        Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
-                                .putExtra("from", "bluetooth")
-                                .putExtra("command", data))
-            }
+                    communicationService.localBroadcastManager?.sendBroadcast(
+                            Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
+                                    .putExtra("from", "bluetooth")
+                                    .putExtra("command", data))
+                }
 
-            override fun onStatusChange(status: BluetoothStatus) {
-                App.log(String.format("bluetooth status: %s", status.toString()))
-                mBluetoothStatus = status
-                communicationService.updateNotificationText()
+                override fun onStatusChange(status: BluetoothStatus) {
+                    App.log(String.format("bluetooth status: %s", status.toString()))
+                    mBluetoothStatus = status
+                    communicationService?.updateNotificationText()
 
-                when (status) {
-                    BluetoothStatus.CONNECTED -> {
-                        if (communicationService.isConnectionStateMessageEnabled) {
-                            writeln(App.ACTION_CONNECTION_ESTABLISHED)
+                    when (status) {
+                        BluetoothStatus.CONNECTED -> {
+                            if (communicationService?.isConnectionStateMessageEnabled) {
+                                writeln(App.ACTION_CONNECTION_ESTABLISHED)
+                            }
+                            communicationService?.localBroadcastManager?.sendBroadcast(
+                                    Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
+                                            .putExtra("type", "bluetooth")
+                                            .putExtra("name", mBluetoothService?.configuration?.deviceName))
                         }
-                        communicationService.localBroadcastManager?.sendBroadcast(
-                            Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
-                                    .putExtra("type", "bluetooth")
-                                    .putExtra("name", mBluetoothService?.configuration?.deviceName))
-                    }
-                    BluetoothStatus.CONNECTING -> {
-                        // nothing
-                    }
-                    BluetoothStatus.NONE -> {
-                        val delay = 2
-                        App.log(String.format("bluetooth reconnect after %d seconds", delay))
-                        Handler().postDelayed({ connect() }, delay.toLong() * 1000)
+                        BluetoothStatus.CONNECTING -> {
+                            // nothing
+                        }
+                        BluetoothStatus.NONE -> {
+                            val delay = 2
+                            App.log(String.format("bluetooth reconnect after %d seconds", delay))
+                            Handler().postDelayed({ connect() }, delay.toLong() * 1000)
 
+                        }
                     }
                 }
-            }
 
-            override fun onDeviceName(deviceName: String) {}
+                override fun onDeviceName(deviceName: String) {}
 
-            override fun onToast(message: String) {}
+                override fun onToast(message: String) {}
 
-            override fun onDataWrite(buffer: ByteArray) {
-                val data = String(buffer, Charset.forName("UTF-8"))
-                App.log(String.format("bluetooth data write: %s", data))
-            }
-        })
+                override fun onDataWrite(buffer: ByteArray) {
+                    val data = String(buffer, Charset.forName("UTF-8"))
+                    App.log(String.format("bluetooth data write: %s", data))
+                }
+            })
 
-        connect()
+            connect()
+        }
     }
 
     fun stop() {
@@ -86,14 +88,20 @@ class BluetoothConnection {
         mBluetoothService = null
     }
 
+    private fun getWriter() : BluetoothWriter? {
+        return if (mBluetoothService != null) {
+            BluetoothWriter(mBluetoothService)
+        } else {
+            null
+        }
+    }
+
     fun write(message: String) {
-        val writer = BluetoothWriter(BluetoothService.getDefaultInstance())
-        writer.write(message)
+        getWriter()?.write(message)
     }
 
     fun writeln(message: String) {
-        val writer = BluetoothWriter(BluetoothService.getDefaultInstance())
-        writer.writeln(message)
+        getWriter()?.writeln(message)
     }
 
     private fun init(context: Context) {
@@ -123,8 +131,10 @@ class BluetoothConnection {
 
     fun connect() {
         val address = App.getInstance().getStringPreference("bluetooth_device")
-        val device = BluetoothAdapter.getDefaultAdapter()?.getRemoteDevice(address)
-        mBluetoothService?.connect(device)
+        if (!address.isNullOrEmpty()) {
+            val device = BluetoothAdapter.getDefaultAdapter()?.getRemoteDevice(address)
+            mBluetoothService?.connect(device)
+        }
     }
 
     private fun disconnect() {

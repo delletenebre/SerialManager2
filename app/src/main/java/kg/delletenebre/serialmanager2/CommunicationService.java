@@ -396,35 +396,6 @@ public class CommunicationService extends Service implements SensorEventListener
             }
             mBluetoothConnection = new BluetoothConnection();
             mBluetoothConnection.start(this);
-//            mBluetoothConnection.setConnectionListener(new BluetoothConnection.ConnectionListener() {
-//                @Override
-//                public void onDeviceConnected(String name, String address) {
-//                    if (isConnectionStateMessageEnabled()) {
-//                        bluetoothSend(App.ACTION_CONNECTION_ESTABLISHED);
-//                    }
-//                    mLocalBroadcastManager.sendBroadcast(
-//                            new Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
-//                                    .putExtra("type", "bluetooth")
-//                                    .putExtra("name", name + " ("+ address + ")"));
-//                    updateNotificationText();
-//                }
-//
-//                @Override
-//                public void onDeviceConnectionFailed() {
-//                    updateNotificationText();
-//                    if (mBluetoothConnection != null) {
-//                        mBluetoothConnection.autoConnectTo(mPrefs.getString("bluetooth_device", ""));
-//                    }
-//                }
-//            });
-//            mBluetoothConnection.setOnDataReceivedListener(new BluetoothConnection.OnDataReceivedListener() {
-//                public void onDataReceived(String message) {
-//                    mLocalBroadcastManager.sendBroadcast(
-//                            new Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
-//                                    .putExtra("from", "bluetooth")
-//                                    .putExtra("command", message));
-//                }
-//            });
         }
     }
     private void stopBluetoothCommunication() {
@@ -440,7 +411,7 @@ public class CommunicationService extends Service implements SensorEventListener
         }
     }
     private void bluetoothSend(String message) {
-        if (mBluetoothConnection != null) {
+        if (mBluetoothConnection != null && mBluetoothConnection.isConnected()) {
             mBluetoothConnection.write(message);
         }
     }
