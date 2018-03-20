@@ -327,13 +327,15 @@ public class App extends Application implements Application.ActivityLifecycleCal
                             if (!mIsFullscreen) {
                                 String text = compileFormulas(
                                         replaceKeywords(command.getNotyMessage(), key, value));
+                                String textColor = command.getNotyTextColor();
+                                String backgroundColor = command.getNotyBackgroundColor();
 
                                 new NotyOverlay(this, command.getPositionZ())
                                     .setPosition(command.getPositionX(), command.getPositionY(),
                                         command.getOffsetX(), command.getOffsetY())
                                     .setTextSize(command.getNotyTextSize())
-                                    .setTextColor(Color.parseColor(command.getNotyTextColor()))
-                                    .setBackgroundColor(Color.parseColor(command.getNotyBackgroundColor()))
+                                    .setTextColor(Color.parseColor(textColor))
+                                    .setBackgroundColor(Color.parseColor(backgroundColor))
                                     .show(text, command.getNotyDurationInMillis());
                             }
                         }
@@ -485,88 +487,98 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
     public String compileFormulas(String str) {
-        StringBuffer stringBuffer;
+        StringBuffer stringBuffer = new StringBuffer();
         Pattern pattern;
         Matcher matcher;
 
         for (int i = 0; i < 3; i++) {
             // **** hex2dec **** //
             pattern = Pattern.compile("hex2dec\\(([x0-9a-f]+?)\\)", Pattern.CASE_INSENSITIVE);
-            matcher = pattern.matcher(str);
-            stringBuffer = new StringBuffer();
-            while (matcher.find()) {
-                try {
-                    matcher.appendReplacement(stringBuffer,
-                            String.valueOf(Long.parseLong(matcher.group(1).toLowerCase().replaceAll("0x", ""), 16)));
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
+            if (pattern != null) {
+                matcher = pattern.matcher(str);
+                stringBuffer = new StringBuffer();
+                while (matcher.find()) {
+                    try {
+                        matcher.appendReplacement(stringBuffer,
+                                String.valueOf(Long.parseLong(matcher.group(1).toLowerCase().replaceAll("0x", ""), 16)));
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
                 }
+                matcher.appendTail(stringBuffer);
+                str = stringBuffer.toString();
             }
-            matcher.appendTail(stringBuffer);
-            str = stringBuffer.toString();
 
 
             // **** dec2hex **** //
             pattern = Pattern.compile("dec2hex\\((\\d+?)\\)", Pattern.CASE_INSENSITIVE);
-            matcher = pattern.matcher(str);
-            stringBuffer = new StringBuffer();
-            while (matcher.find()) {
-                try {
-                    matcher.appendReplacement(stringBuffer, Long.toHexString(Long.valueOf(matcher.group(1))));
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
+            if (pattern != null) {
+                matcher = pattern.matcher(str);
+                stringBuffer = new StringBuffer();
+                while (matcher.find()) {
+                    try {
+                        matcher.appendReplacement(stringBuffer, Long.toHexString(Long.valueOf(matcher.group(1))));
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
                 }
+                matcher.appendTail(stringBuffer);
+                str = stringBuffer.toString();
             }
-            matcher.appendTail(stringBuffer);
-            str = stringBuffer.toString();
 
 
             // **** bin2dec **** //
             pattern = Pattern.compile("bin2dec\\(([01]+?)\\)");
-            matcher = pattern.matcher(str);
-            stringBuffer = new StringBuffer();
-            while (matcher.find()) {
-                try {
-                    matcher.appendReplacement(stringBuffer,
-                            String.valueOf(Long.parseLong(matcher.group(1), 2)));
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
+            if (pattern != null) {
+                matcher = pattern.matcher(str);
+                stringBuffer = new StringBuffer();
+                while (matcher.find()) {
+                    try {
+                        matcher.appendReplacement(stringBuffer,
+                                String.valueOf(Long.parseLong(matcher.group(1), 2)));
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
                 }
+                matcher.appendTail(stringBuffer);
+                str = stringBuffer.toString();
             }
-            matcher.appendTail(stringBuffer);
-            str = stringBuffer.toString();
 
 
             // **** dec2bin **** //
             pattern = Pattern.compile("dec2bin\\((\\d+?)\\)");
-            matcher = pattern.matcher(str);
-            stringBuffer = new StringBuffer();
-            while (matcher.find()) {
-                try {
-                    matcher.appendReplacement(stringBuffer,
-                            Long.toBinaryString(Long.valueOf(matcher.group(1))));
-                } catch (NumberFormatException e) {
-                    e.printStackTrace();
+            if (pattern != null) {
+                matcher = pattern.matcher(str);
+                stringBuffer = new StringBuffer();
+                while (matcher.find()) {
+                    try {
+                        matcher.appendReplacement(stringBuffer,
+                                Long.toBinaryString(Long.valueOf(matcher.group(1))));
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
                 }
+                matcher.appendTail(stringBuffer);
+                str = stringBuffer.toString();
             }
-            matcher.appendTail(stringBuffer);
-            str = stringBuffer.toString();
         }
 
 
         // **** EvalEx **** //
         pattern = Pattern.compile("%\\{(.+?)\\}");
-        matcher = pattern.matcher(str);
-        stringBuffer = new StringBuffer();
-        while (matcher.find()) {
-            try {
-                matcher.appendReplacement(stringBuffer,
-                        String.valueOf(new Expression(matcher.group(1)).eval()));
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (pattern != null) {
+            matcher = pattern.matcher(str);
+            stringBuffer = new StringBuffer();
+            while (matcher.find()) {
+                try {
+                    matcher.appendReplacement(stringBuffer,
+                            String.valueOf(new Expression(matcher.group(1)).eval()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
+            matcher.appendTail(stringBuffer);
         }
-        matcher.appendTail(stringBuffer);
 
         return stringBuffer.toString();
     }

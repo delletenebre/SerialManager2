@@ -105,28 +105,30 @@ class BluetoothConnection {
     }
 
     private fun init(context: Context) {
-        val config = BluetoothConfiguration()
-        config.context = context
-        config.bufferSize = 1024
-        config.characterDelimiter = '\n'
-        config.deviceName = context.getString(R.string.app_name)
-        config.callListenersInMainThread = true
-        // config.transport = BluetoothDevice.TRANSPORT_LE; // Only for dual-mode devices
+        if (BluetoothAdapter.getDefaultAdapter() != null) {
+            val config = BluetoothConfiguration()
+            config.context = context
+            config.bufferSize = 1024
+            config.characterDelimiter = '\n'
+            config.deviceName = context.getString(R.string.app_name)
+            config.callListenersInMainThread = true
+            // config.transport = BluetoothDevice.TRANSPORT_LE; // Only for dual-mode devices
 
-        if (App.getInstance().getBooleanPreference("bluetooth_le_protocol")) {
-            // Bluetooth Low Energy
-            config.bluetoothServiceClass = BluetoothLeService::class.java
-            config.uuidService = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
-            config.uuidCharacteristic = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
+            if (App.getInstance().getBooleanPreference("bluetooth_le_protocol")) {
+                // Bluetooth Low Energy
+                config.bluetoothServiceClass = BluetoothLeService::class.java
+                config.uuidService = UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb")
+                config.uuidCharacteristic = UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb")
 
-        } else {
-            // Bluetooth Classic
-            config.bluetoothServiceClass = BluetoothClassicService::class.java
-            config.uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+            } else {
+                // Bluetooth Classic
+                config.bluetoothServiceClass = BluetoothClassicService::class.java
+                config.uuid = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+            }
+
+            BluetoothService.init(config)
+            mBluetoothService = BluetoothService.getDefaultInstance()
         }
-
-        BluetoothService.init(config)
-        mBluetoothService = BluetoothService.getDefaultInstance()
     }
 
     fun connect() {

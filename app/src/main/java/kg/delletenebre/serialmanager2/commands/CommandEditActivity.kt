@@ -76,8 +76,8 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
             xScatter.setText(mCommand?.scatter.toString())
             xIntentValueExtra.setText(mCommand?.intentValueExtra)
             mCommand?.actionId?.let { xAction.setSelection(it) }
-            xAppChooser.value = mCommand?.chosenApp.toString()
-            xAppChooser.label = mCommand?.chosenAppLabel.toString()
+            xAppChooser.value = mCommand?.chosenApp
+            xAppChooser.label = mCommand?.chosenAppLabel
             mCommand?.emulatedKeyId?.let { xEmulateKey.setSelection(it) }
             xShellCommand.setText(mCommand?.shellCommand)
             xSendData.setText(mCommand?.sendData)
@@ -99,8 +99,8 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
             xEmulateKey.setSelection(0)
             xNotyDuration.setText(getString(R.string.default__command_noty_duration))
             xNotyTextSize.setText(getString(R.string.default__command_noty_text_size))
-            xNotyBackgroundColor.text = getString(R.string.default__command_noty_bg_color)
-            xNotyTextColor.text = getString(R.string.default__command_noty_text_color)
+            xNotyBackgroundColorHelper.text = getString(R.string.default__command_noty_bg_color)
+            xNotyTextColorHelper.text = getString(R.string.default__command_noty_text_color)
             xNotyPositionZ.setSelection(0)
             xNotyPositionX.setSelection(0)
             xNotyPositionY.setSelection(0)

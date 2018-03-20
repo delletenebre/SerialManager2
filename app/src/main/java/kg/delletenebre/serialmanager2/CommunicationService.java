@@ -370,7 +370,7 @@ public class CommunicationService extends Service implements SensorEventListener
         mNotification.setContent(mNotificationLayout);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null) {
+        if (notificationManager != null && mNotification != null) {
             notificationManager.notify(NOTIFICATION_ID, mNotification.build());
         }
     }
