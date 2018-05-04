@@ -17,7 +17,7 @@ public class UsbDeviceAttachActivity extends Activity {
         Intent intent = new Intent(getApplicationContext(), CommunicationService.class);
 
         UsbDevice usbDevice = getIntent().getParcelableExtra(UsbManager.EXTRA_DEVICE);
-        if (usbDevice != null && usbManager.hasPermission(usbDevice)) {
+        if (usbDevice != null && usbManager != null && usbManager.hasPermission(usbDevice)) {
             intent.putExtra(CommunicationService.EXTRA_UPDATE_USB_CONNECTION, true);
         }
 

@@ -656,10 +656,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
         switch (actionId) {
             case CommandModel.ACTION_RUN_APPLICATION: {
                 Intent intent = AppChooserView.getIntentValue(chosenApp, null);
-                if (intent == null) {
-//                    Toaster.toast(getString(R.string.app_chooser_toast_app_not_found,
-//                            AppChooserView.getLabelByValue(this, chosenApp)));
-                } else {
+                if (intent != null) {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }

@@ -32,9 +32,6 @@ public class EventsReceiver extends BroadcastReceiver {
         final int startOnBootDelay = app.getIntPreference("start_on_boot_delay") * 1000;
         Intent sendIntent = new Intent(App.ACTION_SEND_DATA);
 
-        final Intent startIntent = new Intent(context, CommunicationService.class);
-        startIntent.putExtra(CommunicationService.EXTRA_UPDATE_USB_CONNECTION, true);
-        startIntent.putExtra(CommunicationService.EXTRA_UPDATE_BLUETOOTH_CONNECTION, true);
 
         if (action != null) {
             switch (action) {
@@ -47,8 +44,11 @@ public class EventsReceiver extends BroadcastReceiver {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (!stopWhenScreenOff || app.isScreenOn()) {
-                                    context.startService(startIntent);
+                                if (!stopWhenScreenOff || App.getInstance().isScreenOn()) {
+                                    Intent startIntent = new Intent(App.getInstance(), CommunicationService.class);
+                                    startIntent.putExtra(CommunicationService.EXTRA_UPDATE_USB_CONNECTION, true);
+                                    startIntent.putExtra(CommunicationService.EXTRA_UPDATE_BLUETOOTH_CONNECTION, true);
+                                    App.getInstance().startService(startIntent);
                                 }
                             }
                         }, startOnBootDelay);
@@ -72,11 +72,14 @@ public class EventsReceiver extends BroadcastReceiver {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (app.isScreenOn()) {
-                                    context.startService(startIntent);
+                                if (App.getInstance().isScreenOn()) {
+                                    Intent startIntent = new Intent(App.getInstance(), CommunicationService.class);
+                                    startIntent.putExtra(CommunicationService.EXTRA_UPDATE_USB_CONNECTION, true);
+                                    startIntent.putExtra(CommunicationService.EXTRA_UPDATE_BLUETOOTH_CONNECTION, true);
+                                    App.getInstance().startService(startIntent);
                                 }
                             }
-                        }, app.getIntPreference("start_when_screen_on_delay") * 1000);
+                        }, App.getInstance().getIntPreference("start_when_screen_on_delay") * 1000);
                     }
                     break;
 
@@ -95,8 +98,8 @@ public class EventsReceiver extends BroadcastReceiver {
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (app.isScreenOff()) {
-                                    context.stopService(new Intent(context, CommunicationService.class));
+                                if (App.getInstance().isScreenOff()) {
+                                    App.getInstance().stopService(new Intent(context, CommunicationService.class));
                                 }
                             }
                         }, app.getIntPreference("stop_when_screen_off_delay") * 1000);
