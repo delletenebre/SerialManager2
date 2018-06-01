@@ -11,7 +11,6 @@ import android.os.Looper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -30,7 +29,7 @@ class NotyOverlay {
 
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
-        mNotificationLayout = layoutInflater.inflate(R.layout.noty_overlay, (ViewGroup) null);
+        mNotificationLayout = layoutInflater.inflate(R.layout.noty_overlay, null);
 
         int layoutType = WindowManager.LayoutParams.TYPE_SYSTEM_ERROR; //HIGH
         if (positionZ == 1) {
@@ -52,7 +51,7 @@ class NotyOverlay {
 
                 PixelFormat.TRANSLUCENT);
 
-        mMessageView = (TextView) mNotificationLayout.findViewById(R.id.message);
+        mMessageView = mNotificationLayout.findViewById(R.id.message);
     }
 
     NotyOverlay setTextSize(int size) {

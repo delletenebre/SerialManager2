@@ -1,5 +1,7 @@
 package kg.delletenebre.serialmanager2;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -18,7 +20,6 @@ import android.hardware.SensorManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -42,7 +43,6 @@ import kg.delletenebre.serialmanager2.utils.Utils;
 
 public class CommunicationService extends Service implements SensorEventListener {
     private final static int NOTIFICATION_ID = 109;
-    private final static String NOTIFICATION_CHANNEL_ID = "kg.serial.manager.notification.channelId";
 
     public final static String EXTRA_BLUETOOTH_ENABLED = "bluetooth_enabled";
     public final static String EXTRA_UPDATE_USB_CONNECTION = "update_usb";
@@ -68,7 +68,7 @@ public class CommunicationService extends Service implements SensorEventListener
 
     private SensorManager mSensorManager;
 
-    private NotificationCompat.Builder mNotification;
+    private Notification.Builder mNotificationBuilder;
     private RemoteViews mNotificationLayout;
 
 
@@ -312,14 +312,37 @@ public class CommunicationService extends Service implements SensorEventListener
         Bitmap websocketIcon = getNotificationInfoIcon(R.drawable.ic_language_black_24dp, textColor);
         mNotificationLayout.setImageViewBitmap(R.id.web_socket_connections_icon, websocketIcon);
 
-        mNotification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+        mNotificationBuilder = new Notification.Builder(this)
                         .setOnlyAlertOnce(true)
                         .setSmallIcon(R.drawable.notification_icon)
                         .setContent(mNotificationLayout)
                         .setContentIntent(
                                 PendingIntent.getActivity(this, 0,
                                         new Intent(this, MainActivity.class), 0));
-        startForeground(NOTIFICATION_ID, mNotification.build());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel notificationChannel = new NotificationChannel(
+                    "default", "serial.manager.v2", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager notificationManager =
+                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(notificationChannel);
+                mNotificationBuilder.setChannelId(notificationChannel.getId());
+            }
+        }
+
+//        mNotification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+//                        .setOnlyAlertOnce(true)
+//                        .setSmallIcon(R.drawable.notification_icon)
+//                        .setContent(mNotificationLayout)
+//                        .setContentIntent(
+//                                PendingIntent.getActivity(this, 0,
+//                                        new Intent(this, MainActivity.class), 0));
+        if (android.os.Build.VERSION.SDK_INT >= 16) {
+            startForeground(NOTIFICATION_ID, mNotificationBuilder.build());
+        } else {
+            startForeground(NOTIFICATION_ID, mNotificationBuilder.getNotification());
+        }
     }
 
     public void updateNotificationText() {
@@ -367,11 +390,15 @@ public class CommunicationService extends Service implements SensorEventListener
             mNotificationLayout.setViewVisibility(R.id.ip_address, View.GONE);
         }
 
-        mNotification.setContent(mNotificationLayout);
+        mNotificationBuilder.setContent(mNotificationLayout);
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notificationManager != null && mNotification != null) {
-            notificationManager.notify(NOTIFICATION_ID, mNotification.build());
+        if (notificationManager != null && mNotificationBuilder != null) {
+            if (android.os.Build.VERSION.SDK_INT >= 16) {
+                notificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.build());
+            } else {
+                notificationManager.notify(NOTIFICATION_ID, mNotificationBuilder.getNotification());
+            }
         }
     }
 

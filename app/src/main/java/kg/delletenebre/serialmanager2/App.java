@@ -612,7 +612,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
             if (textColor != null) {
                 View snackbarView = snackbar.getView();
-                TextView textView = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
                 textView.setTextColor(textColor);
             }
 

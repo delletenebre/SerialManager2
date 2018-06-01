@@ -24,7 +24,6 @@ import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
 import io.realm.Realm
 import kg.delletenebre.serialmanager2.App
 import kg.delletenebre.serialmanager2.R
-import kotlinx.android.synthetic.main.command_edit_activity.*
 
 
 class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {

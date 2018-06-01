@@ -44,14 +44,14 @@ class BluetoothConnection {
                 override fun onStatusChange(status: BluetoothStatus) {
                     App.log(String.format("bluetooth status: %s", status.toString()))
                     mBluetoothStatus = status
-                    communicationService?.updateNotificationText()
+                    communicationService.updateNotificationText()
 
                     when (status) {
                         BluetoothStatus.CONNECTED -> {
-                            if (communicationService?.isConnectionStateMessageEnabled) {
+                            if (communicationService.isConnectionStateMessageEnabled) {
                                 writeln(App.ACTION_CONNECTION_ESTABLISHED)
                             }
-                            communicationService?.localBroadcastManager?.sendBroadcast(
+                            communicationService.localBroadcastManager?.sendBroadcast(
                                     Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
                                             .putExtra("type", "bluetooth")
                                             .putExtra("name", mBluetoothService?.configuration?.deviceName))

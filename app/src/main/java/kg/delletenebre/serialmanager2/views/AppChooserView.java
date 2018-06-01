@@ -196,8 +196,8 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
 
             LayoutInflater layoutInflater = LayoutInflater.from(layoutContext);
             View rootView = layoutInflater.inflate(R.layout.app_chooser_dialog, null);
-            final ViewGroup tabWidget = (ViewGroup) rootView.findViewById(android.R.id.tabs);
-            final ViewPager pager = (ViewPager) rootView.findViewById(R.id.pager);
+            final ViewGroup tabWidget = rootView.findViewById(android.R.id.tabs);
+            final ViewPager pager = rootView.findViewById(R.id.pager);
             pager.setPageMargin((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
                     getResources().getDisplayMetrics()));
 
@@ -207,7 +207,7 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
             helper.addTab(R.string.app_chooser_title_shortcuts, R.id.shortcuts_list);
 
             // Set up apps
-            mAppsList = (ListView) rootView.findViewById(R.id.apps_list);
+            mAppsList = rootView.findViewById(R.id.apps_list);
             mAppsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> listView, View view,
@@ -222,7 +222,7 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
             });
 
             // Set up shortcuts
-            mShortcutsList = (ListView) rootView.findViewById(R.id.shortcuts_list);
+            mShortcutsList = rootView.findViewById(R.id.shortcuts_list);
             mShortcutsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> listView, View view,

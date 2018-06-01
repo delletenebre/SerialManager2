@@ -28,8 +28,8 @@ android {
         applicationId "kg.delletenebre.serialmanager2"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 30
-        versionName "2.5.9"
+        versionCode 31
+        versionName "2.5.10"
         vectorDrawables.useSupportLibrary = true
         externalNativeBuild {
             cmake {
@@ -64,7 +64,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.7'
     implementation 'com.github.douglasjunior.AndroidBluetoothLibrary:BluetoothClassicLibrary:0.3.5'
     implementation 'com.github.douglasjunior.AndroidBluetoothLibrary:BluetoothLowEnergyLibrary:0.3.5'
-    // compile 'me.palazzetti:adktoolkit:0.3.0'
+    // implementation 'me.palazzetti:adktoolkit:0.3.0'
     implementation 'com.github.felHR85:UsbSerial:4.5.2'
     implementation 'com.jrummyapps:colorpicker:2.1.5'
     implementation 'com.udojava:EvalEx:2.0'
