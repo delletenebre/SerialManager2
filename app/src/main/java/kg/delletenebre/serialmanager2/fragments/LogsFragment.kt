@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.LocalBroadcastManager
 import android.text.Selection
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
@@ -21,10 +19,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class LogsFragment : Fragment() {
+class LogsFragment : androidx.fragment.app.Fragment() {
     private lateinit var mTextView: TextView
     private lateinit var mAutoscrollCheckbox: CheckBox
-    private lateinit var mLocalBroadcastManager: LocalBroadcastManager
+    private lateinit var mLocalBroadcastManager: androidx.localbroadcastmanager.content.LocalBroadcastManager
     private lateinit var mLocalBroadcastReceiver: BroadcastReceiver
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -73,7 +71,7 @@ class LogsFragment : Fragment() {
         localIntentFilter.addAction(App.LOCAL_ACTION_CONNECTION_CLOSED)
         localIntentFilter.addAction(App.LOCAL_ACTION_COMMAND_RECEIVED)
         localIntentFilter.addAction(App.LOCAL_ACTION_DATA_SENT)
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(context!!)
+        mLocalBroadcastManager = androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context!!)
         mLocalBroadcastManager.registerReceiver(mLocalBroadcastReceiver, localIntentFilter)
 
         return layout
@@ -106,7 +104,7 @@ class LogsFragment : Fragment() {
     }
 
     fun sendData(data: String) {
-        LocalBroadcastManager.getInstance(context!!).sendBroadcast(
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context!!).sendBroadcast(
                 Intent(App.LOCAL_ACTION_SEND_DATA)
                         .putExtra("data", data))
     }

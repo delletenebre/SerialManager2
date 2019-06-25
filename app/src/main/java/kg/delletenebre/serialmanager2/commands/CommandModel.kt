@@ -1,7 +1,7 @@
 package kg.delletenebre.serialmanager2.commands
 
 import android.content.Context
-import android.support.annotation.Keep
+import androidx.annotation.Keep
 import io.realm.RealmObject
 import io.realm.annotations.Ignore
 import kg.delletenebre.serialmanager2.App

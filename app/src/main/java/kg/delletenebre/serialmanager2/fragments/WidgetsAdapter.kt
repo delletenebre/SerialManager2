@@ -3,7 +3,6 @@ package kg.delletenebre.serialmanager2.fragments
 import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.graphics.Color
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import kg.delletenebre.serialmanager2.R
 import kg.delletenebre.serialmanager2.widgets.WidgetSimpleModel
 import kg.delletenebre.serialmanager2.widgets.WidgetSimpleSettingsActivity
 
-class WidgetsAdapter : RecyclerView.Adapter<WidgetsAdapter.ViewHolder>() {
+class WidgetsAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<WidgetsAdapter.ViewHolder>() {
 
     //private lateinit var mItems: OrderedRealmCollection<WidgetSimpleModel>
     private var mRealm: Realm? = null
@@ -56,7 +55,7 @@ class WidgetsAdapter : RecyclerView.Adapter<WidgetsAdapter.ViewHolder>() {
     }
 
 
-    class ViewHolder(layout: View) : RecyclerView.ViewHolder(layout), View.OnClickListener {
+    class ViewHolder(layout: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(layout), View.OnClickListener {
         var widgetId: Int = 0
         val mTitle: TextView = layout.findViewById(R.id.title)
         val mSummary: TextView = layout.findViewById(R.id.summary)

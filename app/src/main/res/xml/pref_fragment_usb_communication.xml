@@ -18,4 +18,32 @@
         android:entryValues="@array/array_baud_rates"
         android:defaultValue="@string/pref_default_usb_baud_rate" />
 
+    <ListPreference android:key="usb_data_bits"
+        android:dependency="usb_communication_enabled"
+        android:title="@string/pref_title_usb_data_bits"
+        android:entries="@array/array_usb_data_bits"
+        android:entryValues="@array/array_values_usb_data_bits"
+        android:defaultValue="@string/pref_default_usb_data_bits" />
+
+    <ListPreference android:key="usb_stop_bits"
+        android:dependency="usb_communication_enabled"
+        android:title="@string/pref_title_usb_stop_bits"
+        android:entries="@array/array_usb_stop_bits"
+        android:entryValues="@array/array_values_usb_stop_bits"
+        android:defaultValue="@string/pref_default_usb_stop_bits" />
+
+    <ListPreference android:key="usb_parity"
+        android:dependency="usb_communication_enabled"
+        android:title="@string/pref_title_usb_parity"
+        android:entries="@array/array_usb_parity"
+        android:entryValues="@array/array_values_usb_parity"
+        android:defaultValue="@string/pref_default_usb_parity" />
+
+    <ListPreference android:key="usb_flow_control"
+        android:dependency="usb_communication_enabled"
+        android:title="@string/pref_title_usb_flow_control"
+        android:entries="@array/array_usb_flow_control"
+        android:entryValues="@array/array_values_usb_flow_control"
+        android:defaultValue="@string/pref_default_usb_flow_control" />
+
 </PreferenceScreen>

@@ -10,16 +10,17 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatDelegate;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.NavUtils;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import java.util.List;
 
@@ -226,6 +227,10 @@ public class SettingsActivity extends PreferenceActivity {
             setHasOptionsMenu(true);
 
             bindPreferenceSummaryToValue(findPreference("usb_baud_rate"));
+            bindPreferenceSummaryToValue(findPreference("usb_data_bits"));
+            bindPreferenceSummaryToValue(findPreference("usb_stop_bits"));
+            bindPreferenceSummaryToValue(findPreference("usb_parity"));
+            bindPreferenceSummaryToValue(findPreference("usb_flow_control"));
         }
     }
 

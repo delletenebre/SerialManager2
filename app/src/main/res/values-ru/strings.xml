@@ -86,6 +86,9 @@
 
     <!-- Strings related to Settings -->
     <string name="title_activity_settings">@string/settings</string>
+
+    <string name="pref_title_usb_flow_control">Flow Control (только для CP201x и FTDI)</string>
+
     <string name="pref_header_general">Общие</string>
     <string name="danger_zone">Опасная зона</string>
     <string name="pref_title_start_on_boot">Запускать при загрузке</string>

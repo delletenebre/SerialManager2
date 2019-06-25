@@ -2,14 +2,10 @@ package kg.delletenebre.serialmanager2
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentStatePagerAdapter
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewConfiguration
+import androidx.appcompat.app.AppCompatActivity
 import kg.delletenebre.serialmanager2.fragments.CommandsFragment
 import kg.delletenebre.serialmanager2.fragments.LogsFragment
 import kg.delletenebre.serialmanager2.fragments.WidgetsFragment
@@ -30,10 +26,8 @@ class MainActivity: AppCompatActivity() {
         try {
             val config = ViewConfiguration.get(this)
             val menuKeyField = ViewConfiguration::class.java.getDeclaredField("sHasPermanentMenuKey")
-            if (menuKeyField != null) {
-                menuKeyField.isAccessible = true
-                menuKeyField.setBoolean(config, false)
-            }
+            menuKeyField.isAccessible = true
+            menuKeyField.setBoolean(config, false)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -64,7 +58,7 @@ class MainActivity: AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun setupViewPager(viewPager: ViewPager) {
+    private fun setupViewPager(viewPager: androidx.viewpager.widget.ViewPager) {
         val commandsFragmentInstance = CommandsFragment()
 
         val adapter = ViewPagerAdapter(supportFragmentManager)
@@ -74,11 +68,11 @@ class MainActivity: AppCompatActivity() {
         viewPager.adapter = adapter
     }
 
-    inner class ViewPagerAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-        private val mFragmentList = mutableListOf<Fragment>()
+    inner class ViewPagerAdapter(fm: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
+        private val mFragmentList = mutableListOf<androidx.fragment.app.Fragment>()
         private val mFragmentTitleList = mutableListOf<String>()
 
-        override fun getItem(position: Int): Fragment {
+        override fun getItem(position: Int): androidx.fragment.app.Fragment {
             return mFragmentList[position]
         }
 
@@ -90,7 +84,7 @@ class MainActivity: AppCompatActivity() {
             return mFragmentTitleList[position]
         }
 
-        fun addFragment(fragment: Fragment, title: String) {
+        fun addFragment(fragment: androidx.fragment.app.Fragment, title: String) {
             mFragmentList.add(fragment)
             mFragmentTitleList.add(title)
         }

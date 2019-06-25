@@ -10,14 +10,15 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.AppCompatDrawableManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -171,6 +172,10 @@ public class Utils {
 
     public static int getStringIdentifier(Context context, String name) {
         return context.getResources().getIdentifier(name, "string", context.getPackageName());
+    }
+
+    public static int getResourceId(Context context, String name, String type) {
+        return context.getResources().getIdentifier(name, type, context.getPackageName());
     }
 
     public static int getBooleanIdentifier(Context context, String name) {

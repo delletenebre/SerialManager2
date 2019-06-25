@@ -9,15 +9,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -30,6 +21,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -192,7 +194,7 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             Context layoutContext = new ContextThemeWrapper(getActivity(),
-                    android.support.v7.appcompat.R.style.Base_Theme_AppCompat_Dialog);//R.style.cpv_ColorPickerViewStyle);//Chroma_Dialog_Default);//Theme_Dialog);
+                    androidx.appcompat.R.style.Base_Theme_AppCompat_Dialog);//R.style.cpv_ColorPickerViewStyle);//Chroma_Dialog_Default);//Theme_Dialog);
 
             LayoutInflater layoutInflater = LayoutInflater.from(layoutContext);
             View rootView = layoutInflater.inflate(R.layout.app_chooser_dialog, null);
@@ -201,8 +203,7 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
             pager.setPageMargin((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 16,
                     getResources().getDisplayMetrics()));
 
-            TabsHelper helper = new TabsHelper(
-                    layoutContext, tabWidget, pager);
+            TabsHelper helper = new TabsHelper(layoutContext, tabWidget, pager);
             helper.addTab(R.string.app_chooser_title_apps, R.id.apps_list);
             helper.addTab(R.string.app_chooser_title_shortcuts, R.id.shortcuts_list);
 

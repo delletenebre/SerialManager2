@@ -3,12 +3,13 @@ package kg.delletenebre.serialmanager2.commands;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import io.realm.OrderedRealmCollection;
 import io.realm.Realm;

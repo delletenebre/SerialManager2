@@ -7,23 +7,23 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
-import android.support.annotation.ColorInt
-import android.support.v4.app.NavUtils
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.AppCompatDelegate
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import androidx.annotation.ColorInt
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.NavUtils
 import com.jrummyapps.android.colorpicker.ColorPickerDialog
 import com.jrummyapps.android.colorpicker.ColorPickerDialogListener
 import io.realm.Realm
 import kg.delletenebre.serialmanager2.App
 import kg.delletenebre.serialmanager2.R
+import kotlinx.android.synthetic.main.command_edit_activity.*
 
 
 class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
@@ -33,7 +33,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
     }
 
     private lateinit var mRealm: Realm
-    private lateinit var mLocalBroadcastManager: LocalBroadcastManager
+    private lateinit var mLocalBroadcastManager: androidx.localbroadcastmanager.content.LocalBroadcastManager
     private lateinit var mLocalBroadcastReceiver: BroadcastReceiver
     private var mCommand: CommandModel? = null
     private var mCommandIndex: Int = 0
@@ -130,7 +130,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
         }
         val localIntentFilter = IntentFilter()
         localIntentFilter.addAction(App.LOCAL_ACTION_COMMAND_DETECTED)
-        mLocalBroadcastManager = LocalBroadcastManager.getInstance(this)
+        mLocalBroadcastManager = androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
         mLocalBroadcastManager.registerReceiver(mLocalBroadcastReceiver, localIntentFilter)
     }
 
@@ -203,7 +203,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
     }
 
     private fun saveCommand() {
-        mRealm.executeTransaction({ realm ->
+        mRealm.executeTransaction { realm ->
             if (mCommand == null) {
                 mCommand = realm.createObject(CommandModel::class.java)
                 mCommand?.index = mCommandIndex
@@ -273,7 +273,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
             }
 
             mCommand?.offsetY = offsetY
-        })
+        }
     }
 
     private fun showColorDialog(dialogId: Int) {

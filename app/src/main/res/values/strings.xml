@@ -112,6 +112,69 @@
         <item>115200</item>
     </string-array>
 
+    <string name="pref_title_usb_data_bits" translatable="false">Data Bits</string>
+    <string name="pref_default_usb_data_bits" translatable="false">8</string>
+    <string-array name="array_usb_data_bits" translatable="false">
+        <item>5 bits</item>
+        <item>6 bits</item>
+        <item>7 bits</item>
+        <item>8 bits</item>
+    </string-array>
+    <string-array name="array_values_usb_data_bits" translatable="false">
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string name="pref_title_usb_stop_bits" translatable="false">Stop Bits</string>
+    <string name="pref_default_usb_stop_bits" translatable="false">1</string>
+    <string-array name="array_usb_stop_bits" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>15</item>
+    </string-array>
+    <string-array name="array_values_usb_stop_bits" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string name="pref_title_usb_parity" translatable="false">Parity</string>
+    <string name="pref_default_usb_parity" translatable="false">1</string>
+    <string-array name="array_usb_parity" translatable="false">
+        <item>None</item>
+        <item>Odd</item>
+        <item>Even</item>
+        <item>Mark</item>
+        <item>Space</item>
+    </string-array>
+    <string-array name="array_values_usb_parity" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string name="pref_title_usb_flow_control">Flow Control (only CP201x and FTDI)</string>
+    <string name="pref_default_usb_flow_control" translatable="false">0</string>
+    <string-array name="array_usb_flow_control" translatable="false">
+        <item>None</item>
+        <item>RTS-CTS</item>
+        <item>DSR-DTR</item>
+        <item>XON-XOFF</item>
+    </string-array>
+    <string-array name="array_values_usb_flow_control" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+
+
+
     <string name="pref_header_general">General</string>
     <string name="danger_zone">Danger Zone</string>
     <string name="pref_title_start_on_boot">Start on boot</string>

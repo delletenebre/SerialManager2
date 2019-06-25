@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
-import android.support.v4.content.LocalBroadcastManager
 import android.util.Log.d
 import com.felhr.usbserial.UsbSerialDevice
 import java.io.ByteArrayOutputStream
 import java.util.*
-
 
 
 class UsbConnection(context: Context, baudRate: Int) {
@@ -18,7 +16,7 @@ class UsbConnection(context: Context, baudRate: Int) {
         val sBuffers = HashMap<String, ByteArrayOutputStream>()
     }
     private var mUsbManager: UsbManager = context.getSystemService(Context.USB_SERVICE) as UsbManager
-    private var mLocalBroadcastManager: LocalBroadcastManager = LocalBroadcastManager.getInstance(context)
+    private var mLocalBroadcastManager: androidx.localbroadcastmanager.content.LocalBroadcastManager = androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context)
     private var mBaudRate: Int = baudRate
 
     fun findConnectedDevices() {
@@ -46,13 +44,14 @@ class UsbConnection(context: Context, baudRate: Int) {
 
         if (serialDevice.open()) {
             serialDevice.setBaudRate(mBaudRate)
-//            serialDevice.setDataBits(UsbSerialInterface.DATA_BITS_8)
-//            serialDevice.setStopBits(UsbSerialInterface.STOP_BITS_1)
-//            serialDevice.setParity(UsbSerialInterface.PARITY_NONE)
+            serialDevice.setDataBits(App.getInstance().getIntPreference("usb_data_bits"))
+            serialDevice.setStopBits(App.getInstance().getIntPreference("usb_stop_bits"))
+            serialDevice.setParity(App.getInstance().getIntPreference("usb_parity"))
+            serialDevice.setFlowControl(App.getInstance().getIntPreference("usb_flow_control"))
 
             val deviceName = device.deviceName
-            sConnectedDevices.put(deviceName, serialDevice)
-            sBuffers.put(deviceName, ByteArrayOutputStream())
+            sConnectedDevices[deviceName] = serialDevice
+            sBuffers[deviceName] = ByteArrayOutputStream()
             serialDevice.read { bytes ->
                 if (bytes.isNotEmpty()) {
                     val buffer = sBuffers[deviceName]

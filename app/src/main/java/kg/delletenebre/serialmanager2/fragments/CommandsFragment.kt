@@ -8,24 +8,19 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kg.delletenebre.serialmanager2.R
 import kg.delletenebre.serialmanager2.commands.CommandEditActivity
 
 
-
-class CommandsFragment: Fragment() {
-    private lateinit var mRecyclerView: RecyclerView
+class CommandsFragment: androidx.fragment.app.Fragment() {
+    private lateinit var mRecyclerView: androidx.recyclerview.widget.RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // return super.onCreateView(inflater, container, savedInstanceState)
@@ -33,19 +28,19 @@ class CommandsFragment: Fragment() {
         val layout = layoutInflater.inflate(R.layout.fragment_commands, container, false)
 
         mRecyclerView = layout.findViewById(R.id.recycler_view)
-        mRecyclerView.layoutManager = LinearLayoutManager(context)
+        mRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
         mRecyclerView.adapter = CommandsAdapter()
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.addItemDecoration(
-                DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
+                androidx.recyclerview.widget.DividerItemDecoration(context, androidx.recyclerview.widget.DividerItemDecoration.VERTICAL))
         setupItemTouchHelper(context!!, mRecyclerView)
 
-        layout.findViewById<FloatingActionButton>(R.id.floating_action_button).setOnClickListener({
+        layout.findViewById<FloatingActionButton>(R.id.floating_action_button).setOnClickListener {
             val intent = Intent(context, CommandEditActivity::class.java)
-            intent.putExtra("CommandIndex", mRecyclerView.adapter.itemCount)
+            intent.putExtra("CommandIndex", mRecyclerView.adapter!!.itemCount)
             intent.putExtra("isNew", true)
             context?.startActivity(intent)
-        })
+        }
 
         return layout
     }
@@ -56,7 +51,7 @@ class CommandsFragment: Fragment() {
     }
 
 
-    private fun setupItemTouchHelper(context: Context, recyclerView: RecyclerView) {
+    private fun setupItemTouchHelper(context: Context, recyclerView: androidx.recyclerview.widget.RecyclerView) {
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,
                 ItemTouchHelper.LEFT) {
 
@@ -74,7 +69,7 @@ class CommandsFragment: Fragment() {
                 mInitiated = true
             }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            override fun onSwiped(viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder, direction: Int) {
                 val itemIndex = viewHolder.adapterPosition
                         val adapter = recyclerView.adapter as CommandsAdapter
                         AlertDialog.Builder(context)
@@ -93,23 +88,23 @@ class CommandsFragment: Fragment() {
                                 .show()
             }
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-                                target: RecyclerView.ViewHolder): Boolean {
+            override fun onMove(recyclerView: androidx.recyclerview.widget.RecyclerView, viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
+                                target: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
                 val moveFrom = viewHolder.adapterPosition
                 val moveTo = target.adapterPosition
                 (recyclerView.adapter as CommandsAdapter).updatePositions(moveFrom, moveTo)
                 return true
             }
 
-            override fun getMovementFlags(recyclerView: RecyclerView,
-                                          viewHolder: RecyclerView.ViewHolder): Int {
+            override fun getMovementFlags(recyclerView: androidx.recyclerview.widget.RecyclerView,
+                                          viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder): Int {
                 val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
                 val swipeFlags = ItemTouchHelper.LEFT
                 return ItemTouchHelper.Callback.makeMovementFlags(dragFlags, swipeFlags)
             }
 
-            override fun onChildDraw(canvas: Canvas, recyclerView: RecyclerView,
-                                     viewHolder: RecyclerView.ViewHolder,
+            override fun onChildDraw(canvas: Canvas, recyclerView: androidx.recyclerview.widget.RecyclerView,
+                                     viewHolder: androidx.recyclerview.widget.RecyclerView.ViewHolder,
                                      dX: Float, dY: Float,
                                      actionState: Int, isCurrentlyActive: Boolean) {
 

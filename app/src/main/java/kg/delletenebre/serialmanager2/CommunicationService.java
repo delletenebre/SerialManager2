@@ -19,11 +19,13 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.koushikdutta.async.callback.CompletedCallback;
 import com.koushikdutta.async.http.WebSocket;
@@ -135,10 +137,14 @@ public class CommunicationService extends Service implements SensorEventListener
                             break;
 
                         case App.ACTION_SEND_DATA:
-                            if (intent.hasExtra("data")) {
-                                String data = App.getInstance().compileFormulas(intent.getStringExtra("data"));
-                                if (intent.hasExtra("id")) {
-                                    sendData(data, intent.getStringExtra("id"));
+                            Bundle extra = intent.getExtras();
+                            if (extra != null && extra.containsKey("data")) {
+                                String dataStr = String.valueOf(extra.get("data"));
+                                String data = App.getInstance().compileFormulas(dataStr);
+
+                                if (extra.containsKey("id")) {
+                                    String id = String.valueOf(extra.get("id"));
+                                    sendData(data, id);
                                 } else {
                                     sendData(data);
                                 }
@@ -295,13 +301,13 @@ public class CommunicationService extends Service implements SensorEventListener
         mNotificationLayout = new RemoteViews(getPackageName(), R.layout.layout_notification);
 
         int textColor = getNotificationTextColor(
-                android.support.v7.appcompat.R.style.TextAppearance_Compat_Notification_Info);
+                androidx.appcompat.R.style.TextAppearance_Compat_Notification_Info);
 
         Bitmap appIcon = getNotificationInfoIcon(R.drawable.notification_icon, textColor);
         mNotificationLayout.setImageViewBitmap(R.id.app_icon, appIcon);
 
         textColor = getNotificationTextColor(
-                android.support.v7.appcompat.R.style.TextAppearance_Compat_Notification_Title);
+                androidx.appcompat.R.style.TextAppearance_Compat_Notification_Title);
 
         Bitmap usbIcon = getNotificationInfoIcon(R.drawable.ic_usb, textColor);
         mNotificationLayout.setImageViewBitmap(R.id.usb_connections_icon, usbIcon);
@@ -362,7 +368,7 @@ public class CommunicationService extends Service implements SensorEventListener
                     bluetoothIconId = R.drawable.ic_bluetooth_connected_black_24dp;
                 }
                 int textColor = getNotificationTextColor(
-                        android.support.v7.appcompat.R.style.TextAppearance_Compat_Notification_Title);
+                        androidx.appcompat.R.style.TextAppearance_Compat_Notification_Title);
                 Bitmap bluetoothIcon = getNotificationInfoIcon(bluetoothIconId, textColor);
                 mNotificationLayout.setImageViewBitmap(R.id.bluetooth_connections_icon, bluetoothIcon);
             }

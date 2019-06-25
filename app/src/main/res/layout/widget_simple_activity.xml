@@ -19,45 +19,45 @@
         android:focusableInTouchMode="true"
         tools:context=".widgets.WidgetReceiveActivity">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/command_key">
-            <android.support.design.widget.TextInputEditText android:id="@+id/xKey"
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/xKey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/widget_parameter_text">
-            <android.support.design.widget.TextInputEditText android:id="@+id/xText"
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/xText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:hint="@string/command_noty_text_size"
                 android:gravity="center_vertical">
-                <android.support.design.widget.TextInputEditText android:id="@+id/xTextSize"
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/xTextSize"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:inputType="number" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.v7.widget.AppCompatButton android:id="@+id/xTextColorButton"
+            <androidx.appcompat.widget.AppCompatButton android:id="@+id/xTextColorButton"
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -68,7 +68,7 @@
                 android:layout_height="0dp"
                 android:visibility="gone" />
 
-            <android.support.v7.widget.AppCompatButton android:id="@+id/xBackgroundColorButton"
+            <androidx.appcompat.widget.AppCompatButton android:id="@+id/xBackgroundColorButton"
                 android:layout_width="0dip"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
@@ -99,7 +99,7 @@
                     android:maxLines="1"
                     android:text="@string/widget_text_vertical_position"
                     android:translationY="-2dp"/>
-                <android.support.v7.widget.AppCompatSpinner android:id="@+id/xTextVerticalPosition"
+                <androidx.appcompat.widget.AppCompatSpinner android:id="@+id/xTextVerticalPosition"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="12dp"
@@ -124,7 +124,7 @@
                     android:textColor="@color/textColorHint"
                     android:text="@string/widget_text_alignment"
                     android:translationY="-2dp"/>
-                <android.support.v7.widget.AppCompatSpinner android:id="@+id/xTextAlignment"
+                <androidx.appcompat.widget.AppCompatSpinner android:id="@+id/xTextAlignment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="12dp"
@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/textColorHint"
                 android:text="@string/command_action" />
-            <android.support.v7.widget.AppCompatSpinner android:id="@+id/xAction"
+            <androidx.appcompat.widget.AppCompatSpinner android:id="@+id/xAction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="12dp"
@@ -177,7 +177,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.design.widget.TextInputLayout android:id="@+id/xAppChooserLayout"
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/xAppChooserLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/app_chooser_title">
@@ -187,7 +187,7 @@
                     android:layout_height="wrap_content"
                     android:maxLines="2"
                     android:drawableTint="@color/inputBottomLine" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout android:id="@+id/xEmulateKeyLayout"
                 android:orientation="vertical"
@@ -198,7 +198,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/textColorHint"
                     android:text="@string/command_emulated_key" />
-                <android.support.v7.widget.AppCompatSpinner android:id="@+id/xEmulateKey"
+                <androidx.appcompat.widget.AppCompatSpinner android:id="@+id/xEmulateKey"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingRight="12dp"
@@ -211,25 +211,25 @@
                     android:layout_marginRight="@dimen/input_label_horizontal_spacing"/>
             </LinearLayout>
 
-            <android.support.design.widget.TextInputLayout android:id="@+id/xShellCommandLayout"
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/xShellCommandLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/shell_command">
-                <android.support.design.widget.TextInputEditText android:id="@+id/xShellCommand"
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/xShellCommand"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout android:id="@+id/xSendDataLayout"
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/xSendDataLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/send_data">
-                <android.support.design.widget.TextInputEditText android:id="@+id/xSendData"
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/xSendData"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1" />
-            </android.support.design.widget.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </RelativeLayout>
 

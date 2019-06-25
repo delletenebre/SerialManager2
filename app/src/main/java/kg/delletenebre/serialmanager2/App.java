@@ -2,6 +2,7 @@ package kg.delletenebre.serialmanager2;
 
 import android.app.Activity;
 import android.app.Application;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -18,8 +19,6 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -30,7 +29,11 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.android.material.snackbar.Snackbar;
 import com.udojava.evalex.Expression;
 
 import java.util.HashMap;
@@ -63,8 +66,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String LOCAL_ACTION_SETTINGS_UPDATED = "local.settings_updated";
     public static final String LOCAL_ACTION_CONNECTION_ESTABLISHED = "local.connection_established";
     public static final String LOCAL_ACTION_CONNECTION_CLOSED = "local.connection_closed";
-
-
 
     public static final String ACTION_COMMAND_RECEIVED = "kg.serial.manager.command_received";
     public static final String ACTION_SEND_DATA = "kg.serial.manager.send";
@@ -141,7 +142,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+        Crashlytics crashlyticsKit = new Crashlytics.Builder()
+                .core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build())
+                .build();
+        Fabric.with(this, crashlyticsKit);
         sSelf = this;
         registerActivityLifecycleCallbacks(this);
         Realm.init(this);
@@ -302,6 +306,10 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 receivedCommandIntent.putExtra("value", value);
                 sendBroadcast(receivedCommandIntent);
 
+                Intent widgetIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                widgetIntent.putExtra("key", key);
+                widgetIntent.putExtra("value", value);
+                sendBroadcast(widgetIntent);
 
             } else {
                 String intentValue = value;
@@ -353,6 +361,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
                     intent.putExtra("key", key);
                     intent.putExtra("value", intentValue);
                     sendBroadcast(intent);
+
+                    Intent widgetIntent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+                    widgetIntent.putExtra("key", key);
+                    widgetIntent.putExtra("value", value);
+                    sendBroadcast(widgetIntent);
                 }
 
                 realm.close();
@@ -362,10 +375,9 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public int getIntPreference(String key, String defaultValue) {
         int result = Integer.parseInt(defaultValue);
-        try {
-            result = Integer.parseInt(mPrefs.getString(key, defaultValue));
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
+        String value = mPrefs.getString(key, defaultValue);
+        if (value != null) {
+            result = Integer.parseInt(value);
         }
 
         return result;
@@ -373,9 +385,8 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
     public int getIntPreference(String key) {
         return getIntPreference(key,
-                getString(Utils.getStringIdentifier(this, "pref_default_" + key)));
+                getString(Utils.getResourceId(this, "pref_default_" + key, "string")));
     }
-
 
     public boolean getBooleanPreference(String key, boolean defaultValue) {
         return mPrefs.getBoolean(key, defaultValue);
@@ -612,7 +623,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
             if (textColor != null) {
                 View snackbarView = snackbar.getView();
-                TextView textView = snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+                TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
                 textView.setTextColor(textColor);
             }
 

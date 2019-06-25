@@ -3,7 +3,6 @@ package kg.delletenebre.serialmanager2.fragments
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,7 +16,7 @@ import kg.delletenebre.serialmanager2.R
 import kg.delletenebre.serialmanager2.commands.CommandEditActivity
 import kg.delletenebre.serialmanager2.commands.CommandModel
 
-class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
+class CommandsAdapter : androidx.recyclerview.widget.RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
 
     private var mRealm: Realm? = null
     private var mItems: OrderedRealmCollection<CommandModel>? = null
@@ -126,7 +125,7 @@ class CommandsAdapter : RecyclerView.Adapter<CommandsAdapter.ViewHolder>() {
         }
     }
 
-    class ViewHolder internal constructor(layout: View) : RecyclerView.ViewHolder(layout), View.OnClickListener {
+    class ViewHolder internal constructor(layout: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(layout), View.OnClickListener {
         internal var mTitle: TextView = layout.findViewById(R.id.title)
         internal var mSummary: TextView = layout.findViewById(R.id.summary)
         internal var mUndo: Button = layout.findViewById(R.id.undo_button)

@@ -8,6 +8,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
+import android.util.Log.d
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
@@ -23,9 +24,10 @@ class WidgetSimple : AppWidgetProvider() {
             R.id.text_bottom_left, R.id.text_bottom_center, R.id.text_bottom_right)
 
     override fun onUpdate(context: Context, widgetManager: AppWidgetManager, widgetIds: IntArray) {
-        for (widgetId in widgetIds) {
+        widgetIds.forEach { widgetId ->
             update(context, widgetManager, widgetId, "---")
         }
+        super.onUpdate(context, widgetManager, widgetIds)
     }
 
     override fun onDeleted(context: Context, widgetIds: IntArray) {
@@ -43,8 +45,7 @@ class WidgetSimple : AppWidgetProvider() {
 
         var key = ""
         var value = ""
-
-        if (intent.action == App.ACTION_COMMAND_RECEIVED) {
+        if (intent.hasExtra("key") && intent.hasExtra("value")) {
             key = intent.getStringExtra("key")
             value = intent.getStringExtra("value")
         }
@@ -68,6 +69,7 @@ class WidgetSimple : AppWidgetProvider() {
         val widget = App.getInstance().realm.where(WidgetSimpleModel::class.java)
                 .equalTo("id", widgetId).findFirst()
         if (widget != null) {
+            d("test", "widget not null")
             val app = App.getInstance()
             val position = widget.textAlignmentId + widget.textVerticalPositionId * 3
             val visibleTextViewId = sTextViewIds[position]
