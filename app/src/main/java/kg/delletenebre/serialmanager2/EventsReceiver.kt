@@ -7,6 +7,10 @@ import android.content.Intent
 import android.os.Handler
 import android.os.SystemClock
 import java.util.*
+import androidx.core.content.ContextCompat.startForegroundService
+import android.os.Build
+
+
 
 class EventsReceiver : BroadcastReceiver() {
 
@@ -42,7 +46,12 @@ class EventsReceiver : BroadcastReceiver() {
                                 val startIntent = Intent(App.getInstance(), CommunicationService::class.java)
                                 startIntent.putExtra(CommunicationService.EXTRA_UPDATE_USB_CONNECTION, true)
                                 startIntent.putExtra(CommunicationService.EXTRA_UPDATE_BLUETOOTH_CONNECTION, true)
-                                App.getInstance().startService(startIntent)
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    context.startForegroundService(startIntent)
+                                } else {
+                                    context.startService(startIntent)
+                                }
                             }
                         }, startOnBootDelay.toLong())
                     }
@@ -67,7 +76,12 @@ class EventsReceiver : BroadcastReceiver() {
                                 val startIntent = Intent(App.getInstance(), CommunicationService::class.java)
                                 startIntent.putExtra(CommunicationService.EXTRA_UPDATE_USB_CONNECTION, true)
                                 startIntent.putExtra(CommunicationService.EXTRA_UPDATE_BLUETOOTH_CONNECTION, true)
-                                App.getInstance().startService(startIntent)
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    context.startForegroundService(startIntent)
+                                } else {
+                                    context.startService(startIntent)
+                                }
                             }
                         }, (App.getInstance().getIntPreference("start_when_screen_on_delay") * 1000).toLong())
                     }

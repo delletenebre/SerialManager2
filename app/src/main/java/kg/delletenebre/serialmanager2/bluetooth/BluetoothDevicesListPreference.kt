@@ -32,12 +32,12 @@ class BluetoothDevicesListPreference : ListPreference {
                 App.log(String.format("bluetooth device [ %s (%s)] major class: %d",
                         name, address, majorClass))
 
-                if (majorClass == BluetoothClass.Device.Major.UNCATEGORIZED) {
+                //if (majorClass == BluetoothClass.Device.Major.UNCATEGORIZED) {
                     entriesList.add(String.format(
                             resources.getString(R.string.pref_template_bluetooth_device_list_item),
                             name, address))
                     entryValuesList.add(address)
-                }
+                //}
             }
         }
 

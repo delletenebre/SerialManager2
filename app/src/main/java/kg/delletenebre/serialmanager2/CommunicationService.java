@@ -265,11 +265,6 @@ public class CommunicationService extends Service implements SensorEventListener
         stopWebServer();
         stopSerialCommunication();
 
-//        if (mPrefs.getBoolean("bluetooth_adapter_turn_on",
-//                getResources().getBoolean(R.bool.pref_default_bluetooth_adapter_turn_on))) {
-//            mBluetoothConnection.getBluetoothAdapter().disable();
-//        }
-
         mSensorManager.unregisterListener(this);
         mSensorManager = null;
 
@@ -301,13 +296,13 @@ public class CommunicationService extends Service implements SensorEventListener
         mNotificationLayout = new RemoteViews(getPackageName(), R.layout.layout_notification);
 
         int textColor = getNotificationTextColor(
-                androidx.appcompat.R.style.TextAppearance_Compat_Notification_Info);
+                R.style.TextAppearance_Compat_Notification_Info);
 
         Bitmap appIcon = getNotificationInfoIcon(R.drawable.notification_icon, textColor);
         mNotificationLayout.setImageViewBitmap(R.id.app_icon, appIcon);
 
         textColor = getNotificationTextColor(
-                androidx.appcompat.R.style.TextAppearance_Compat_Notification_Title);
+                R.style.TextAppearance_Compat_Notification_Title);
 
         Bitmap usbIcon = getNotificationInfoIcon(R.drawable.ic_usb, textColor);
         mNotificationLayout.setImageViewBitmap(R.id.usb_connections_icon, usbIcon);
@@ -328,7 +323,7 @@ public class CommunicationService extends Service implements SensorEventListener
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel notificationChannel = new NotificationChannel(
-                    "default", "serial.manager.v2", NotificationManager.IMPORTANCE_DEFAULT);
+                    "serial.manager.v2", "notification_service", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager notificationManager =
                     (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager != null) {
@@ -337,13 +332,6 @@ public class CommunicationService extends Service implements SensorEventListener
             }
         }
 
-//        mNotification = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-//                        .setOnlyAlertOnce(true)
-//                        .setSmallIcon(R.drawable.notification_icon)
-//                        .setContent(mNotificationLayout)
-//                        .setContentIntent(
-//                                PendingIntent.getActivity(this, 0,
-//                                        new Intent(this, MainActivity.class), 0));
         if (android.os.Build.VERSION.SDK_INT >= 16) {
             startForeground(NOTIFICATION_ID, mNotificationBuilder.build());
         } else {
@@ -368,7 +356,7 @@ public class CommunicationService extends Service implements SensorEventListener
                     bluetoothIconId = R.drawable.ic_bluetooth_connected_black_24dp;
                 }
                 int textColor = getNotificationTextColor(
-                        androidx.appcompat.R.style.TextAppearance_Compat_Notification_Title);
+                        R.style.TextAppearance_Compat_Notification_Title);
                 Bitmap bluetoothIcon = getNotificationInfoIcon(bluetoothIconId, textColor);
                 mNotificationLayout.setImageViewBitmap(R.id.bluetooth_connections_icon, bluetoothIcon);
             }
@@ -458,80 +446,66 @@ public class CommunicationService extends Service implements SensorEventListener
                     getString(R.string.pref_default_web_server_port));
             final String ipAddress = Utils.getIpAddress();
 
-            mWebServer.get("/", new HttpServerRequestCallback() {
-                @Override
-                public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
-                    String webSocketInfo = String.format(getString(R.string.web_socket_info),
-                            ipAddress, port);
+            mWebServer.get("/", (request, response) -> {
+                String webSocketInfo = String.format(getString(R.string.web_socket_info),
+                        ipAddress, port);
 
-                    response.send("<!DOCTYPE html><head><title>" + getString(R.string.app_name) + "</title><meta charset=\"utf-8\" /></head><body><h1>" + getString(R.string.app_name) + "</h1><i>version: <b>" + App.getInstance().getVersion() + "</b></i><br><br>" + webSocketInfo + "<br><br><a href=\"/test-websocket\">WebSocket test</a></body></html>");
-                }
+                response.send("<!DOCTYPE html><head><title>" + getString(R.string.app_name) + "</title><meta charset=\"utf-8\" /></head><body><h1>" + getString(R.string.app_name) + "</h1><i>version: <b>" + App.getInstance().getVersion() + "</b></i><br><br>" + webSocketInfo + "<br><br><a href=\"/test-websocket\">WebSocket test</a></body></html>");
             });
-            mWebServer.get("/test-websocket", new HttpServerRequestCallback() {
-                @Override
-                public void onRequest(AsyncHttpServerRequest request, AsyncHttpServerResponse response) {
-                    AssetManager assetManager = getAssets();
+            mWebServer.get("/test-websocket", (request, response) -> {
+                AssetManager assetManager = getAssets();
 
-                    String html = "<h1>404 Not found</h1>";
-                    InputStream input;
-                    try {
-                        input = assetManager.open("websoket_test.html");
-                        int size = input.available();
-                        byte[] buffer = new byte[size];
-                        //noinspection ResultOfMethodCallIgnored
-                        input.read(buffer);
-                        input.close();
+                String html = "<h1>404 Not found</h1>";
+                InputStream input;
+                try {
+                    input = assetManager.open("websoket_test.html");
+                    int size = input.available();
+                    byte[] buffer = new byte[size];
+                    //noinspection ResultOfMethodCallIgnored
+                    input.read(buffer);
+                    input.close();
 
-                        html = new String(buffer);
-                        html = html.replace("{{address}}", ipAddress + ":" + port + "/ws");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    response.send(html);
+                    html = new String(buffer);
+                    html = html.replace("{{address}}", ipAddress + ":" + port + "/ws");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
+                response.send(html);
             });
             mWebServer.listen(port);
-            mWebServer.websocket("/ws", new AsyncHttpServer.WebSocketRequestCallback() {
-                @Override
-                public void onConnected(final WebSocket webSocket, AsyncHttpServerRequest request) {
-                    App.log("New WebSocket client connected");
-                    webSocket.setClosedCallback(new CompletedCallback() {
-                        @Override
-                        public void onCompleted(Exception e) {
-                            try {
-                                if (e != null) {
-                                    e.printStackTrace();
-                                }
-                            } finally {
-                                mLocalBroadcastManager.sendBroadcast(
-                                        new Intent(App.LOCAL_ACTION_CONNECTION_CLOSED)
-                                                .putExtra("type", "web")
-                                                .putExtra("name", webSocket.toString()));
-                                mWebSockets.remove(webSocket);
-                                updateNotificationText();
+            mWebServer.websocket("/ws", (webSocket, request) -> {
+                App.log("New WebSocket client connected");
+                webSocket.setClosedCallback(new CompletedCallback() {
+                    @Override
+                    public void onCompleted(Exception e) {
+                        try {
+                            if (e != null) {
+                                e.printStackTrace();
                             }
-                        }
-                    });
-                    webSocket.setStringCallback(new WebSocket.StringCallback() {
-                        @Override
-                        public void onStringAvailable(String message) {
+                        } finally {
                             mLocalBroadcastManager.sendBroadcast(
-                                    new Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
-                                            .putExtra("from", "web")
-                                            .putExtra("command", message));
+                                    new Intent(App.LOCAL_ACTION_CONNECTION_CLOSED)
+                                            .putExtra("type", "web")
+                                            .putExtra("name", webSocket.toString()));
+                            mWebSockets.remove(webSocket);
+                            updateNotificationText();
                         }
-                    });
-                    mWebSockets.add(webSocket);
-                    if (isConnectionStateMessageEnabled()) {
-                        webSocket.send(App.ACTION_CONNECTION_ESTABLISHED);
                     }
-                    mLocalBroadcastManager.sendBroadcast(
-                            new Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
-                                    .putExtra("type", "web")
-                                    .putExtra("name", webSocket.toString()));
-                    updateNotificationText();
+                });
+                webSocket.setStringCallback(message -> mLocalBroadcastManager.sendBroadcast(
+                        new Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
+                                .putExtra("from", "web")
+                                .putExtra("command", message)));
+                mWebSockets.add(webSocket);
+                if (isConnectionStateMessageEnabled()) {
+                    webSocket.send(App.ACTION_CONNECTION_ESTABLISHED);
                 }
+                mLocalBroadcastManager.sendBroadcast(
+                        new Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
+                                .putExtra("type", "web")
+                                .putExtra("name", webSocket.toString()));
+                updateNotificationText();
             });
         }
     }
@@ -563,12 +537,7 @@ public class CommunicationService extends Service implements SensorEventListener
             mSerialPort = new SerialPort(
                     App.getInstance().getStringPreference("serial_path"),
                     App.getInstance().getIntPreference("serial_baud_rate"));
-            mSerialPort.setOnDataReceivedListener(new SerialPort.OnDataReceivedListener() {
-                @Override
-                public void onDataReceived(String message) {
-                    App.getInstance().detectCommand(message);
-                }
-            });
+            mSerialPort.setOnDataReceivedListener(message -> App.getInstance().detectCommand(message));
         }
     }
     private void stopSerialCommunication() {
@@ -652,7 +621,6 @@ public class CommunicationService extends Service implements SensorEventListener
             }
         }
     }
-
 
     public boolean isConnectionStateMessageEnabled() {
         return App.getInstance().getBooleanPreference("send_connection_state");

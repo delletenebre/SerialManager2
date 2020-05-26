@@ -84,30 +84,15 @@ class NotyOverlay {
             }
 
             mShowDuration = duration;
-
-//            DisplayMetrics displayMetrics = new DisplayMetrics();
-//            mWindowManager.getDefaultDisplay().getMetrics(displayMetrics);
-
-//            int screenWidth = displayMetrics.widthPixels;
-//            int screenHeight = displayMetrics.heightPixels;
-
             mMessageView.setText(message);
 
-            mNotificationLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    remove();
-                }
-            });
+            mNotificationLayout.setOnClickListener(view -> remove());
 
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    mNotificationLayout.setAlpha(0.0f);
-                    mWindowManager.addView(mNotificationLayout, mNotificationLayoutParams);
-                    mNotificationLayout.post(mShowRunnable);
-                    mNotificationLayout.postDelayed(mHideRunnable, mShowDuration);
-                }
+            new Handler(Looper.getMainLooper()).post(() -> {
+                mNotificationLayout.setAlpha(0.0f);
+                mWindowManager.addView(mNotificationLayout, mNotificationLayoutParams);
+                mNotificationLayout.post(mShowRunnable);
+                mNotificationLayout.postDelayed(mHideRunnable, mShowDuration);
             });
         } else if (Build.VERSION.SDK_INT >= 23) {
             App.logError("SYSTEM_ALERT_WINDOW permission is not granted");
@@ -144,19 +129,6 @@ class NotyOverlay {
             mNotificationLayout = null;
         }
     }
-
-//    private int getStatusBarHeight(Resources resources) {
-//        int result = 0;
-//        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
-//        if (resourceId > 0) {
-//            result = resources.getDimensionPixelSize(resourceId);
-//        }
-//        return result;
-//    }
-//
-//    private int getGravity(String vert, String horiz) {
-//        return getVertGravity(vert) | getHorizGravity(horiz);
-//    }
 
     private int getGravity(int x, int y) {
         String[] positionsX = {"left", "center", "right"};

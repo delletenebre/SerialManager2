@@ -35,7 +35,7 @@ class WidgetSimpleSettingsActivity : AppCompatActivity(), ColorPickerDialogListe
         super.onCreate(savedInstanceState)
         setContentView(R.layout.widget_simple_activity)
 
-        mWidgetId = intent.extras.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
+        mWidgetId = intent.extras!!.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID)
         if (mWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish()
@@ -60,7 +60,7 @@ class WidgetSimpleSettingsActivity : AppCompatActivity(), ColorPickerDialogListe
 
 
         mRealm = App.getInstance().realm
-        if (!intent.extras.getBoolean(App.EXTRA_APPWIDGET_EDIT, false)) {
+        if (!intent.extras!!.getBoolean(App.EXTRA_APPWIDGET_EDIT, false)) {
             mRealm?.executeTransaction {
                 mWidget = mRealm?.createObject(WidgetSimpleModel::class.java, mWidgetId)
                 mWidget?.text = getString(R.string.widget_simple_default_text)
