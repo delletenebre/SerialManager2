@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -11,7 +12,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import kg.delletenebre.serialmanager2.App;
 import kg.delletenebre.serialmanager2.R;
 
 public class AppChooserView extends TextInputEditText implements View.OnClickListener {
@@ -62,7 +63,7 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
     }
 
     public AppChooserView(Context context, AttributeSet attrs,
-                                int defStyle) {
+                          int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
@@ -89,9 +90,11 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
     public String getValue() {
         return value;
     }
+
     public String getLabel() {
         return label;
     }
+
     public void setLabel(String label) {
         this.label = label;
         setText(this.label);
@@ -131,25 +134,31 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
         return resolveInfos.get(0).loadLabel(pm).toString();
     }
 
-    public static void dumpIntent(Intent i){
+    public static void dumpIntent(Intent i) {
         String LOG_TAG = "DELLE";
         Bundle bundle = i.getExtras();
         if (bundle != null) {
             Set<String> keys = bundle.keySet();
             Iterator<String> it = keys.iterator();
-            Log.e(LOG_TAG,"Dumping Intent start");
+            App.logError(LOG_TAG + " Dumping Intent start");
             while (it.hasNext()) {
                 String key = it.next();
-                Log.e(LOG_TAG,"[" + key + "=" + bundle.get(key)+"]");
+                App.logError(LOG_TAG + " [" + key + "=" + bundle.get(key) + "]");
             }
-            Log.e(LOG_TAG,"Dumping Intent end");
+            App.logError(LOG_TAG + " Dumping Intent end");
         }
     }
 
 
     @Override
     public void onClick(View view) {
-        FragmentActivity activity = (FragmentActivity) getContext();
+        FragmentActivity activity;
+        Context context = getContext();
+        if (getContext() instanceof ContextWrapper) {
+            activity = (FragmentActivity) ((ContextThemeWrapper) context).getBaseContext();
+        } else {
+            activity = (FragmentActivity) context;
+        }
         FragmentManager fragmentManager = activity.getSupportFragmentManager();
         AppChooserDialogFragment fragment = new AppChooserDialogFragment();
         fragment.setAppChooser(this);
@@ -297,7 +306,7 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
 
                 mInfos = new ArrayList<>();
                 List<ResolveInfo> resolveInfos =
-                        mPackageManager.queryIntentActivities(queryIntent,0);
+                        mPackageManager.queryIntentActivities(queryIntent, 0);
 
                 for (ResolveInfo ri : resolveInfos) {
                     ActivityInfo ai = new ActivityInfo();
@@ -404,7 +413,7 @@ public class AppChooserView extends TextInputEditText implements View.OnClickLis
 
         void addTab(CharSequence label, int contentViewId) {
             View tabView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.app_chooser_tab,mTabContainer, false);
+                    .inflate(R.layout.app_chooser_tab, mTabContainer, false);
             ((TextView) tabView.findViewById(R.id.tab)).setText(label);
             tabView.setOnClickListener(new View.OnClickListener() {
                 @Override

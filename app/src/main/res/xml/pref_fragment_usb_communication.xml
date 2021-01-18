@@ -4,6 +4,12 @@
         android:defaultValue="@bool/pref_default_usb_communication_enabled"
         android:title="@string/pref_title_usb_communication_enabled" />
 
+    <kg.delletenebre.serialmanager2.views.UsbDevicesListPreference
+        android:key="usb_device"
+        android:dependency="usb_communication_enabled"
+        android:defaultValue="@array/pref_default_usb_device"
+        android:title="@string/pref_title_usb_device" />
+
     <!--<EditTextPreference android:key="usb_baud_rate"-->
         <!--android:dependency="usb_communication_enabled"-->
         <!--android:defaultValue="@string/pref_default_usb_baud_rate"-->

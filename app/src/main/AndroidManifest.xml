@@ -69,7 +69,7 @@
         </activity>
 
         <service
-            android:name=".CommunicationService"
+            android:name=".communication.CommunicationService"
             android:enabled="true"
             android:launchMode="singleTask" />
 

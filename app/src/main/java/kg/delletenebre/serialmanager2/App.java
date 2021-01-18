@@ -31,9 +31,9 @@ import android.widget.TextView;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-//import com.crashlytics.android.Crashlytics;
-//import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.android.material.snackbar.Snackbar;
+import com.stericson.RootShell.RootShell;
+import com.stericson.RootShell.execution.Command;
 import com.udojava.evalex.Expression;
 
 import java.util.HashMap;
@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
@@ -51,9 +50,16 @@ import kg.delletenebre.serialmanager2.utils.Utils;
 import kg.delletenebre.serialmanager2.utils.VirtualKeyboard;
 import kg.delletenebre.serialmanager2.views.AppChooserView;
 
+import static android.util.Log.d;
+
+//import com.crashlytics.android.Crashlytics;
+//import com.crashlytics.android.core.CrashlyticsCore;
+//import io.fabric.sdk.android.Fabric;
+
 
 public class App extends Application implements Application.ActivityLifecycleCallbacks {
     private static App sSelf;
+
     public static App getInstance() {
         return sSelf;
     }
@@ -66,6 +72,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String LOCAL_ACTION_SETTINGS_UPDATED = "local.settings_updated";
     public static final String LOCAL_ACTION_CONNECTION_ESTABLISHED = "local.connection_established";
     public static final String LOCAL_ACTION_CONNECTION_CLOSED = "local.connection_closed";
+    public static final String LOCAL_ACTION_CONNECTION_FAILED = "local.connection_failed";
 
     public static final String ACTION_COMMAND_RECEIVED = "kg.serial.manager.command_received";
     public static final String ACTION_SEND_DATA = "kg.serial.manager.send";
@@ -85,10 +92,11 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public static final String EXTRA_SELECTED_ACTION_EMULATE_KEY = "kg.serial.manager.extra.selected_action.emulateed_key_id";
     public static final String EXTRA_SELECTED_ACTION_SHELL_COMMAND = "kg.serial.manager.extra.selected_action.shell_command";
     public static final String EXTRA_SELECTED_ACTION_SEND_DATA = "kg.serial.manager.extra.selected_action.send_data";
+    public static final String EXTRA_SELECTED_ACTION_SYSTEM_ACTION_ID = "kg.serial.manager.extra.selected_action.system_action";
 
     public static final Map<String, String> ICONS;
-    static
-    {
+
+    static {
         ICONS = new HashMap<>();
         ICONS.put("controller", "\ue800");
         ICONS.put("usb", "\ue801");
@@ -98,32 +106,39 @@ public class App extends Application implements Application.ActivityLifecycleCal
         ICONS.put("send", "\ue805");
         ICONS.put("ok", "\ue806");
         ICONS.put("cancel", "\ue807");
+        ICONS.put("serial", "\ue808");
+        ICONS.put("failed", "\ue809");
     }
 
-    public final static char CR  = (char) 0x0D;
-    public final static char LF  = (char) 0x0A;
-    public final static String CRLF  = "" + CR + LF;
+    public final static char CR = (char) 0x0D;
+    public final static char LF = (char) 0x0A;
+    public final static String CRLF = "" + CR + LF;
 
     private static boolean sDebugEnabled = false;
+
     public static boolean isDebugEnabled() {
         return sDebugEnabled;
     }
+
     public static void setDebugEnabled(boolean debugEnabled) {
         sDebugEnabled = debugEnabled;
     }
+
     public static void log(String message) {
         if (isDebugEnabled()) {
-            Log.d(TAG, message);
+            d(TAG, message);
         }
     }
+
     public static void logError(String message) {
         if (isDebugEnabled()) {
             Log.e(TAG, message);
         }
     }
+
     public static void logStatus(String message, String state) {
         if (isDebugEnabled()) {
-            Log.d(TAG, message + " ........ " + state);
+            d(TAG, message + " ........ " + state);
         }
     }
 
@@ -154,7 +169,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mRealmConfig = new RealmConfiguration.Builder()
-                .schemaVersion(7)
+                .schemaVersion(8)
                 .migration(new RealmMigration())
                 //.deleteRealmIfMigrationNeeded()
                 .build();
@@ -190,6 +205,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
     public SharedPreferences getPrefs() {
         return mPrefs;
     }
+
     public Realm getRealm() {
         if (mRealm.isClosed()) {
             mRealm = getNewRealmInstance();
@@ -236,33 +252,47 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
 
     Activity mVisibleActivity;
+
     public boolean isActivityVisible() {
         return mVisibleActivityStatus;
     }
+
     @Override
-    public void onActivityCreated(Activity activity, Bundle bundle) {}
+    public void onActivityCreated(Activity activity, Bundle bundle) {
+    }
+
     @Override
-    public void onActivityStarted(Activity activity) {}
+    public void onActivityStarted(Activity activity) {
+    }
+
     @Override
     public void onActivityResumed(Activity activity) {
         mVisibleActivityStatus = true;
         mVisibleActivity = activity;
     }
+
     @Override
     public void onActivityPaused(Activity activity) {
         mVisibleActivityStatus = false;
         mVisibleActivity = null;
     }
+
     @Override
-    public void onActivityStopped(Activity activity) {}
+    public void onActivityStopped(Activity activity) {
+    }
+
     @Override
-    public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {}
+    public void onActivitySaveInstanceState(Activity activity, Bundle bundle) {
+    }
+
     @Override
-    public void onActivityDestroyed(Activity activity) {}
+    public void onActivityDestroyed(Activity activity) {
+    }
 
     public long getBootedMillis() {
         return mBootedMillis;
     }
+
     public void setBootedMillis(long bootedMillis) {
         mBootedMillis = bootedMillis;
     }
@@ -339,18 +369,18 @@ public class App extends Application implements Application.ActivityLifecycleCal
                                 String backgroundColor = command.getNotyBackgroundColor();
 
                                 new NotyOverlay(this, command.getPositionZ())
-                                    .setPosition(command.getPositionX(), command.getPositionY(),
-                                        command.getOffsetX(), command.getOffsetY())
-                                    .setTextSize(command.getNotyTextSize())
-                                    .setTextColor(Color.parseColor(textColor))
-                                    .setBackgroundColor(Color.parseColor(backgroundColor))
-                                    .show(text, command.getNotyDurationInMillis());
+                                        .setPosition(command.getPositionX(), command.getPositionY(),
+                                                command.getOffsetX(), command.getOffsetY())
+                                        .setTextSize(command.getNotyTextSize())
+                                        .setTextColor(Color.parseColor(textColor))
+                                        .setBackgroundColor(Color.parseColor(backgroundColor))
+                                        .show(text, command.getNotyDurationInMillis());
                             }
                         }
 
                         executeCommandAction(command.getActionId(), command.getChosenApp(),
                                 command.getEmulatedKeyId(), command.getShellCommand(),
-                                command.getSendData(), key, value);
+                                command.getSendData(), command.getSystemActionId(), key, value);
 
                         intentValue = replaceKeywords(command.getIntentValueExtra(), key, value);
                     }
@@ -421,15 +451,18 @@ public class App extends Application implements Application.ActivityLifecycleCal
             return powerManager.isScreenOn();
         }
     }
+
     public boolean isScreenOff() {
         return !isScreenOn();
     }
+
     public int getScreenBrightness() {
         if (isScreenBrightnessModeManual()) {
             return Settings.System.getInt(getContentResolver(), Settings.System.SCREEN_BRIGHTNESS, -1);
         }
         return -1;
     }
+
     public void setScreenBrightness(Object value) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(this)) {
@@ -478,6 +511,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
             log("Screen brightness set to " + (int) level);
         }
     }
+
     public boolean isScreenBrightnessModeManual() {
         return (Settings.System.getInt(getContentResolver(),
                 Settings.System.SCREEN_BRIGHTNESS_MODE,
@@ -613,7 +647,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
     }
 
 
-
     public void showSnackbar(Activity activity, String message, int length, Integer textColor) {
         if (activity != null) {
             Snackbar snackbar = Snackbar.make(
@@ -630,19 +663,22 @@ public class App extends Application implements Application.ActivityLifecycleCal
             snackbar.show();
         }
     }
+
     public void showSnackbar(Activity activity, String message, int length) {
         showSnackbar(activity, message, length, null);
     }
+
     public void showSnackbar(Activity activity, String message) {
         showSnackbar(activity, message, Snackbar.LENGTH_LONG, null);
     }
+
     public void showSnackbarSuccess(Activity activity, String message) {
         showSnackbar(activity, message, Snackbar.LENGTH_LONG, Color.parseColor("#4CAF50"));
     }
+
     public void showSnackbarError(Activity activity, String message) {
         showSnackbar(activity, message, Snackbar.LENGTH_LONG, Color.parseColor("#F44336"));
     }
-
 
 
     public boolean isSystemOverlaysPermissionGranted() {
@@ -662,7 +698,7 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
 
     public void executeCommandAction(int actionId, String chosenApp, int emulatedKeyId,
-                                     String shellCommand, String sendData,
+                                     String shellCommand, String sendData, int systemActionId,
                                      String key, String value) {
         switch (actionId) {
             case CommandModel.ACTION_RUN_APPLICATION: {
@@ -682,11 +718,14 @@ public class App extends Application implements Application.ActivityLifecycleCal
             }
 
             case CommandModel.ACTION_SHELL_COMMAND: {
-                try {
-                    Runtime.getRuntime().exec(shellCommand);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                runShell(shellCommand);
+
+
+//                try {
+//                    Runtime.getRuntime().exec(shellCommand);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
                 break;
             }
 
@@ -696,6 +735,39 @@ public class App extends Application implements Application.ActivityLifecycleCal
                 sendBroadcast(intent);
                 break;
             }
+
+            case CommandModel.ACTION_SYSTEM: {
+                switch (systemActionId) {
+                    case 0: {
+                        //shutdown
+                        runShell("reboot -p");
+                        break;
+                    }
+                    case 1: {
+                        //reboot
+                        runShell("reboot");
+                        break;
+                    }
+                    case 2: {
+                        setScreenBrightness(value);
+                        break;
+                    }
+                    default:
+                        logError("Undef system action command (systemActionId) " + systemActionId);
+                }
+            }
         }
+    }
+
+    private void runShell(String shellCommand) {
+        final boolean rootAvailable = RootShell.isRootAvailable();
+        new Thread(() -> {
+            log("run shell: " + shellCommand);
+            try {
+                RootShell.getShell(rootAvailable).add(new Command(0, shellCommand));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 }
