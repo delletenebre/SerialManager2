@@ -90,6 +90,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
             mCommand?.positionY?.let { xNotyPositionY.setSelection(it) }
             xNotyOffsetX.setText(mCommand?.offsetX.toString())
             xNotyOffsetY.setText(mCommand?.offsetY.toString())
+            mCommand?.systemActionId?.let { xSystemAction.setSelection(it) }
 
         } else {
             xIntentValueExtra.setText(
@@ -191,12 +192,14 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
         xEmulateKeyLayout.visibility = View.GONE
         xShellCommandLayout.visibility = View.GONE
         xSendDataLayout.visibility = View.GONE
+        xSystemActionLayout.visibility = View.GONE
 
         when (actionId) {
             CommandModel.ACTION_RUN_APPLICATION -> xAppChooserLayout.visibility = View.VISIBLE
             CommandModel.ACTION_EMULATE_KEY -> xEmulateKeyLayout.visibility = View.VISIBLE
             CommandModel.ACTION_SHELL_COMMAND -> xShellCommandLayout.visibility = View.VISIBLE
             CommandModel.ACTION_SEND_DATA -> xSendDataLayout.visibility = View.VISIBLE
+            CommandModel.ACTION_SYSTEM -> xSystemActionLayout.visibility = View.VISIBLE
             else -> {
             }
         }
@@ -228,6 +231,7 @@ class CommandEditActivity : AppCompatActivity(), ColorPickerDialogListener {
             mCommand?.emulatedKeyId = xEmulateKey.selectedItemPosition
             mCommand?.shellCommand = xShellCommand.text.toString()
             mCommand?.sendData = xSendData.text.toString()
+            mCommand?.systemActionId = xSystemAction.selectedItemPosition
 
             mCommand?.notyMessage = xNotyMessage.text.toString()
 

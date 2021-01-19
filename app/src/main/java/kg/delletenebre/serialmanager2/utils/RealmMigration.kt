@@ -102,6 +102,16 @@ open class RealmMigration : io.realm.RealmMigration {
             currentVersion++
         }
 
+        if (currentVersion == 7L) {
+            val commandSchema = schema.get("CommandModel")
+            commandSchema!!
+                    .addField("systemActionId", Int::class.java, FieldAttribute.REQUIRED)
+            val widgetSchema = schema.get("WidgetSimpleModel")
+            widgetSchema!!
+                    .addField("systemActionId", Int::class.java, FieldAttribute.REQUIRED)
+
+            currentVersion++
+        }
 
     }
 }

@@ -21,6 +21,8 @@ open class CommandModel : RealmObject() {
         const val ACTION_SHELL_COMMAND = 3
         @Ignore
         const val ACTION_SEND_DATA = 4
+        @Ignore
+        const val ACTION_SYSTEM = 5
     }
 
     var index: Int = 0
@@ -46,6 +48,7 @@ open class CommandModel : RealmObject() {
     var positionY: Int = 0
     var offsetX: Int = 0
     var offsetY: Int = 0
+    var systemActionId: Int = 0
 
     fun getNotyDurationInMillis(): Int {
         return (notyDuration * 1000).toInt()
@@ -79,6 +82,10 @@ open class CommandModel : RealmObject() {
             ACTION_SEND_DATA -> return context.getString(R.string.command_subtitle,
                     actions[actionId],
                     sendData)
+
+            ACTION_SYSTEM -> return context.getString(R.string.command_subtitle,
+                    actions[actionId],
+                    context.resources.getStringArray(R.array.array_system_actions)[systemActionId])
 
             else ->
                 // ACTION_NONE

@@ -7,6 +7,8 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 
+import kg.delletenebre.serialmanager2.communication.CommunicationService;
+
 public class UsbDeviceAttachActivity extends Activity {
 
     @Override

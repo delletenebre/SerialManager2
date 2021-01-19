@@ -56,6 +56,10 @@ class LogsFragment : androidx.fragment.app.Fragment() {
                         addMessage("${App.ICONS["cancel"]} ${App.ICONS[intent.getStringExtra("type")]}\t${getString(R.string.connection_closed)}\t[ ${intent.getStringExtra("name")} ]")
                     }
 
+                    App.LOCAL_ACTION_CONNECTION_FAILED -> {
+                        addMessage("${App.ICONS["failed"]} ${App.ICONS[intent.getStringExtra("type")]}\t${getString(R.string.connection_failed)}\t[ ${intent.getStringExtra("name")} ]")
+                    }
+
                     App.LOCAL_ACTION_COMMAND_RECEIVED -> {
                         addMessage("${App.ICONS["receive"]} ${App.ICONS[intent.getStringExtra("from")]}\t${intent.getStringExtra("command")}")
                     }
@@ -69,6 +73,7 @@ class LogsFragment : androidx.fragment.app.Fragment() {
         val localIntentFilter = IntentFilter()
         localIntentFilter.addAction(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
         localIntentFilter.addAction(App.LOCAL_ACTION_CONNECTION_CLOSED)
+        localIntentFilter.addAction(App.LOCAL_ACTION_CONNECTION_FAILED)
         localIntentFilter.addAction(App.LOCAL_ACTION_COMMAND_RECEIVED)
         localIntentFilter.addAction(App.LOCAL_ACTION_DATA_SENT)
         mLocalBroadcastManager = androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(context!!)

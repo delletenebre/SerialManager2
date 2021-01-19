@@ -13,7 +13,7 @@
     <dimen name="form_element_icon_size">22dip</dimen>
 
     <dimen name="notification_padding_top_bottom">8dp</dimen>
-    <dimen name="notification_padding_left_right">16dp</dimen>
+    <dimen name="notification_padding_left_right">8dp</dimen>
     <dimen name="notification_icon_size_app">16dp</dimen>
     <dimen name="notification_icon_size_connected_type">20dp</dimen>
 

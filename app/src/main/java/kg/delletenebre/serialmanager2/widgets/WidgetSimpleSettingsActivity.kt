@@ -48,6 +48,7 @@ class WidgetSimpleSettingsActivity : AppCompatActivity(), ColorPickerDialogListe
             override fun onItemSelected(arg0: AdapterView<*>, arg1: View, position: Int, id: Long) {
                 showViewForSelectedAction(position)
             }
+
             override fun onNothingSelected(arg0: AdapterView<*>) {}
         }
         val spinnerArrayAdapter = ArrayAdapter(
@@ -95,7 +96,8 @@ class WidgetSimpleSettingsActivity : AppCompatActivity(), ColorPickerDialogListe
 
             finish()
             true
-        } else -> {
+        }
+        else -> {
             super.onOptionsItemSelected(item)
         }
     }
@@ -126,6 +128,7 @@ class WidgetSimpleSettingsActivity : AppCompatActivity(), ColorPickerDialogListe
         mWidget?.emulatedKeyId?.let { xEmulateKey.setSelection(it) }
         xShellCommand.setText(mWidget?.shellCommand)
         xSendData.setText(mWidget?.sendData)
+        mWidget?.systemActionId?.let { xSystemAction.setSelection(it) }
     }
 
     private fun saveWidgetSettings() {
@@ -144,6 +147,7 @@ class WidgetSimpleSettingsActivity : AppCompatActivity(), ColorPickerDialogListe
             mWidget?.emulatedKeyId = xEmulateKey.selectedItemPosition
             mWidget?.shellCommand = xShellCommand.text.toString()
             mWidget?.sendData = xSendData.text.toString()
+            mWidget?.systemActionId = xSystemAction.selectedItemPosition
         }
 
         val intent = Intent(this, WidgetSimple::class.java)
@@ -158,12 +162,14 @@ class WidgetSimpleSettingsActivity : AppCompatActivity(), ColorPickerDialogListe
         xEmulateKeyLayout.visibility = View.GONE
         xShellCommandLayout.visibility = View.GONE
         xSendDataLayout.visibility = View.GONE
+        xSystemActionLayout.visibility = View.GONE
 
         when (actionId) {
             CommandModel.ACTION_RUN_APPLICATION -> xAppChooserLayout.visibility = View.VISIBLE
             CommandModel.ACTION_EMULATE_KEY -> xEmulateKeyLayout.visibility = View.VISIBLE
             CommandModel.ACTION_SHELL_COMMAND -> xShellCommandLayout.visibility = View.VISIBLE
             CommandModel.ACTION_SEND_DATA -> xSendDataLayout.visibility = View.VISIBLE
+            CommandModel.ACTION_SYSTEM -> xSystemActionLayout.visibility = View.VISIBLE
         }
     }
 

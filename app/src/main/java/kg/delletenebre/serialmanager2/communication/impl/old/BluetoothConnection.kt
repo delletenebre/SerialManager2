@@ -1,4 +1,4 @@
-package kg.delletenebre.serialmanager2.bluetooth
+package kg.delletenebre.serialmanager2.communication.impl.old
 
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
@@ -7,8 +7,8 @@ import android.os.Handler
 import com.github.douglasjunior.bluetoothclassiclibrary.*
 import com.github.douglasjunior.bluetoothlowenergylibrary.BluetoothLeService
 import kg.delletenebre.serialmanager2.App
-import kg.delletenebre.serialmanager2.CommunicationService
 import kg.delletenebre.serialmanager2.R
+import kg.delletenebre.serialmanager2.communication.CommunicationService
 import java.nio.charset.Charset
 import java.util.*
 

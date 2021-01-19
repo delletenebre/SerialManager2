@@ -4,6 +4,7 @@
     <string name="command">Команда</string>
     <string name="settings">Настройки</string>
     <string name="restart_service">Перезапустить сервис</string>
+    <string name="close_application">Закрыть приложение</string>
     <string name="send_report">Отправить отчёт</string>
     <string name="error">Ошибка</string>
     <string name="yes">Да</string>
@@ -18,6 +19,7 @@
     <string name="send">Отправить</string>
     <string name="connection_established">Соединение установлено</string>
     <string name="connection_closed">Соединение закрыто</string>
+    <string name="connection_failed">Соединение не может быть установлено</string>
 
     <string name="crash_toast_text">Упс! Возникла критическая ошибка, но Вы можете отправить информацию разработчику, что поможет (наверное) решить проблему.</string>
     <string name="crash_dialog_title">Отправить отчёт?</string>
@@ -50,10 +52,17 @@
         <item>Нажатие клавиши</item>
         <item>Консольная команда</item>
         <item>Отправить данные</item>
+        <item>Управление системой</item>
     </string-array>
     <string name="command_emulated_key">Эмулируемая клавиша</string>
     <string name="shell_command">Консольная команда</string>
     <string name="send_data">Отправить данные</string>
+    <string name="system_action">Управление системой</string>
+    <string-array name="array_system_actions">
+        <item>Выключение</item>
+        <item>Перезагрузка</item>
+        <item>Установить яркость</item>
+    </string-array>
     <string name="command_noty_message">Текст уведомления</string>
     <string name="command_noty_duration">Продолжительность</string>
     <string name="command_noty_text_size">Размер текста</string>
@@ -95,10 +104,10 @@
     <string name="pref_summary_start_on_boot">Запускать сервис по завершению загрузки устройства</string>
     <string name="pref_title_start_on_boot_delay">Задержка запуска после загрузки (сек)</string>
     <string name="pref_title_start_when_screen_on">Запускать при включении экрана</string>
-    <string name="pref_summary_start_when_screen_on"></string>
+    <string name="pref_summary_start_when_screen_on">Запускать при включении экрана</string>
     <string name="pref_title_start_when_screen_on_delay">Задержка после включения экрана (сек)</string>
     <string name="pref_title_stop_when_screen_off">Останавливать при выключении экрана</string>
-    <string name="pref_summary_stop_when_screen_off"></string>
+    <string name="pref_summary_stop_when_screen_off">Останавливать при выключении экрана</string>
     <string name="pref_title_stop_when_screen_off_delay">Задержка после выключения экрана (сек)</string>
     <string name="pref_title_debugging">Отладка</string>
     <string name="pref_summary_debugging">Включить всплывающие окна и отправлять дополнительную информацию в logcat</string>
@@ -161,4 +170,5 @@
         <item>По центру</item>
         <item>По правому краю</item>
     </string-array>
+    <string name="pref_title_usb_device">USB устройства</string>
 </resources>

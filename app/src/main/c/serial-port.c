@@ -43,8 +43,7 @@ static speed_t getBaudRateCode(jint baudRate)
 }
 
 JNIEXPORT jobject JNICALL
-Java_kg_delletenebre_serialmanager2_SerialPort_open (JNIEnv *env, jclass instance,
-                                                     jstring path, jint baudRate) {
+Java_kg_delletenebre_serialmanager2_communication_impl_SerialCommunicator_openSerial (JNIEnv *env, jclass instance, jstring path, jint baudRate) {
     int fd;
     speed_t speed;
     jobject fileDescriptor;
@@ -102,11 +101,11 @@ Java_kg_delletenebre_serialmanager2_SerialPort_open (JNIEnv *env, jclass instanc
 
 
 JNIEXPORT void JNICALL
-Java_kg_delletenebre_serialmanager2_SerialPort_close (JNIEnv *env, jobject instance) {
+Java_kg_delletenebre_serialmanager2_communication_impl_SerialCommunicator_closeSerial (JNIEnv *env, jobject instance) {
     jclass SerialPortClass = (*env)->GetObjectClass(env, instance);
     jclass FileDescriptorClass = (*env)->FindClass(env, "java/io/FileDescriptor");
 
-    jfieldID fdID = (*env)->GetFieldID(env, SerialPortClass, "fd", "Ljava/io/FileDescriptor;");
+    jfieldID fdID = (*env)->GetFieldID(env, SerialPortClass, "mFileDescriptor", "Ljava/io/FileDescriptor;");
     jfieldID descriptorID = (*env)->GetFieldID(env, FileDescriptorClass, "descriptor", "I");
 
     jobject fd = (*env)->GetObjectField(env, instance, fdID);
