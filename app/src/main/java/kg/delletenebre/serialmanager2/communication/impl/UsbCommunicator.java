@@ -1,5 +1,6 @@
 package kg.delletenebre.serialmanager2.communication.impl;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.usb.UsbDevice;
@@ -40,6 +41,9 @@ public class UsbCommunicator extends BaseCommunicatorImpl {
                     && !connectedDevices.containsKey(device.getValue().getDeviceName())) {
 
                 if (!usbManager.hasPermission(device.getValue())) {
+                    PendingIntent mPermissionIntent = PendingIntent.getBroadcast(App.getInstance(), 0, new Intent(), 0);
+                    usbManager.requestPermission(device.getValue(), mPermissionIntent);
+
                     localBroadcastManager.sendBroadcast(
                             new Intent(App.LOCAL_ACTION_CONNECTION_FAILED)
                                     .putExtra("type", "usb")
