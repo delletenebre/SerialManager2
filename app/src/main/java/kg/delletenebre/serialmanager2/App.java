@@ -719,13 +719,6 @@ public class App extends Application implements Application.ActivityLifecycleCal
 
             case CommandModel.ACTION_SHELL_COMMAND: {
                 runShell(shellCommand);
-
-
-//                try {
-//                    Runtime.getRuntime().exec(shellCommand);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
                 break;
             }
 

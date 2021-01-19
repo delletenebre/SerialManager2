@@ -52,26 +52,7 @@ public class CommunicationService extends Service implements SensorEventListener
     private LocalBroadcastManager mLocalBroadcastManager;
     private SharedPreferences mPrefs;
 
-//    // **** USB **** //
-//    private UsbConnection mUsbConnection;
-//
-//    // **** BLUETOOTH **** //
-//    private BluetoothConnection mBluetoothConnection;
-//
-//    // **** WEB-SERVER **** //
-//    private AsyncHttpServer mWebServer;
-//    private List<WebSocket> mWebSockets;
-//
-//    // **** SERIAL **** //
-//    private SerialPort mSerialPort;
-
-    Map<CommunicatorType, BaseCommunicator> communicators;
-
-//    SerialCommunicator serial;
-//    UsbCommunicator usb;
-//    BluetoothCommunicator bluetooth;
-//    WebServerCommunicator web;
-
+    private Map<CommunicatorType, BaseCommunicator> communicators;
     private SensorManager mSensorManager;
 
     private Notification.Builder mNotificationBuilder;
@@ -95,18 +76,6 @@ public class CommunicationService extends Service implements SensorEventListener
             communicator.openOrClose(
                     isCommunicationTypeEnabled(communicator.getCommunicatorType().getTypeCode()));
         }
-
-//        if (intent != null) {
-//            if (intent.getBooleanExtra(EXTRA_UPDATE_USB_CONNECTION, false)) {
-//                mUsbConnection.findConnectedDevices();
-//            }
-//
-//            if (intent.getBooleanExtra(EXTRA_BLUETOOTH_ENABLED, false)
-//                    || intent.getBooleanExtra(EXTRA_UPDATE_BLUETOOTH_CONNECTION, false)) {
-//                startBluetoothCommunication();
-//            }
-//        }
-
         return START_STICKY;
     }
 
@@ -124,17 +93,6 @@ public class CommunicationService extends Service implements SensorEventListener
         mPrefs = App.getInstance().getPrefs();
         initializeNotification();
 
-//        mUsbConnection = new UsbConnection(this, App.getInstance().getIntPreference("usb_baud_rate"));
-//        mBluetoothConnection = new BluetoothConnection();
-//        if (App.getInstance().getBooleanPreference("bluetooth_adapter_turn_on")) {
-//            mBluetoothConnection.enableAdapter();
-//        }
-//
-//        mUsbConnection.findConnectedDevices();
-//        startBluetoothCommunication();
-//        startSerialCommunication();
-//        startWebServer();
-
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -145,7 +103,6 @@ public class CommunicationService extends Service implements SensorEventListener
                         case UsbManager.ACTION_USB_DEVICE_DETACHED:
                             UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
                             ((UsbCommunicator) communicators.get(CommunicatorType.USB)).close(device);
-//                            mUsbConnection.close(device.getDeviceName());
                             break;
 
                         case BluetoothAdapter.ACTION_STATE_CHANGED:
@@ -154,7 +111,6 @@ public class CommunicationService extends Service implements SensorEventListener
                             if (BluetoothAdapter.STATE_TURNING_OFF == bluetoothState
                                     || BluetoothAdapter.ERROR == bluetoothState) {
                                 communicators.get(CommunicatorType.BLUETOOTH).close();
-//                                stopBluetoothCommunication();
                             }
                             break;
 
@@ -214,48 +170,6 @@ public class CommunicationService extends Service implements SensorEventListener
                                 communicator.openOrClose(
                                         isCommunicationTypeEnabled(communicator.getCommunicatorType().getTypeCode()));
                             }
-
-//                            serial.openOrClose(isCommunicationTypeEnabled("serial"));
-//                            usb.openOrClose(isCommunicationTypeEnabled("usb"));
-//                            bluetooth.openOrClose(isCommunicationTypeEnabled("bluetooth"));
-//                            web.openOrClose(isCommunicationTypeEnabled("web_socket"));
-
-//                            if (isCommunicationTypeEnabled("usb")) {
-//                                if (!mUsbConnection.hasOpened()) {
-//                                    mUsbConnection.findConnectedDevices();
-//                                }
-//                            } else {
-//                                mUsbConnection.closeAll();
-//                            }
-//
-//                            if (isCommunicationTypeEnabled("bluetooth")) {
-//                                if (mBluetoothConnection == null) {
-//                                    startBluetoothCommunication();
-//                                } else {
-//                                    stopBluetoothCommunication();
-//                                    startBluetoothCommunication();
-//                                }
-//                            } else {
-//                                stopBluetoothCommunication();
-//                            }
-//
-//
-//                            if (isCommunicationTypeEnabled("web_socket")) {
-//                                if (mWebServer == null) {
-//                                    startWebServer();
-//                                }
-//                            } else {
-//                                stopWebServer();
-//                            }
-//
-//                            if (isCommunicationTypeEnabled("serial")) {
-//                                if (mSerialPort == null) {
-//                                    startSerialCommunication();
-//                                }
-//                            } else {
-//                                stopSerialCommunication();
-//                            }
-
                             updateNotificationText();
                             break;
                     }
@@ -286,24 +200,10 @@ public class CommunicationService extends Service implements SensorEventListener
     @Override
     public void onDestroy() {
         App.log("CommunicationService - destroy");
-//        if (isConnectionStateMessageEnabled()) {
-//            sendData(App.ACTION_CONNECTION_LOST);
-//        }
 
         for (BaseCommunicator communicator : communicators.values()) {
             communicator.openOrClose(false);
         }
-
-//        serial.close();
-//        usb.close();
-//        bluetooth.close();
-//        web.close();
-
-//        mUsbConnection.closeAll();
-//        mUsbConnection = null;
-//        stopBluetoothCommunication();
-//        stopWebServer();
-//        stopSerialCommunication();
 
         mSensorManager.unregisterListener(this);
         mSensorManager = null;
@@ -352,20 +252,6 @@ public class CommunicationService extends Service implements SensorEventListener
             mNotificationLayout.setImageViewBitmap(communicator.getCommunicatorType().getImageViewId(), icon);
         }
 
-
-//
-//        Bitmap usbIcon = getNotificationInfoIcon(R.drawable.ic_usb, textColor);
-//        mNotificationLayout.setImageViewBitmap(R.id.usb_connections_icon, usbIcon);
-//
-//        Bitmap bluetoothIcon = getNotificationInfoIcon(R.drawable.ic_bluetooth_black_24dp, textColor);
-//        mNotificationLayout.setImageViewBitmap(R.id.bluetooth_connections_icon, bluetoothIcon);
-//
-//        Bitmap websocketIcon = getNotificationInfoIcon(R.drawable.ic_language_black_24dp, textColor);
-//        mNotificationLayout.setImageViewBitmap(R.id.web_socket_connections_icon, websocketIcon);
-//
-//        Bitmap serialIcon = getNotificationInfoIcon(R.drawable.ic_vga, textColor);
-//        mNotificationLayout.setImageViewBitmap(R.id.serial_connections_icon, serialIcon);
-
         mNotificationBuilder = new Notification.Builder(this)
                 .setOnlyAlertOnce(true)
                 .setSmallIcon(R.drawable.notification_icon)
@@ -394,62 +280,6 @@ public class CommunicationService extends Service implements SensorEventListener
 
     public void updateNotificationText() {
         App.log("CommunicationService-updateNotificationText");
-//        if (isCommunicationTypeEnabled("usb")) {
-//            e("mUsbConnection", "VISIBLE");
-//            if (mNotificationLayout != null) {
-//                mNotificationLayout.setTextViewText(R.id.usb_connections_count,
-//                        String.valueOf(communicators.get(CommunicatorType.USB).getConnectionsCount()));
-//                setNotificationInfoVisibility("usb", View.VISIBLE);
-//            }
-//        } else {
-//            e("mUsbConnection", "GONE");
-//            setNotificationInfoVisibility("usb", View.GONE);
-//        }
-//
-//        if (isCommunicationTypeEnabled("bluetooth")) {
-//            if (mNotificationLayout != null) {
-//                int bluetoothIconId = R.drawable.ic_bluetooth_black_24dp;
-////                if (mBluetoothConnection != null && mBluetoothConnection.isConnected()) {
-//                bluetoothIconId = R.drawable.ic_bluetooth_connected_black_24dp;
-////                }
-//                int textColor = getNotificationTextColor(
-//                        R.style.TextAppearance_Compat_Notification_Title);
-//                Bitmap bluetoothIcon = getNotificationInfoIcon(bluetoothIconId, textColor);
-//                mNotificationLayout.setImageViewBitmap(R.id.bluetooth_connections_icon, bluetoothIcon);
-//            }
-//            setNotificationInfoVisibility("bluetooth", View.VISIBLE);
-//        } else {
-//            setNotificationInfoVisibility("bluetooth", View.GONE);
-//        }
-//
-//        if (isCommunicationTypeEnabled("web_socket")) {
-//            if (mNotificationLayout != null) {
-////                String webSocketCountText = "0";
-////                if (mWebSockets != null) {
-////                    webSocketCountText = String.valueOf(mWebSockets.size());
-////                }
-//                mNotificationLayout.setTextViewText(R.id.web_socket_connections_count,
-//                        communicators.get(CommunicatorType.WEB).getConnectionsCount().toString());
-//                setNotificationInfoVisibility("web_socket", View.VISIBLE);
-//            }
-//            mNotificationLayout.setTextViewText(R.id.ip_address,
-//                    Utils.getIpAddress() + ":" + App.getInstance().getIntPreference("web_server_port",
-//                            getString(R.string.pref_default_web_server_port)));
-//            mNotificationLayout.setViewVisibility(R.id.ip_address, View.VISIBLE);
-//        } else {
-//            setNotificationInfoVisibility("web_socket", View.GONE);
-//            mNotificationLayout.setViewVisibility(R.id.ip_address, View.GONE);
-//        }
-//
-//        if (isCommunicationTypeEnabled("serial")) {
-//            if (mNotificationLayout != null) {
-////                mNotificationLayout.setTextViewText(R.id.usb_connections_count, String.valueOf(mUsbConnection.count()));
-//                setNotificationInfoVisibility("serial", View.VISIBLE);
-//            }
-//        } else {
-//            setNotificationInfoVisibility("serial", View.GONE);
-//        }
-
         for (BaseCommunicator communicator : communicators.values()) {
             updateNotificationTextItem(communicator);
         }
@@ -474,155 +304,6 @@ public class CommunicationService extends Service implements SensorEventListener
         return Utils.tintBitmap(usbIcon, color);
     }
 
-
-//    private void startBluetoothCommunication() {
-//        if (isCommunicationTypeEnabled("bluetooth")) {
-//            if (mBluetoothConnection != null) {
-//                mBluetoothConnection.stop();
-//                mBluetoothConnection = null;
-//            }
-//            mBluetoothConnection = new BluetoothConnection();
-//            mBluetoothConnection.start(this);
-//        }
-//    }
-
-//    private void stopBluetoothCommunication() {
-//        if (mBluetoothConnection != null) {
-//            mBluetoothConnection.stop();
-//            mBluetoothConnection = null;
-//
-//            mLocalBroadcastManager.sendBroadcast(
-//                    new Intent(App.LOCAL_ACTION_CONNECTION_CLOSED)
-//                            .putExtra("type", "bluetooth")
-//                            .putExtra("name", "bluetooth"));
-//
-//            updateNotificationText();
-//        }
-//    }
-
-//    private void bluetoothSend(String message) {
-//        if (mBluetoothConnection != null && mBluetoothConnection.isConnected()) {
-//            mBluetoothConnection.write(message);
-//        }
-//    }
-
-//    public void startWebServer() {
-//        if (isCommunicationTypeEnabled("web_socket")) {
-//            mWebServer = new AsyncHttpServer();
-//            mWebSockets = new ArrayList<>();
-//            final int port = App.getInstance().getIntPreference("web_server_port",
-//                    getString(R.string.pref_default_web_server_port));
-//            final String ipAddress = Utils.getIpAddress();
-//
-//            mWebServer.get("/", (request, response) -> {
-//                String webSocketInfo = String.format(getString(R.string.web_socket_info),
-//                        ipAddress, port);
-//
-//                response.send("<!DOCTYPE html><head><title>" + getString(R.string.app_name) + "</title><meta charset=\"utf-8\" /></head><body><h1>" + getString(R.string.app_name) + "</h1><i>version: <b>" + App.getInstance().getVersion() + "</b></i><br><br>" + webSocketInfo + "<br><br><a href=\"/test-websocket\">WebSocket test</a></body></html>");
-//            });
-//            mWebServer.get("/test-websocket", (request, response) -> {
-//                AssetManager assetManager = getAssets();
-//
-//                String html = "<h1>404 Not found</h1>";
-//                InputStream input;
-//                try {
-//                    input = assetManager.open("websoket_test.html");
-//                    int size = input.available();
-//                    byte[] buffer = new byte[size];
-//                    //noinspection ResultOfMethodCallIgnored
-//                    input.read(buffer);
-//                    input.close();
-//
-//                    html = new String(buffer);
-//                    html = html.replace("{{address}}", ipAddress + ":" + port + "/ws");
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                response.send(html);
-//            });
-//            mWebServer.listen(port);
-//            mWebServer.websocket("/ws", (webSocket, request) -> {
-//                App.log("New WebSocket client connected");
-//                webSocket.setClosedCallback(new CompletedCallback() {
-//                    @Override
-//                    public void onCompleted(Exception e) {
-//                        try {
-//                            if (e != null) {
-//                                e.printStackTrace();
-//                            }
-//                        } finally {
-//                            mLocalBroadcastManager.sendBroadcast(
-//                                    new Intent(App.LOCAL_ACTION_CONNECTION_CLOSED)
-//                                            .putExtra("type", "web")
-//                                            .putExtra("name", webSocket.toString()));
-//                            mWebSockets.remove(webSocket);
-//                            updateNotificationText();
-//                        }
-//                    }
-//                });
-//                webSocket.setStringCallback(message -> mLocalBroadcastManager.sendBroadcast(
-//                        new Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
-//                                .putExtra("from", "web")
-//                                .putExtra("command", message)));
-//                mWebSockets.add(webSocket);
-//                if (isConnectionStateMessageEnabled()) {
-//                    webSocket.send(App.ACTION_CONNECTION_ESTABLISHED);
-//                }
-//                mLocalBroadcastManager.sendBroadcast(
-//                        new Intent(App.LOCAL_ACTION_CONNECTION_ESTABLISHED)
-//                                .putExtra("type", "web")
-//                                .putExtra("name", webSocket.toString()));
-//                updateNotificationText();
-//            });
-//        }
-//    }
-
-//    private void stopWebServer() {
-//        if (mWebSockets != null) {
-//            for (WebSocket socket : mWebSockets) {
-//                socket.close();
-//            }
-//            mWebSockets = null;
-//        }
-//
-//        if (mWebServer != null) {
-//            mWebServer.stop();
-//            mWebServer = null;
-//        }
-//    }
-
-//    public void webSocketSend(String message) {
-//        if (mWebSockets != null) {
-//            for (WebSocket socket : mWebSockets) {
-//                socket.send(message);
-//            }
-//        }
-//    }
-
-//    private void startSerialCommunication() {
-//        if (isCommunicationTypeEnabled("serial")) {
-//            stopSerialCommunication();
-//            mSerialPort = new SerialPort(
-//                    App.getInstance().getStringPreference("serial_path"),
-//                    App.getInstance().getIntPreference("serial_baud_rate"),
-//                    this);
-//        }
-//    }
-
-//    private void stopSerialCommunication() {
-//        if (mSerialPort != null) {
-//            mSerialPort.closePort();
-//            mSerialPort = null;
-//        }
-//    }
-
-//    private void serialSend(String message) {
-//        if (mSerialPort != null && mSerialPort.isConnected()) {
-//            mSerialPort.write(message.getBytes());
-//        }
-//    }
-
     private void sendData(String message) {
         if (App.getInstance().getBooleanPreference("crlf")) {
             message += App.CRLF;
@@ -631,11 +312,6 @@ public class CommunicationService extends Service implements SensorEventListener
         for (BaseCommunicator communicator : communicators.values()) {
             communicator.write(message);
         }
-
-//        mUsbConnection.send(message);
-//        bluetoothSend(message);
-//        webSocketSend(message);
-//        serialSend(message);
 
         LocalBroadcastManager.getInstance(this)
                 .sendBroadcast(new Intent(App.LOCAL_ACTION_DATA_SENT).putExtra("data", message));
