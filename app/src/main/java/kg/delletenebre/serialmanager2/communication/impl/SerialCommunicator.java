@@ -29,6 +29,9 @@ public class SerialCommunicator extends BaseCommunicatorImpl {
 
     @Override
     public void open() {
+        if (fileDescriptor != null) {
+            closeSerial();
+        }
         Pair<String, Integer> settings = getPathAndBaudRate();
         fileDescriptor = openSerial(settings.first, settings.second);
         if (fileDescriptor != null) {
@@ -60,13 +63,15 @@ public class SerialCommunicator extends BaseCommunicatorImpl {
 
         if (mCommunicationThread != null) {
             mCommunicationThread.cancel();
-            closeSerial();
             localBroadcastManager.sendBroadcast(
                     new Intent(App.LOCAL_ACTION_CONNECTION_CLOSED)
                             .putExtra("type", "serial")
                             .putExtra("name", "dev/tty*"));
         }
-        fileDescriptor = null;
+        if(fileDescriptor != null) {
+            closeSerial();
+            fileDescriptor = null;
+        }
     }
 
     @Override
@@ -112,7 +117,7 @@ public class SerialCommunicator extends BaseCommunicatorImpl {
 //                                new Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
 //                                        .putExtra("from", "serial")
 //                                        .putExtra("command", strData));
-//                        Thread.sleep(20);
+//                        Thread.sleep(1);
 //                    }
 
                     int data = mInputStream.read();
@@ -123,7 +128,7 @@ public class SerialCommunicator extends BaseCommunicatorImpl {
                                         new Intent(App.LOCAL_ACTION_COMMAND_RECEIVED)
                                                 .putExtra("from", "serial")
                                                 .putExtra("command", sb.toString()));
-                                Thread.sleep(20);
+                                Thread.sleep(10);
                                 sb = new StringBuilder();
                             }
                         } else {
@@ -154,7 +159,7 @@ public class SerialCommunicator extends BaseCommunicatorImpl {
                     mOutputStream.write(buffer);
                 }
             } catch (IOException e) {
-                App.logError("BluetoothService: Exception during write: " + e.getLocalizedMessage());
+                App.logError("SerialPort: Exception during write: " + e.getLocalizedMessage());
             }
         }
 
