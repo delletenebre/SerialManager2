@@ -8,7 +8,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
-import android.util.Log.d
 import android.util.TypedValue
 import android.view.View
 import android.widget.RemoteViews
@@ -69,7 +68,6 @@ class WidgetSimple : AppWidgetProvider() {
         val widget = App.getInstance().realm.where(WidgetSimpleModel::class.java)
                 .equalTo("id", widgetId).findFirst()
         if (widget != null) {
-            d("test", "widget not null")
             val app = App.getInstance()
             val position = widget.textAlignmentId + widget.textVerticalPositionId * 3
             val visibleTextViewId = sTextViewIds[position]
@@ -100,6 +98,7 @@ class WidgetSimple : AppWidgetProvider() {
             intent.putExtra(App.EXTRA_SELECTED_ACTION_EMULATE_KEY, widget.emulatedKeyId)
             intent.putExtra(App.EXTRA_SELECTED_ACTION_SHELL_COMMAND, widget.shellCommand)
             intent.putExtra(App.EXTRA_SELECTED_ACTION_SEND_DATA, widget.sendData)
+            intent.putExtra(App.EXTRA_SELECTED_ACTION_SYSTEM_ACTION_ID, widget.systemActionId)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
             intent.data = Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME))

@@ -5,6 +5,7 @@
     <string name="command">Command</string>
     <string name="settings">Settings</string>
     <string name="restart_service">Restart Service</string>
+    <string name="close_application">Close app</string>
     <string name="send_report">Send report</string>
     <string name="error">Error</string>
     <string name="yes">Yes</string>
@@ -19,6 +20,7 @@
     <string name="send">Send</string>
     <string name="connection_established">Connection established</string>
     <string name="connection_closed">Connection closed</string>
+    <string name="connection_failed">Connection failed</string>
 
     <string name="crash_toast_text">Ooooops ! I crashed, but a report has been sent to my developer to help fix the issue !</string>
     <string name="crash_dialog_title">Send Crash Report?</string>
@@ -64,10 +66,17 @@
         <item>Emulate key</item>
         <item>Shell command</item>
         <item>Send data</item>
+        <item>System action</item>
     </string-array>
     <string name="command_emulated_key">Emulated key</string>
     <string name="shell_command">Shell command</string>
     <string name="send_data">Send data</string>
+    <string name="system_action">System action</string>
+    <string-array name="array_system_actions">
+        <item>Shutdown</item>
+        <item>Reboot</item>
+        <item>Set brightness</item>
+    </string-array>
     <string name="command_noty_message">Notification message</string>
     <string name="command_noty_duration">Duration</string>
     <string name="command_noty_position_priority">Position Priority</string>
@@ -200,13 +209,17 @@
 
     <string name="pref_header_usb">USB connection</string>
     <string name="pref_title_usb_communication_enabled">Enable USB communication</string>
+    <string-array name="pref_default_usb_device" translatable="false" />
+    <string name="pref_title_usb_device">Usb device</string>
+    <string name="pref_template_usb_device_list_item" translatable="false">%1$s\n%2$s:%3$s (pid:vid)\n%4$s %5$s</string>
+    <string name="pref_template_usb_device_list_item_old" translatable="false">%1$s\n%2$s:%3$s (pid:vid)</string>
     <string name="pref_default_usb_baud_rate" translatable="false">9600</string>
     <string name="pref_title_usb_baud_rate">Serial port baud rate</string>
 
     <string name="pref_header_bluetooth">Bluetooth connection</string>
     <string name="pref_title_bluetooth_communication_enabled">Enable Bluetooth communication</string>
     <string name="pref_title_bluetooth_device">Bluetooth device</string>
-    <string name="pref_default_bluetooth_device" translatable="false"></string>
+    <string name="pref_default_bluetooth_device" translatable="false" />
     <string name="no_device">No device</string>
     <string name="pref_template_bluetooth_device_list_item" translatable="false">%1$s [ %2$s ]</string>
     <string name="pref_title_bluetooth_adapter_turn_on">Turn on bluetooth adapter</string>

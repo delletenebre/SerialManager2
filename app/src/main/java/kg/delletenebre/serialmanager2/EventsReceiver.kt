@@ -4,12 +4,11 @@ import android.bluetooth.BluetoothAdapter
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.SystemClock
+import kg.delletenebre.serialmanager2.communication.CommunicationService
 import java.util.*
-import androidx.core.content.ContextCompat.startForegroundService
-import android.os.Build
-
 
 
 class EventsReceiver : BroadcastReceiver() {

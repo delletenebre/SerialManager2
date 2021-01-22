@@ -28,6 +28,7 @@ open class WidgetSimpleModel : RealmObject() {
     var emulatedKeyId: Int = 0
     var shellCommand: String = ""
     var sendData: String = ""
+    var systemActionId: Int = 0
 
     fun getTitleLabel(context: Context): String {
         return context.getString(R.string.widgets_list_item_title, id, key)
@@ -50,6 +51,10 @@ open class WidgetSimpleModel : RealmObject() {
             CommandModel.ACTION_SEND_DATA -> return context.getString(R.string.command_subtitle,
                     actions[actionId],
                     sendData)
+
+            CommandModel.ACTION_SYSTEM -> return context.getString(R.string.command_subtitle,
+                    actions[actionId],
+                    context.resources.getStringArray(R.array.array_system_actions)[systemActionId])
 
             else ->
                 // ACTION_NONE

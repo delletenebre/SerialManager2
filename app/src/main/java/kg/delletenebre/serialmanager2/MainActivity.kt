@@ -1,11 +1,14 @@
 package kg.delletenebre.serialmanager2
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.ViewConfiguration
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import kg.delletenebre.serialmanager2.communication.CommunicationService
 import kg.delletenebre.serialmanager2.fragments.CommandsFragment
 import kg.delletenebre.serialmanager2.fragments.LogsFragment
 import kg.delletenebre.serialmanager2.fragments.WidgetsFragment
@@ -42,6 +45,7 @@ class MainActivity: AppCompatActivity() {
         return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
@@ -52,6 +56,12 @@ class MainActivity: AppCompatActivity() {
                 val communicationServiceIntent = Intent(this, CommunicationService::class.java)
                 stopService(communicationServiceIntent)
                 startService(communicationServiceIntent)
+            }
+
+            R.id.close_application -> {
+                val communicationServiceIntent = Intent(this, CommunicationService::class.java)
+                stopService(communicationServiceIntent)
+                finishAffinity()
             }
         }
 

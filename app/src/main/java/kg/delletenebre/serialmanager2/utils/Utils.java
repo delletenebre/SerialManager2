@@ -11,7 +11,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -164,7 +163,7 @@ public class Utils {
                 }
             }
         } catch (SocketException ex) {
-            Log.e(TAG, "Socket exception in GetIP Address of Utilities" + ex.toString());
+            App.logError("Socket exception in GetIP Address of Utilities" + ex.toString());
         }
 
         return "0.0.0.0";

@@ -49,14 +49,19 @@
             android:layout_marginRight="4dp"
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/notification_usb_connections_count" />
-        <TextView android:id="@+id/usb_connections_count"
-            android:visibility="gone"
+
+        <TextView
+            android:id="@+id/usb_connections_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="sans-serif"
             android:text="@string/notification_default_connections_count"
-            android:textAppearance="@style/TextAppearance.Compat.Notification.Title" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="gone" />
 
         <ImageView android:id="@+id/web_socket_connections_icon"
             android:visibility="gone"
@@ -65,21 +70,60 @@
             android:layout_marginRight="4dp"
             android:layout_marginEnd="4dp"
             android:contentDescription="@string/notification_web_socket_connections_count" />
-        <TextView android:id="@+id/web_socket_connections_count"
-            android:visibility="gone"
+
+        <TextView
+            android:id="@+id/web_socket_connections_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="sans-serif"
             android:text="@string/notification_default_connections_count"
-            android:textAppearance="@style/TextAppearance.Compat.Notification.Title" />
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="gone" />
+        <ImageView
+            android:id="@+id/serial_connections_icon"
+            android:layout_width="@dimen/notification_icon_size_connected_type"
+            android:layout_height="@dimen/notification_icon_size_connected_type"
+            android:layout_marginEnd="4dp"
+            android:layout_marginRight="4dp"
+            android:contentDescription="@string/pref_header_serial"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/serial_connections_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/notification_default_connections_count"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="gone" />
 
         <ImageView android:id="@+id/bluetooth_connections_icon"
             android:visibility="gone"
             android:layout_width="@dimen/notification_icon_size_connected_type"
             android:layout_height="@dimen/notification_icon_size_connected_type"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginEnd="4dp"
             android:contentDescription="@string/notification_bluetooth_connection_state" />
+
+        <TextView
+            android:id="@+id/bluetooth_connections_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:fontFamily="sans-serif"
+            android:text="@string/notification_default_connections_count"
+            android:textAppearance="@style/TextAppearance.Compat.Notification.Title"
+            android:textSize="14sp"
+            android:textStyle="normal"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

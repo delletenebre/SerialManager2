@@ -1,7 +1,6 @@
-package kg.delletenebre.serialmanager2.bluetooth
+package kg.delletenebre.serialmanager2.views
 
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothClass
 import android.content.Context
 import android.preference.ListPreference
 import android.util.AttributeSet
@@ -11,7 +10,6 @@ import java.util.*
 
 
 class BluetoothDevicesListPreference : ListPreference {
-
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
