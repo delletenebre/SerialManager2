@@ -29,8 +29,8 @@ public class SerialCommunicator extends BaseCommunicatorImpl {
 
     @Override
     public void open() {
-        if (fileDescriptor != null) {
-            closeSerial();
+        if (mCommunicationThread != null) {
+            close();
         }
         Pair<String, Integer> settings = getPathAndBaudRate();
         fileDescriptor = openSerial(settings.first, settings.second);
