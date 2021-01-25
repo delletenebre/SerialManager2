@@ -105,7 +105,7 @@ Java_kg_delletenebre_serialmanager2_communication_impl_SerialCommunicator_closeS
     jclass SerialPortClass = (*env)->GetObjectClass(env, instance);
     jclass FileDescriptorClass = (*env)->FindClass(env, "java/io/FileDescriptor");
 
-    jfieldID fdID = (*env)->GetFieldID(env, SerialPortClass, "mFileDescriptor", "Ljava/io/FileDescriptor;");
+    jfieldID fdID = (*env)->GetFieldID(env, SerialPortClass, "fileDescriptor", "Ljava/io/FileDescriptor;");
     jfieldID descriptorID = (*env)->GetFieldID(env, FileDescriptorClass, "descriptor", "I");
 
     jobject fd = (*env)->GetObjectField(env, instance, fdID);
