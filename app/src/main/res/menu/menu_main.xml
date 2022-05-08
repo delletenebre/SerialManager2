@@ -1,16 +1,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_settings1"
         android:orderInCategory="100"
-        android:title="@string/settings" />
-    <item
-        android:id="@+id/restart_service"
-        android:orderInCategory="102"
-        android:title="@string/restart_service" />
-    <item
-        android:id="@+id/close_application"
-        android:orderInCategory="103"
-        android:title="@string/close_application" />
+        android:title="@string/settings"
+        android:icon="@drawable/ic_build_white_24dp"
+        app:showAsAction="withText|always">
+        <menu>
+            <item
+                android:id="@+id/action_settings"
+                android:orderInCategory="100"
+                android:title="@string/settings"
+                android:icon="@drawable/ic_build_black_24dp"/>
+            <item
+                android:id="@+id/restart_service"
+                android:orderInCategory="102"
+                android:title="@string/restart_service"
+                android:icon="@drawable/ic_history_black_24dp"/>
+            <item
+                android:id="@+id/close_application"
+                android:orderInCategory="103"
+                android:title="@string/close_application"
+                android:icon="@drawable/ic_clear_24dp"/>
+        </menu>
+    </item>
 </menu>
